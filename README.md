@@ -10,6 +10,5 @@ A user-friendly dashboard offers intuitive navigation for managing job applicati
 while real-time notifications keep users updated about new job openings, application statuses, and interview requests.
 
 Built using a modern technology stack, JobSeekAI integrates React.js and Next.js for the frontend, Python flask framework for the backend. 
-AI functionalities are powered by OpenAI API, ensuring accurate and efficient job matching.  
-With its advanced AI-driven approach, JobSeekAI aims to revolutionize the job-seeking process by making it smarter, faster, and more effective for both job seekers and employers.
+AI functionalities are powered by OpenAI API, ensuring accurate and efficient job matching. With its advanced AI-driven approach, JobSeekAI aims to revolutionize the job-seeking process by making it smarter, faster, and more effective for both job seekers and employers.
 
