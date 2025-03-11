@@ -19,18 +19,17 @@ html{
     background-color: #eeeeee;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));/* Always 4 columns */
-    gap: 4px;
+    gap: 30px;
     border-radius: 15px;
-    padding: 15px;
+    padding: 30px;
     position: relative; /* Keeps natural document flow */
 
 }
 .posting{
     aspect-ratio: 1 / 1; 
-    margin: 30px;
     background-color: rgb(189, 189, 189);
     padding: 10px 20px;
-    border-radius: 30px;
+    border-radius: 40px;
 }
 
 .job-board::-webkit-scrollbar {
