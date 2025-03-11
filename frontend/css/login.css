@@ -11,11 +11,13 @@ body {
 
 .container {
     display: flex;
-    background-color: eeeeee;
+    background-color: #eeeeee;
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
     width: 90vw;
     height: 85vh;
     background-color: #e9e9e9;
@@ -28,13 +30,13 @@ body {
     padding-bottom: 20px;
     display: flex;
     flex-direction: column;
-    width: 45vw; /* Adjust width as needed */
-    height: 40vh;
+    min-width: 40%; /* Adjust width as needed */
+    min-height: 40%;
+    height: fit-content;
+    width: min-content;
     border-radius: 30px;
-    margin-right: 5vw;
-    margin-left: 8vw;
+
     background-color: #d6d6d6; /* Light gray background for the form */
-    margin-top: 20vh;
 }
 
 .inner-form{
@@ -104,7 +106,7 @@ input[type="checkbox"]{
 
 }
 .button-wrapper{
-    width:100%;
+    width:50%;
     text-align: center;
     cursor: pointer;
     padding-top: 10px;
@@ -157,11 +159,12 @@ user-select: none; /* Standard */
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 45vw; /* Adjust width as needed */
-    height: 40vh;
+    min-width: 40%; /* Adjust width as needed */
+    min-height: 40%;
+    width: min-content;
+    height: min-content;
     padding: 20px;
     justify-content: center; /* Center vertically */
-    margin-top: 20vh;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -176,8 +179,10 @@ user-select: none; /* Standard */
 }
 
 .back{
+    align-self: flex-start ;
     color: #000000;
     height: min-content;
+
 }
 
 .back:hover{
@@ -186,8 +191,49 @@ user-select: none; /* Standard */
 
 .back i{
     transform: scale(1.5);
-}
 
+}
 .back i:hover{
     transform: scale(1.8);
 }
+
+h1{
+    font-family: 'Major Mono Display';
+    font-size: xx-large;
+    transform: scale(6);
+    padding: 10px;
+}
+
+h4{
+    font-family: 'Major Mono Display';
+    font-size: xx-large;
+    transform: scale(1.6);   
+    padding-top: 50px;
+    padding-bottom: 50px;
+    color: #2e2e2e;
+}
+
+
+.logo-container p{
+    font-family: 'Major Mono Display';
+    font-size: larger;
+    color: #2e2e2e;
+    text-align: center;
+    margin: 0;
+}
+
+.brand-logos{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 40px;
+    transform: scale(2.4);
+    cursor: pointer;
+}
+
+.brand-logos i:hover{
+
+    transform: scale(1.5);
+    color: rgb(59, 59, 59);
+}
+
