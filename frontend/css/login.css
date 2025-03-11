@@ -22,23 +22,31 @@ body {
 }
 
 .form-container {
-    padding: 20px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 20px;
     display: flex;
     flex-direction: column;
     width: 45vw; /* Adjust width as needed */
     height: 40vh;
-    border-radius: 20px;
+    border-radius: 30px;
     margin-right: 5vw;
     margin-left: 8vw;
-    justify-content: center;
-    align-items: center;
     background-color: #d6d6d6; /* Light gray background for the form */
     margin-top: 20vh;
 }
 
+.inner-form{
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    justify-content: center;
+    align-items: center;
+}
 
 .form-container input:not([type="checkbox"]) {
-    font-size:xx-large;
+    font-size:x-large;
     margin-bottom: 10px;
     padding: 10px;
     border: none;
@@ -72,19 +80,56 @@ input[type="checkbox"]{
     padding: 5px 15px;
     border-radius: 30px;
     border: none;
-    font-size:xx-large;
+    font-size:x-large;
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
 }
 
 .spacer{
     height: 10px;
 }
+
+
+.switch p{
+    font-size: x-large;
+    border: none;
+    background-color: #b1b1b100;
+
+}
+.button-wrapper{
+    width:100%;
+    text-align: center;
+    cursor: pointer;
+    padding-top: 10px;
+    border-radius: 30px;
+    padding-bottom: 20px;
+}
+
+.switch .active{
+    background: linear-gradient(180deg, #ffffff 0%, #d6d6d6 80%);
+}
+
+.switch{
+    display: flex;
+    width: 100%;
+}
+
+
 .options {
     display: flex;
     align-items: center;
     flex-direction: column;
     margin-top: 10px;
     color: black;
+}
+
+.options a{
+    color: black;
+
+}
+
+.options a:hover{
+    color: rgb(105, 105, 105);
+
 }
 
 .logo-container {

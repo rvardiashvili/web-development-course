@@ -10,6 +10,11 @@
 <body>
     <div class="container">
         <div class="form-container">
+            <div class="switch">
+                <div class="button-wrapper active"><p> Employee </p></div>
+                <div class="button-wrapper"><p> Employer </p></div>
+            </div>
+            <div class="inner-form">
             <input type="text" placeholder="Mail...">
             <input type="password" placeholder="Password...">
             <button class="sign-in">Sign In</button>
@@ -19,10 +24,17 @@
                 <div class="spacer"></div>
                 <a href="#">Lost Password?</a>
             </div>
+            </div>
         </div>
         <div class="logo-container">
             <img src="media/logo_login.png" alt="Logo"> 
         </div>
     </div>
+    <script>
+        switches = document.getElementsByClassName("button-wrapper");
+        switches[0].addEventListener("click", function(){ switches[0].classList.add("active");switches[1].classList.remove("active")});
+        switches[1].addEventListener("click", function(){ switches[1].classList.add("active");switches[0].classList.remove("active")});
+
+    </script>
 </body>
 </html>
