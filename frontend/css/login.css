@@ -65,7 +65,7 @@ input[type="checkbox"]{
     cursor: pointer;
     padding: 5px 15px;
     border-radius: 30px;
-    border: solid rgb(99, 99, 99) 2px;
+    border: none;
     font-size:xx-large;
 
 }
