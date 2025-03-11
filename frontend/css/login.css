@@ -104,6 +104,13 @@ input[type="checkbox"]{
     padding-bottom: 20px;
 }
 
+.button-wrapper p{
+    -webkit-user-select: none; /* Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+/Edge */
+user-select: none; /* Standard */
+}
+
 .switch .active{
     background: linear-gradient(180deg, #ffffff 0%, #d6d6d6 80%);
 }
