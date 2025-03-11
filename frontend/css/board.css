@@ -1,0 +1,48 @@
+.site-main{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligns to top instead of center */
+    padding-top: 20px; 
+    min-height: calc(100vh - 50px);
+}
+html{
+    overflow: hidden;
+}
+.job-board{
+    width: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+    max-height: 80vh; /* Limit height so it doesn't overflow the page */
+    overflow: hidden;
+    overflow-y: auto;
+    height: auto; /* Expands naturally */
+    background-color: #eeeeee;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));/* Always 4 columns */
+    gap: 4px;
+    border-radius: 15px;
+    padding: 20px;
+    position: relative; /* Keeps natural document flow */
+
+}
+.posting{
+    aspect-ratio: 1 / 1; 
+    margin: 30px;
+    background-color: rgb(189, 189, 189);
+    padding: 10px 20px;
+    border-radius: 30px;
+}
+
+.job-board::-webkit-scrollbar {
+    width: 8px;
+}
+
+.job-board::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+}
+
+.job-board::-webkit-scrollbar-track {
+    background: transparent;
+}

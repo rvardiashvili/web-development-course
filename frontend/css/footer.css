@@ -1,0 +1,21 @@
+.footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+    font-size: 14px;
+    margin: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 15px 0;
+}
+
+.footer a{
+    color: black    ;
+}
+
+.footer .divider{
+    color: black;
+    font-size: large;
+}
