@@ -56,7 +56,11 @@
     background-color: white;
   }
   .fa-magnifying-glass{
-    padding-top: 8px;
-    padding-right: 3px;
+    margin-top: 6px;
+    margin-right: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 5px;
+    border-right: solid black 2px;
   }
 
