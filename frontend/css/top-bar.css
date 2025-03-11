@@ -64,4 +64,11 @@
     border-right: solid black 2px;
   }
 
-
+  .logo{
+    font-family: 'Major Mono Display';
+    font-size: xx-large;
+    position: absolute;
+    top: 0;
+    left:50vw;
+    transform: scale(1.4);
+  }
