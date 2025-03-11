@@ -1,0 +1,62 @@
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #eeeeee;
+    overflow: hidden;
+    border-radius: 40px;
+    padding: 6px 10px;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #000000;
+    text-align: center;
+    padding: 4px 9px;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 20px;
+    background-color: #cfcfcf;
+
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #8a8a8a;
+    color: rgb(255, 255, 255);
+    .rounded{
+        border-color: white;
+    }
+  }
+
+
+  .rounded{
+    border: #000000;
+    border-radius: 50%;
+    border-style: solid;
+    padding: 5px 6px;
+    border-width: 2px;
+  }
+
+  .topnav input[type=text] {
+    float: right;
+    padding: 6px;
+    border: none;
+    font-size: 17px;
+    border-radius: 20px;
+  }
+  .topnav input[type=text]:focus {
+    outline : none;
+  }
+  #search{
+    margin-top: 2px;
+    float: right;
+    border-radius: 20px;
+    border: solid black 2px;
+    padding-left: 5px;
+    background-color: white;
+  }
+  .fa-magnifying-glass{
+    padding-top: 8px;
+    padding-right: 3px;
+  }
+
