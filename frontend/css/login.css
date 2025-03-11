@@ -84,6 +84,7 @@ input[type="checkbox"]{
     align-items: center;
     flex-direction: column;
     margin-top: 10px;
+    color: black;
 }
 
 .logo-container {
