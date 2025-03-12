@@ -2,9 +2,9 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/side-bar.css">
-    <link rel="stylesheet" href="css/board.css">
     <link rel="stylesheet" href="css/footer.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile.css">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -12,21 +12,60 @@
 <meta http-equiv="Expires" content="0" />
 </head>
 <body>
-    <div class="side-bar-container">
-    <div class="topnav">
-        <h1 class="logo">kAI</h1>
-        <a href="login.html"><i class="fa-solid fa-user rounded"></i></a>
-        <i class="fa-solid fa-house"></i>
-        <i class="fa-solid fa-bell"></i>
-        <i class="fa-solid fa-comments"></i>
-        <i class="fa-solid fa-users"></i>
-        <i class="fa-solid fa-location-dot"></i>
-        <div class="low-end">
-            <i class="fa-solid fa-magnifying-glass"></i>
+    <div class="nav-wrapper">
+        <div class="topnav">
+            <h1 class="logo">kAI</h1>
+            <a href="login.html"><i class="fa-solid fa-user rounded"></i></a>
+            <i class="fa-solid fa-house"></i>
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-comments"></i>
+            <i class="fa-solid fa-users"></i>
+            <i class="fa-solid fa-location-dot"></i>
+            <div class="low-end">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
         </div>
     </div>
+    <div class="main-body">
+        <div class="header">
+            <div class="profile-container">
+                <div class="profile-info">
+                    <div class="profile-pic"><img src="media/pfp.jpg"></div>
+                    <div class="text-info">
+                        <div class="text-info-1">
+                            <h1 class="name">Werner Heisenberg</h1>
+                            <p class = "email">Heisenberg@lospolloshermanos.mx</p>
+                        </div>
+                        <div class="text-info-2">
+                            <div class = "stats">
+                                <span>followers: ###</span>
+                                <span>AI matches: ###</span>
+                            </div>
+                        </div>
+                        <div class="profession">Chemist</div>
+                        <div class="text-info-3">
+                            <div class="location"> Albaqurqe, TX, USA</div>
+                            <div class="number">+00 000 000 000</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="follow-button">Follow</button>
+                <div class="profile-actions">
+                    <button class="edit-profile">Edit Profile</button>
+                    <i class="fa-solid fa-gear settings"></i>
+                </div>
+            </div>
+            <div class="buttons">
+            </div>
+            <div class="bio-wrapper">
+                <div class="bio-section">
+                    <p class="languages"><strong>English | German | Georgian</strong></p>
+                    <p class="bio">bio: JobSeekAI is an AI-driven job matching platform designed to help users find their ideal job by analyzing their profiles...</p>
+                </div>
+                <div class="cv-pdf"><h1>CV / Resume PDF</h1></div>
+            </div>
+        </div>
     </div>
-
     <div class="footer">
         <a href="">Terms of Service</a>
         <span class="divider">|</span>

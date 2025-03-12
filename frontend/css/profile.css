@@ -1,0 +1,171 @@
+
+.main-body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    width: 80vw;
+    margin: auto;
+    margin-left: 10%;
+}
+.profile-container {
+    width: 80vw;
+    padding: 10px;
+    margin-left: 60px;
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-container button{
+    
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+.profile-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 90%;
+}
+
+.profile-pic img{
+    width: 170px;
+    height: 170px;
+    background: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 20px;
+    border-radius: 100%;
+}
+.text-info-1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+.text-info-3 {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap:30px;
+    color: gray;
+
+}
+
+.text-info{
+    transform: scale(1.2);
+    margin-left: 70px;
+    margin-bottom: 30px;
+}
+
+.name {
+    font-size: 22px;
+    font-weight: bold;
+}
+.email {
+    font-size: 14px;
+    color: gray;
+    margin-left: 10px;
+}
+.stats {
+    display: flex;
+    gap: 15px;
+    margin-top: 5px;
+}
+.profession {
+    font-style: italic;
+    color: gray;
+    margin-top: 10px;
+}
+.edit-profile{
+    border:none;
+    width: 200px;
+    font-size: large;
+    padding: 10px;
+    border-radius: 30px;
+    height: fit-content;
+    cursor: pointer;
+    margin-left: 70px;
+}
+.follow-button {
+    background: #4a64f2;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: auto;
+    font-size: large;
+    width: 250px;
+}
+.bio-wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+.bio-section {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    background: #eaeaea;
+    padding: 5px 25px;
+    border-radius: 40px;
+    width: 80%;
+    height: 165px;
+}
+.bio-section p {
+    font-size: 14px;
+    color: #444;
+}
+
+.cv-pdf {
+    height: 165px;
+    width: 165px;
+    padding: 5px;
+    border-radius: 40px;
+    border: none;
+    background: #d9d9d9;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    align-items: center;
+    display: flex;
+
+
+}
+
+.settings{
+    transform: scale(1.5);
+    float: left;
+    margin-left: 30px;
+    cursor: pointer;
+}
+.profile-actions{
+    display: flex;
+    align-items: center;
+    height: min-content;
+}
+
+.bio-section .languages{
+    font-size: x-large;
+}
+
+.bio-section .bio{
+    font-size: large;
+}
