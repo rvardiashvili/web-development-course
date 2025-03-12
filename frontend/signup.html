@@ -12,23 +12,27 @@
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back"><i class="fa-solid fa-arrow-left"></i></a> 
+        <a href="login.html" class="back"><i class="fa-solid fa-arrow-left"></i></a> 
         <div class="form-container">
             <div class="switch">
-                <div class="button-wrapper active" id="employee"><p> Employee </p></div>
-                <div class="button-wrapper" id="employer"><p> Employer </p></div>
+                <div class="button-wrapper active"><p> Employee </p></div>
+                <div class="button-wrapper"><p> Employer </p></div>
             </div>
             <div class="inner-form">
                 <input type="text" placeholder="E-Mail...">
                 <input type="hidden" id = "account-type" value="employee">
+                <input type="text" placeholder="Name">
+                <input type="text" placeholder="Lastname">
+                <input type="date" placeholder="Date of birth">
                 <input type="password" placeholder="Password...">
+            <input type="password" placeholder="Repeat Password...">
             <button class="sign-in">Sign In</button>
             <div class="options">
                 <br>
                 <label><input class="checkbox" type="checkbox">Remember Me</label>
                 <div class="spacer"></div>
                 <a href="#">Lost Password?</a>
-                <a href="signup.html">Sign up now</a>
+                <a href="#">Sign up now</a>
             </div>
             </div>
         </div>
