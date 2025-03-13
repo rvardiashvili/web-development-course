@@ -41,3 +41,128 @@
     transform: scale(1.8);
 }
 
+.tittle{
+    margin-left: 20px
+}
+
+.experience-tab-expanded{
+    width: 97%;
+    height: fit-content;
+    background-color: #d9d9d9;
+    text-align: center;
+    border-radius: 50px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: x-large;
+    cursor: pointer;
+    padding: 10px;
+}
+.experience-list{
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    justify-content: flex-start;
+    gap: 100px;
+    padding: 20px 30px;
+    width: 90%;
+    overflow-x: auto;
+
+}
+
+.experience-entery{
+    height: 220px;
+    width: 220px;
+    background-color: #fcfcfccc;
+    flex-shrink: 0;
+    border-radius: 50px;
+}
+
+.projects-list{
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px 30px;
+    width: 90%;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.projects-entery{
+    height: 150px;
+    width: 100%;
+    background-color: #fcfcfccc;
+    overflow-y: hide;
+    flex-shrink: 0;
+    border-radius: 50px;
+}
+
+
+
+.education-list{
+    display: flex;
+    flex-direction: row;
+    height: fit-content;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 20px 30px;
+    width: 85%;
+    overflow-x: auto;
+}
+
+.education-entery{
+    height: 60px;
+    width: 33%;
+    background-color: #fcfcfccc;
+    flex-shrink: 0;
+    border-radius: 50px;
+}
+
+
+
+.experience-list::-webkit-scrollbar {
+    height: 5px;
+}
+
+.experience-list::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+}
+
+.experience-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.education-list::-webkit-scrollbar {
+    height: 5px;
+}
+
+.education-list::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+}
+
+.education-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.projects-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.projects-list::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+}
+
+.projects-list::-webkit-scrollbar-track {
+    background: transparent;
+}

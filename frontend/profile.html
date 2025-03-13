@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/experience-tab.css">
+    <link rel="stylesheet" href="css/scrollbar.css">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -67,12 +68,51 @@
             </div>
         </div>
         <div class="experience-block">
-            <div class="work-experience experience-tab">Work Experience</div>
-            <div class="projects experience-tab">Projects</div>
-            <div class="education experience-tab">Eudcation</div>
+            <div class="experience-tab" id="work-experience" style="display: flex;">Work Experience</div>
+            <div class="experience-tab-expanded" id="work-experience-expanded" style="display: none;">
+                <div class="tittle">Work Experience:</div>
+                <div class="experience-list">
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                    <div class="experience-entery"></div>
+                </div>
+            </div>
+            <div class="experience-tab" id="projects">Projects</div>
+            <div class="experience-tab-expanded" id="projects-expanded" style="display: none;">
+                <div class="tittle">Projects expanded</div>
+                <div class="projects-list">
+                    <div class="projects-entery"></div>
+                    <div class="projects-entery"></div>
+                    <div class="projects-entery"></div>
+                    <div class="projects-entery"></div>
+                    <div class="projects-entery"></div>
+                </div>
+            </div>
+            <div class="experience-tab" id="eudcation">Eudcation</div>
+            <div class="experience-tab-expanded" id="eudcation-expanded" style="display: none;">
+                <div class="tittle">Eudcation:</div>
+                <div class="education-list">
+                    <div class="education-entery"></div>
+                    <div class="education-entery"></div>
+                    <div class="education-entery"></div>
+                    <div class="education-entery"></div>
+                </div>
+            
+            </div>
             <div class="inner-block">
-                <div class="skills experience-tab inner">Skills</div>
-                <div class="interests experience-tab inner">Interests</div>
+                <div class="experience-tab inner" id="skills">Skills</div>
+                <div class="experience-tab-expanded inner" id="skills-expanded" style="display: none;">
+                   <div class="tittle">Skills:</div>
+
+                
+                </div>
+                <div class="interests experience-tab inner" id="interests">Interests</div>
+                <div class="interests experience-tab-expanded inner" id="interests-expanded" style="display: none;">Interests expanded</div>
             </div>
             <i class="fa-solid fa-chevron-down drop-down"></i>
         </div>
@@ -82,5 +122,44 @@
         <span class="divider">|</span>
         <a href="">Privacy Policy</a>
     </div>
+    <script>
+        expTab = document.querySelectorAll(".experience-tab");
+        expTabExpanded = document.getElementsByClassName("experience-tab-expanded");
+        expandButton = document.querySelector(".drop-down")
+        expanded = null;
+        hidden = null;
+        isFullyExpanded=false;
+        expTab.forEach((tab) => {
+            tab.addEventListener("click", function(){
+                if(isFullyExpanded)
+                    return;
+                if(expanded){
+                    expanded.style.display="none";
+                    hidden.style.display="flex";
+                }
+                expanded = document.getElementById(tab.id+"-expanded");
+                expanded.style.display = "flex";
+                tab.style.display="none";
+                hidden = tab;
+            });
+        });
+        
+            expandButton.addEventListener("click", function(){
+            for(i = 0; i < expTab.length; i++){
+                if(!isFullyExpanded){
+                    expTab[i].style.display="none";
+                    expTabExpanded[i].style.display="flex";
+                }
+                else if(isFullyExpanded){
+                    expTab[i].style.display="flex";
+                    expTabExpanded[i].style.display="none";
+                }
+            }
+            isFullyExpanded=!isFullyExpanded;
+        });
+
+
+    </script>
+
 </body>
 </html>
