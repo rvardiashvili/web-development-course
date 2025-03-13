@@ -2,8 +2,7 @@
 .main-body {
     font-family: Arial, sans-serif;
     background-color: #ffffff;
-    display: flex;
-    justify-content: center;
+
     padding: 40px;
     width: 80vw;
     margin: auto;
