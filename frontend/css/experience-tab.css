@@ -102,8 +102,6 @@
     border-radius: 50px;
 }
 
-
-
 .education-list{
     display: flex;
     flex-direction: row;
@@ -122,8 +120,6 @@
     flex-shrink: 0;
     border-radius: 50px;
 }
-
-
 
 .experience-list::-webkit-scrollbar {
     height: 5px;

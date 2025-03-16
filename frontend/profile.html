@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/experience-tab.css">
     <link rel="stylesheet" href="css/scrollbar.css">
+    <link rel="stylesheet" href="css/posts.css">
+    <link rel="stylesheet" href="css/suggestions.css">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -116,6 +118,33 @@
             </div>
             <i class="fa-solid fa-chevron-down drop-down"></i>
         </div>
+        <div class="posts">
+            <div class = "post-type-selector">
+                <button class="post-type-button" id="All">All</button>
+                <button class="post-type-button" id="Articles">Articles</button>
+                <button class="post-type-button" id="Images">Images</button>
+                <button class="post-type-button" id="Videos">Videos</button>
+            </div>
+            <div class="posts-middle">
+                <div class="posts-separator"></div>
+                <div class="sorter">
+                    <label>Sort by:</label>
+                    <select class="sort-by">
+                        <option value="recent">Recent</option>
+                        <option value="top">Top</option>
+                    </select>
+                </div>
+            </div>
+            <div class="posts-suggestions-container">
+            <div class="posts-main">
+                <h1>No Posts Yet</h1>
+            </div>
+            <div class="suggestions">
+                <h1>Suggestions:</h1>
+                <div class="suggestions-separator"></div>
+            </div>
+            </div>
+        </div>
     </div>
     <div class="footer">
         <a href="">Terms of Service</a>
@@ -149,10 +178,13 @@
                 if(!isFullyExpanded){
                     expTab[i].style.display="none";
                     expTabExpanded[i].style.display="flex";
+                    expandButton.style.transform = "rotate(180deg)  scale(1.8)";
                 }
                 else if(isFullyExpanded){
                     expTab[i].style.display="flex";
                     expTabExpanded[i].style.display="none";
+                    expandButton.style.transform = "rotate(0deg)  scale(1.8)";
+
                 }
             }
             isFullyExpanded=!isFullyExpanded;
@@ -160,6 +192,6 @@
 
 
     </script>
-
+    <script src="js/posts.js"></script>
 </body>
 </html>

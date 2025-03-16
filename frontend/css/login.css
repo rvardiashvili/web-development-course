@@ -99,7 +99,6 @@ input[type="checkbox"]{
     height: 10px;
 }
 
-
 .switch p{
     border: none;
     background: none;
@@ -120,7 +119,6 @@ input[type="checkbox"]{
 -ms-user-select: none; /* IE10+/Edge */
 user-select: none; /* Standard */
 }
-
 
 .switch{
     display: flex;
@@ -171,8 +169,6 @@ user-select: none; /* Standard */
     user-select: none;
 }
 
-
-
 .jobseekai {
     font-size: 1.5em;
     font-weight: bold;
@@ -213,7 +209,6 @@ h4{
     color: #2e2e2e;
 }
 
-
 .logo-container p{
     font-family: 'Major Mono Display';
     font-size: larger;
@@ -236,4 +231,3 @@ h4{
     transform: scale(1.5);
     color: rgb(59, 59, 59);
 }
-
