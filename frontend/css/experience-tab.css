@@ -121,7 +121,50 @@
     border-radius: 50px;
 }
 
-.experience-list::-webkit-scrollbar {
+
+.skills-list{
+    height: auto; /* Expands naturally */
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    height: 100px;
+    padding: 20px 30px;
+    overflow-y: auto;
+    width: 660px;
+}
+
+.skills-entery{
+    height: 40px;
+    width: 200px;
+    background-color: #fcfcfccc;
+    flex-shrink: 0;
+    border-radius: 50px;
+}
+
+.skills-expanded{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+
+
+.skills-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.skills-list::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+}
+
+.skills-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+experience-list::-webkit-scrollbar {
     height: 5px;
 }
 
