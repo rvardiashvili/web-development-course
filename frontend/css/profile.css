@@ -2,9 +2,9 @@
 .main-body {
     font-family: Arial, sans-serif;
     background-color: #ffffff;
-
+    border-radius: 40px;
     padding: 40px;
-    width: 80vw;
+    width: 84vw;
     margin: auto;
     margin-left: 10%;
 }
