@@ -1,3 +1,5 @@
+CREATE DATABASE JobPortal;
+USE JobPortal;
 
 -- Users Table
 CREATE TABLE Users (
@@ -24,7 +26,6 @@ CREATE TABLE JobPreferences (
     job_level VARCHAR(100),
     position VARCHAR(255),
     job_type ENUM('full-time', 'part-time', 'contract', 'internship'),
-    work_type ENUM('hybrid', 'remote', 'on-site'),
     FOREIGN KEY (user_id) REFERENCES Employees(user_id) ON DELETE CASCADE
 );
 
@@ -67,7 +68,6 @@ CREATE TABLE JobPostings (
     job_level VARCHAR(100),
     position VARCHAR(255),
     job_type ENUM('full-time', 'part-time', 'contract', 'internship') NOT NULL,
-    work_type ENUM('hybrid', 'remote', 'on-site'),
     posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (employer_id) REFERENCES Employers(user_id) ON DELETE CASCADE
 );
@@ -93,8 +93,8 @@ CREATE TABLE Messages (
     FOREIGN KEY (receiver_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
--- Groups Table
-CREATE TABLE Groups (
+-- Groups Table (Renamed to Avoid Reserved Keyword Conflict)
+CREATE TABLE UserGroups (
     group_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -107,7 +107,7 @@ CREATE TABLE GroupMemberships (
     user_id INT,
     role ENUM('member', 'moderator', 'admin') DEFAULT 'member',
     PRIMARY KEY (group_id, user_id),
-    FOREIGN KEY (group_id) REFERENCES Groups(group_id) ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES UserGroups(group_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
