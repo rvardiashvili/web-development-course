@@ -1,5 +1,5 @@
-CREATE DATABASE JobPortal;
-USE JobPortal;
+
+USE kai;
 
 -- Users Table
 CREATE TABLE Users (
