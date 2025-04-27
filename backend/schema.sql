@@ -1,4 +1,4 @@
-USE kai;~
+USE kai;
 
 CREATE TABLE `Users` (
   `user_id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -6,7 +6,7 @@ CREATE TABLE `Users` (
   `password_hash` VARCHAR(255) NOT NULL,
   `full_name` VARCHAR(255) NOT NULL,
   `user_type` ENUM ('employee', 'employer', 'admin') NOT NULL,
-  `created_at` TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `Employees` (
@@ -30,18 +30,18 @@ CREATE TABLE `Employers` (
   `business_type` VARCHAR(255)
 );
 
-CREATE TABLE `EmployerLocations` (
-  `city_id` INT AUTO_INCREMENT,
-  `employer_id` INT AUTO_INCREMENT,
-  `address` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`city_id`, `employer_id`)
-);
-
 CREATE TABLE `Cities` (
   `city_id` INT PRIMARY KEY AUTO_INCREMENT,
   `city` VARCHAR(100),
   `state` VARCHAR(100),
   `country` VARCHAR(100)
+);
+
+CREATE TABLE `EmployerLocations` (
+  `city_id` INT,
+  `employer_id` INT,
+  `address` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`city_id`, `employer_id`)
 );
 
 CREATE TABLE `EmployerAccounts` (
@@ -61,7 +61,7 @@ CREATE TABLE `JobPostings` (
   `position` VARCHAR(255),
   `job_type` ENUM ('full-time', 'part-time', 'contract', 'internship') NOT NULL,
   `work_type` ENUM ('hybrid', 'remote', 'on-site'),
-  `posted_at` TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  `posted_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `Posts` (
@@ -69,7 +69,7 @@ CREATE TABLE `Posts` (
   `user_id` INT,
   `group_id` INT,
   `content` TEXT NOT NULL,
-  `created_at` TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `Messages` (
@@ -77,14 +77,14 @@ CREATE TABLE `Messages` (
   `sender_id` INT,
   `receiver_id` INT,
   `content` TEXT NOT NULL,
-  `sent_at` TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  `sent_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `Groups` (
   `group_id` INT PRIMARY KEY AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `description` TEXT,
-  `created_at` TIMESTAMP DEFAULT (CURRENT_TIMESTAMP)
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `GroupMemberships` (
@@ -100,32 +100,19 @@ CREATE TABLE `Followers` (
   PRIMARY KEY (`follower_id`, `followed_id`)
 );
 
+-- Foreign Keys
 ALTER TABLE `Employees` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
 ALTER TABLE `JobPreferences` ADD FOREIGN KEY (`user_id`) REFERENCES `Employees` (`user_id`) ON DELETE CASCADE;
-
 ALTER TABLE `Employers` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
 ALTER TABLE `EmployerLocations` ADD FOREIGN KEY (`employer_id`) REFERENCES `Employers` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `EmployerAccounts` ADD FOREIGN KEY (`employer_id`) REFERENCES `Employers` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `EmployerAccounts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `JobPostings` ADD FOREIGN KEY (`employer_id`) REFERENCES `Employers` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `Posts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`sender_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `Messages` ADD FOREIGN KEY (`receiver_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `GroupMemberships` ADD FOREIGN KEY (`group_id`) REFERENCES `Groups` (`group_id`) ON DELETE CASCADE;
-
-ALTER TABLE `GroupMemberships` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `Followers` ADD FOREIGN KEY (`follower_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
-ALTER TABLE `Followers` ADD FOREIGN KEY (`followed_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
-
 ALTER TABLE `EmployerLocations` ADD FOREIGN KEY (`city_id`) REFERENCES `Cities` (`city_id`);
+ALTER TABLE `EmployerAccounts` ADD FOREIGN KEY (`employer_id`) REFERENCES `Employers` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `EmployerAccounts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `JobPostings` ADD FOREIGN KEY (`employer_id`) REFERENCES `Employers` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `Posts` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `Messages` ADD FOREIGN KEY (`sender_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `Messages` ADD FOREIGN KEY (`receiver_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `GroupMemberships` ADD FOREIGN KEY (`group_id`) REFERENCES `Groups` (`group_id`) ON DELETE CASCADE;
+ALTER TABLE `GroupMemberships` ADD FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `Followers` ADD FOREIGN KEY (`follower_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `Followers` ADD FOREIGN KEY (`followed_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE;
