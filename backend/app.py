@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-
+from database import db
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'your_secret_key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/kai'
