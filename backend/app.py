@@ -69,3 +69,7 @@ def profile():
 def logout():
     session.pop('username', None)
     return redirect(url_for('home'))
+
+# Table creation
+with app.app_context():
+    db.create_all()

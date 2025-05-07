@@ -69,8 +69,3 @@ def signup(email, password, full_name, user_type, extra_data={}):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
-
-# Table creation
-@app.before_first_request
-def create_tables():
-    db.create_all()
