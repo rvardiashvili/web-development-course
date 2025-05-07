@@ -49,7 +49,7 @@ def handle_signup():
             extra_data['business_name'] = form.get('business_name')
             extra_data['business_type'] = form.get('business_type')
 
-        return signup(email, password, full_name, user_type, extra_data)
+        return user.signup(email, password, full_name, user_type, extra_data)
 
     return render_template('signup.html')
 
