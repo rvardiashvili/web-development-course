@@ -1,37 +1,12 @@
-from flask import request, jsonify
-from database.database import db
-import bcrypt
-import enum
 import datetime
-from flask import current_app as app
-from sqlalchemy import Enum as SQLAlchemyEnum
+from flask import jsonify
+import bcrypt
 
-# Enums
-class UserType(enum.Enum):
-    employee = "employee"
-    employer = "employer"
-    admin = "admin"
+from models.users import Users, UserType
+from models.employees import Employees
+from models.employers import Employers
+from database.database import db
 
-# Models
-class Users(db.Model):
-    __tablename__ = 'Users'
-    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password_hash = db.Column(db.String(255), nullable=False)
-    full_name = db.Column(db.String(255), nullable=False)
-    user_type = db.Column(SQLAlchemyEnum(UserType), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-
-class Employees(db.Model):
-    __tablename__ = 'Employees'
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id', ondelete='CASCADE'), primary_key=True)
-    date_of_birth = db.Column(db.Date)
-
-class Employers(db.Model):
-    __tablename__ = 'Employers'
-    user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id', ondelete='CASCADE'), primary_key=True)
-    business_name = db.Column(db.String(255), nullable=False)
-    business_type = db.Column(db.String(255))
 
 # Signup function
 def signup(email, password, full_name, user_type, extra_data={}):
@@ -69,3 +44,5 @@ def signup(email, password, full_name, user_type, extra_data={}):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
+
+
