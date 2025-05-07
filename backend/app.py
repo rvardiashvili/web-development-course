@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-from database import db
+from database.database import db
+import os
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')
 app.secret_key = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/kai'
+db_pass = os.environ['DATABASE_PASS']
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://app:{db_pass}@localhost/kai'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
