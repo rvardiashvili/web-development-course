@@ -1,0 +1,94 @@
+.main-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 10px 10px;
+}
+
+.left-bar {
+    position: fixed;
+}
+
+.left-bar-upper {
+    width: 15vw;
+    background-color: #f5f5f5;
+    border-radius: 30px;
+    padding: 15px;
+}
+
+.left-bar-lower {
+    width: 15vw;
+    height: 40vw;
+    background-color: #f5f5f5;
+    border-radius: 30px;
+    margin-top: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.community-logo img {
+    border-radius: 100%;
+    aspect-ratio: 1/1;
+    height: 50px;
+}
+
+.community-group-logo img {
+    border-radius: 100%;
+    aspect-ratio: 1/1;
+    height: 40px;
+}
+
+.profile-pic img {
+    border-radius: 100%;
+    aspect-ratio: 1/1;
+    height: 60px;
+}
+
+.user-main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.community-sign {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.community-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.community-groups {
+    width: 15vw;
+    height: 5vw;
+    border-radius: 30px;
+    margin-top: 5px;
+    padding: 5px;
+}
+
+.text-info-stats {
+    font-size: small;
+}
+
+.text-info-personal {
+    font-size: small;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: rgb(86, 86, 86);
+}

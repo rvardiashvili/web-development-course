@@ -1,0 +1,59 @@
+.nav-wrapper{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100vh;
+  position: fixed;
+}
+
+
+.topnav {
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+    background-color: #eeeeee;
+    overflow: hidden;
+    border-radius: 50px;
+    padding: 10px 1px;
+    width: min-content;
+    height: 94vh;
+    align-content: center;
+    align-items: center;
+    gap: 30px;
+    position: fixed;
+    margin-left: 25px;
+}
+
+
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 20px;
+
+
+  }
+  
+
+  .topnav i{
+    transform: scale(1.8);
+    color: rgb(139, 139, 139);
+    cursor: pointer;
+  }
+  .topnav i:hover{
+    transform: scale(1.9);
+    color: rgb(0, 0, 0);
+    
+  }
+  .low-end{
+    margin-top: auto;
+    padding-bottom: 10px;
+  }
+  .logo{
+    font-family: 'Major Mono Display';
+    font-size: x-large;
+    top: 0;
+  }
+

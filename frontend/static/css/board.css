@@ -1,0 +1,46 @@
+
+body{
+    overflow: hidden;
+}
+.homepage{
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligns to top instead of center */
+}
+.job-board{
+ 
+    max-height: 80vh; /* Limit height so it doesn't overflow the page */
+    overflow: hidden;
+    overflow-y: auto;
+    height: auto; /* Expands naturally */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));/* Always 4 columns */
+    gap: 70px;
+    position: relative; /* Keeps natural document flow */
+
+}
+.posting{
+    aspect-ratio: 1 / 1; 
+    background-color: rgb(189, 189, 189);
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
+.posting:hover{
+    transform: scale(1.1);
+}
+
+.job-board::-webkit-scrollbar {
+    width: 8px;
+}
+
+.job-board::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+}
+
+.job-board::-webkit-scrollbar-track {
+    background: transparent;
+}
