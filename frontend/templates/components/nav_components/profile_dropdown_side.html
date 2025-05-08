@@ -1,0 +1,8 @@
+<div class="sidebar-dropdown">
+    <i class="fa-solid fa-user dropdown-trigger"></i>
+    <div class="sidebar-dropdown-content">
+      <a href="{{ url_for('profile.profile') }}"><i class="fa-solid fa-id-badge"></i> Profile</a>
+      <a href="/settings"><i class="fa-solid fa-gear"></i> Settings</a>
+      <a href="{{ url_for('auth.logout_route') }}"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+    </div>
+  </div>

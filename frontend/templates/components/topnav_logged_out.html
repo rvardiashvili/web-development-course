@@ -1,0 +1,14 @@
+<div class="topnav">
+    <div class="nav-left">
+      <a href="{{ url_for('auth_page.login') }}" id="login">
+        <i class="fa-solid fa-user rounded"></i> Register / Log in
+      </a>
+    </div>
+  
+    {% include 'components/nav_components/logo.html' %}
+  
+    <div class="nav-right">
+        {% include 'components/nav_components/search.html' %}
+    </div>
+  </div>
+  

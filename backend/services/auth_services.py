@@ -1,5 +1,5 @@
 import datetime
-from flask import jsonify, request, session
+from flask import jsonify, request, session, render_template    
 from flask_login import login_user, logout_user, current_user
 import bcrypt
 
@@ -80,6 +80,6 @@ def login(email, password):
 def logout():
     try:
         logout_user()  # Flask-Login logout_user to clear session
-        return jsonify({'message': 'Logout successful'}), 200
+        return render_template('index.html')  # Redirect to home page after logout
     except Exception as e:
         return jsonify({'error': str(e)}), 500

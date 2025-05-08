@@ -6,9 +6,10 @@ body{
     display: flex;
     justify-content: center;
     align-items: flex-start; /* Aligns to top instead of center */
+    z-index: 0;
 }
 .job-board{
- 
+    z-index: 0;
     max-height: 80vh; /* Limit height so it doesn't overflow the page */
     overflow: hidden;
     overflow-y: auto;

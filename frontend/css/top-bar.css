@@ -1,74 +1,77 @@
-/* Add a black background color to the top navigation */
+/* Top Navigation Bar */
 .topnav {
-    background-color: #eeeeee;
-    overflow: hidden;
-    border-radius: 40px;
-    padding: 6px 10px;
-  }
-  
-  /* Style the links inside the navigation bar */
-  .topnav a {
-    float: left;
-    color: #000000;
-    text-align: center;
-    padding: 4px 9px;
-    text-decoration: none;
-    font-size: 17px;
-    border-radius: 20px;
-    background-color: #cfcfcf;
-    border: solid #cfcfcf 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #eeeeee;
+  border-radius: 40px;
+  padding: 8px 20px;
+  margin: 10px auto;
+  max-width: 1200px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-  }
-  
-  /* Change the color of links on hover */
-  .topnav a:hover {
-    background-color: #dddddd;
-    background-color: rgb(255, 255, 255);
-    border: solid black 2px;
+/* Left-side nav items (links and icons) */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-  }
+/* Search bar */
+#search {
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  border: 2px solid black;
+  padding: 0 10px;
+  background-color: white;
+}
 
+#search input[type="text"] {
+  padding: 6px;
+  border: none;
+  font-size: 17px;
+  border-radius: 20px;
+  outline: none;
+}
 
-  .rounded{
-    border: #000000;
-    border-radius: 50%;
-    border-style: solid;
-    padding: 5px 6px;
-    border-width: 2px;
-  }
+.fa-magnifying-glass {
+  margin-right: 8px;
+  padding-right: 8px;
+  border-right: 2px solid black;
+}
 
-  .topnav input[type=text] {
-    float: right;
-    padding: 6px;
-    border: none;
-    font-size: 17px;
-    border-radius: 20px;
-  }
-  .topnav input[type=text]:focus {
-    outline : none;
-  }
-  #search{
-    margin-top: 2px;
-    float: right;
-    border-radius: 20px;
-    border: solid black 2px;
-    padding-left: 5px;
-    background-color: white;
-  }
-  .fa-magnifying-glass{
-    margin-top: 6px;
-    margin-right: 5px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-right: 5px;
-    border-right: solid black 2px;
-  }
+/* Logo centered absolutely */
+.logo {
+  font-family: 'Major Mono Display';
+  font-size: 28px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scale(1.2);
+}
 
-  .logo{
-    font-family: 'Major Mono Display';
-    font-size: xx-large;
-    position: absolute;
-    top: 0;
-    left:50vw;
-    transform: scale(1.4);
-  }
+/* Nav Links */
+.topnav a {
+  color: #000000;
+  text-decoration: none;
+  font-size: 17px;
+  padding: 6px 12px;
+  border-radius: 20px;
+
+  transition: 0.3s ease;
+}
+
+.rounded a:hover {
+  background-color: white;
+  border-color: black;
+}
+
+/* Rounded Icon (Login button) */
+.rounded {
+  border-radius: 50%;
+  border: 2px solid black;
+  padding: 6px 8px;
+  background-color: #cfcfcf;
+  border: 2px solid #cfcfcf;
+}

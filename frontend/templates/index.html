@@ -13,11 +13,11 @@
 <meta http-equiv="Expires" content="0" />
 </head>
 <body>
-    <div class="topnav">
-        <a href="auth/login"><i class="fa-solid fa-user rounded"></i> Register / Log in</a>
-        <h1 class="logo">kAI</h1>
-        <div id = "search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Search.."></div>
-    </div>
+    {% if current_user.is_authenticated %}
+        {% include 'components/topnav_logged_in.html' %}
+    {% else %}
+        {% include 'components/topnav_logged_out.html' %}
+    {% endif %}
     <div class="site-main homepage">
         <div class = "container job-board">
             <div class = "posting"></div>

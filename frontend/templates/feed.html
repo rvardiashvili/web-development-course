@@ -13,16 +13,11 @@
 </head>
 
 <body>
-    <div class="topnav">
-        <a href="/auth/login"><i class="fa-solid fa-user rounded"></i> Register / Log in</a>
-        <h1 class="logo">kAI</h1>
-        <i class="fa-solid fa-house"></i>
-        <i class="fa-solid fa-bell"></i>
-        <i class="fa-solid fa-comments"></i>
-        <i class="fa-solid fa-users"></i>
-        <i class="fa-solid fa-location-dot"></i>
-        <div id="search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Search.."></div>
-    </div>
+    {% if current_user.is_authenticated %}
+        {% include 'components/topnav_logged_in.html' %}
+    {% else %}
+        {% include 'components/topnav_logged_out.html' %}
+    {% endif %}
     <div class="main-body">
         <div class="left-bar">
             <div class="left-bar-upper">

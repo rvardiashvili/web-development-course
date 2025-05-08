@@ -1,74 +1,200 @@
-/* Add a black background color to the top navigation */
+/* Main topnav container */
 .topnav {
-    background-color: #eeeeee;
-    overflow: hidden;
-    border-radius: 40px;
-    padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #e0e0e0; /* slightly deeper for contrast */
+  border-radius: 40px;
+  gap: 30px;
+  height: 50px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1000;
+}
+
+/* Left section (only present when logged in) */
+.topnav .nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  height: 100%;
+  padding-left: 10px;
+}
+
+/* Right section (for logged-in topnav) */
+.topnav .nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Topnav links (both logged in/out) */
+.topnav a {
+  color: rgb(100, 100, 100);
+  text-decoration: none;
+  font-size: 17px;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topnav a:hover {
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+}
+
+.topnav a:active {
+  color: #ffffff;
+}
+
+/* Special login link (logged-out state) */
+#login {
+  transform: scale(1);
+  color: black;
+  transition: transform 0.2s ease;
+}
+
+#login:hover {
+  transform: scale(1.1);
+}
+
+/* Rounded icons */
+.rounded {
+  border-radius: 20px;
+  border: 2px solid #000;
+  padding: 5px 6px;
+  background-color: transparent;
+  transition: background-color 0.2s ease, border 0.2s ease;
+}
+
+.rounded:hover {
+  background-color: #fff;
+  border: solid black 2px;
+}
+
+/* Logo */
+.logo {
+  font-family: 'Major Mono Display';
+  font-size: xx-large;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(2);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Search */
+#search {
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  border: solid black 2px;
+  padding-left: 5px;
+  background-color: white;
+}
+
+#search input[type=text] {
+  border: none;
+  font-size: 17px;
+  border-radius: 20px;
+  padding: 6px;
+  outline: none;
+}
+
+.fa-magnifying-glass {
+  margin-right: 5px;
+  padding: 2px 5px 2px 0;
+  border-right: solid black 2px;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  margin-right: 20px;
+}
+
+.dropdown > a {
+  margin-right: 0;
+}
+
+/* Dropdown content */
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  z-index: 9999;
+  padding: 10px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.dropdown-content a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+  border-radius: 15px;
+  transition: background-color 0.2s ease, font-weight 0.2s ease;
+}
+
+.dropdown-content a i {
+  font-size: 20px;
+  color: #555;
+}
+
+.dropdown-content a:hover,
+.dropdown-content a:focus {
+  background-color: #f1f1f1;
+  font-weight: 600;
+  outline: none;
+}
+
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Mobile/responsive fallback ideas (optional) */
+@media screen and (max-width: 768px) {
+  .logo {
+    transform: translate(-50%, -50%) scale(1.5);
+    font-size: large;
   }
-  
-  /* Style the links inside the navigation bar */
+
+  .topnav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+  }
+
   .topnav a {
-    float: left;
-    color: #000000;
-    text-align: center;
-    padding: 4px 9px;
-    text-decoration: none;
-    font-size: 17px;
-    border-radius: 20px;
-    background-color: #cfcfcf;
-    border: solid #cfcfcf 2px;
-
-  }
-  
-  /* Change the color of links on hover */
-  .topnav a:hover {
-    background-color: #dddddd;
-    background-color: rgb(255, 255, 255);
-    border: solid black 2px;
-
+    font-size: 14px;
+    margin-right: 10px;
   }
 
-
-  .rounded{
-    border: #000000;
-    border-radius: 50%;
-    border-style: solid;
-    padding: 5px 6px;
-    border-width: 2px;
+  .dropdown-content {
+    left: auto;
+    right: 0;
   }
-
-  .topnav input[type=text] {
-    float: right;
-    padding: 6px;
-    border: none;
-    font-size: 17px;
-    border-radius: 20px;
-  }
-  .topnav input[type=text]:focus {
-    outline : none;
-  }
-  #search{
-    margin-top: 2px;
-    float: right;
-    border-radius: 20px;
-    border: solid black 2px;
-    padding-left: 5px;
-    background-color: white;
-  }
-  .fa-magnifying-glass{
-    margin-top: 6px;
-    margin-right: 5px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-right: 5px;
-    border-right: solid black 2px;
-  }
-
-  .logo{
-    font-family: 'Major Mono Display';
-    font-size: xx-large;
-    position: absolute;
-    top: 0;
-    left:50vw;
-    transform: scale(1.4);
-  }
+}
+.topnav a i {
+  font-size: 25px;
+}
