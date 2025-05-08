@@ -7,6 +7,17 @@
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
+    <style>
+        .error-message {
+            color: red;
+            margin-top: 5px;
+            font-size: 0.9em;
+            display: none; /* Initially hidden */
+        }
+        .input-error {
+            border-color: red !important; /* Apply red border to invalid inputs */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -19,12 +30,14 @@
             <form id="login-form" class="inner-form">
                 <div class="inner-form">
                     <input type="text" placeholder="E-Mail or Username" name="username" id="username">
+                    <div id="username-error" class="error-message"></div>
                     <input type="hidden" id="account-type" value="employee" name="account-type">
                     <input type="password" placeholder="Password..." name="password" id="password">
+                    <div id="password-error" class="error-message"></div>
                     <button type="submit" class="sign-in">Sign In</button>
                     <div class="options">
                         <br>
-                        <label><input class="checkbox" type="checkbox" name="checkbox">Remember Me</label>
+                        <label><input class="checkbox" type="checkbox" name="remember_me">Remember Me</label>
                         <div class="spacer"></div>
                         <a href="#">Lost Password?</a>
                         <a href="signup">Sign up now</a>
@@ -50,17 +63,63 @@
         switches[0].addEventListener("click", function(){ 
             switches[0].classList.add("active");
             switches[1].classList.remove("active");
-            type.value = switches[0].id; 
+            type.value = "employee";
         });
         switches[1].addEventListener("click", function(){ 
             switches[1].classList.add("active");
             switches[0].classList.remove("active");
-            type.value = switches[0].id; 
+            type.value = "employer";
         });
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        }
+
+        function hideError(fieldId) {
+            const errorElement = document.getElementById(fieldId);
+            if (errorElement) {
+                errorElement.style.display = 'none';
+                errorElement.textContent = ''; // Clear message
+            }
+        }
 
         // Handle form submission without refresh
         document.getElementById('login-form').addEventListener('submit', function(e) {
             e.preventDefault();  // Prevent the default form submission
+
+            let isValid = true;
+            const usernameField = document.getElementById('username');
+            const passwordField = document.getElementById('password');
+            const usernameError = document.getElementById('username-error');
+            const passwordError = document.getElementById('password-error');
+
+
+            if (!usernameField.value.trim()) {
+                showError('username-error', 'Please enter your E-Mail or Username.');
+                usernameField.classList.add('input-error');
+                isValid = false;
+            } else {
+                hideError('username-error');
+                usernameField.classList.remove('input-error');
+            }
+
+            if (!passwordField.value.trim()) {
+                showError('password-error', 'Please enter your Password.');
+                passwordField.classList.add('input-error');
+                isValid = false;
+            } else {
+                hideError('password-error');
+                passwordField.classList.remove('input-error');
+            }
+
+            if (!isValid) {
+                return; // Stop submission if errors
+            }
+
 
             // Get form data
             const formData = new FormData(this);
@@ -75,16 +134,44 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(errorData => {
+                        if (errorData.error) {
+                            // Display the error message in the appropriate input field
+                            if (errorData.error.toLowerCase().includes("password")) {
+                                showError('password-error', errorData.error);
+                                passwordField.classList.add('input-error');
+                            } else if (errorData.error.toLowerCase().includes("username")) {
+                                showError('username-error', errorData.error);
+                                usernameField.classList.add('input-error');
+                            } else {
+                                // Handle generic error, show in both fields
+                                showError('username-error', errorData.error);
+                                showError('password-error', errorData.error);
+                                usernameField.classList.add('input-error');
+                                passwordField.classList.add('input-error');
+                            }
+                            throw new Error(errorData.error); // Re-throw to be caught later
+                        } else {
+                            throw new Error('Login failed. Please check your credentials.');
+                        }
+                    });
+                }
+                return response.json();
+            })
             .then(result => {
-                if (result.message) {
-                    window.location.href = '/feed';  // Example: Redirect to the dashboard
-                } else if (result.error) {
-                    alert(result.error);  // Show error message
+                if (result && result.message) {
+                    window.location.href = '/feed';
+                } else  {
+                    alert('Login successful, but unexpected response.');
+                    window.location.href = '/feed';
                 }
             })
             .catch(error => {
-                alert('An error occurred. Please try again later.');
+                // Catch the error thrown in the previous .then block
+                console.error("Login Error:", error);
+                //  alert('An error occurred: ' + error.message);  //  Removed alert
             });
         });
     </script>
