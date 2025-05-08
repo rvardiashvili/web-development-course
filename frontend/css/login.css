@@ -231,3 +231,139 @@ h4{
     transform: scale(1.5);
     color: rgb(59, 59, 59);
 }
+
+.autocomplete-wrapper {
+    position: relative;
+    width: 30vw;
+  }
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    z-index: 10;
+  }
+  .suggestions li {
+    padding: 8px 12px;
+    cursor: pointer;
+  }
+  .suggestions li:hover {
+    background: #f0f0f0;
+  }
+  .autocomplete-wrapper {
+    position: relative;
+    width: 30vw;               /* match your input width */
+  }
+  
+  .suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 0;
+    list-style: none;
+    z-index: 20;
+    display: none;             /* hide until we have items */
+  }
+  
+  .suggestions li {
+    padding: 10px 12px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .suggestions li + li {
+    border-top: 1px solid #eee;
+  }
+  .suggestions li:hover {
+    background-color: #f5f5f5;
+  }
+/* hide until we have items */
+.suggestions {
+    display: none;  
+    /* (your existing styling…) */
+  }
+  
+  /* show when non-empty */
+  .suggestions.show {
+    display: block;
+  }
+    
+  /* 1. Add a down-arrow icon inside the city input */
+#city-input {
+    /* adjust the SVG data URI or replace with your own icon URL */
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23707AFC' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 6l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;  /* leave space for the icon */
+  }
+  
+  /* 2. Highlight the suggestions container when active */
+  .suggestions.show {
+    display: block;
+    border: 2px solid #707AFC;         /* bright accent border */
+    border-radius: 6px;
+    box-shadow: 0 6px 12px rgba(112, 122, 252, 0.25);
+  }
+  
+  /* 3. Make each item stand out */
+  .suggestions li {
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  /* 4. On hover, give clear feedback */
+  .suggestions li:hover {
+    background-color: rgba(112, 122, 252, 0.1);
+  }
+  
+  /* 5. Optional: emphasize the first item as default selection */
+  .suggestions li:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+  
+  /* 6. Optional: placeholder instruction at top */
+  .autocomplete-wrapper::before {
+    content: "▼ Select from the list";
+    position: absolute;
+    top: -1.6em;
+    left: 0;
+    font-size: 0.85rem;
+    color: #707AFC;
+    font-style: italic;
+    display: none;
+  }
+  .suggestions.show + .autocomplete-wrapper::before,
+  .autocomplete-wrapper.show-instruction::before {
+    display: block;
+  }
+
+  .form-buttons{
+    display: flex;
+    width: 30vw;
+    height: 300px;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #000000;
+  }
+  

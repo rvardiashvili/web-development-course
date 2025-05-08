@@ -4,7 +4,7 @@ from routes.pages.auth_pages import auth_page_bp
 from routes.pages.feed import feed_bp
 from routes.pages.home import home_bp
 from routes.pages.profile import profile_bp
-
+from routes.misc.geographic_routes import geographic_bp
 
 def init_app(app):
     app.register_blueprint(auth_bp)
@@ -13,3 +13,5 @@ def init_app(app):
     app.register_blueprint(feed_bp)
     app.register_blueprint(home_bp)
     app.register_blueprint(profile_bp)
+
+    app.register_blueprint(geographic_bp)

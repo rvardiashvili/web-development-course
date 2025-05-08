@@ -1,0 +1,42 @@
+.autocomplete-wrapper {
+    position: relative;
+}
+
+#city-suggestions {
+    position: absolute;
+    top: 90%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    text-align: center;
+}
+
+#city-suggestions.show {
+    display: block;
+}
+
+#city-suggestions {
+    list-style-type: none; /* Removes bullet points */
+    padding: 0; /* Removes default padding */
+    margin: 0; /* Removes default margin */
+}
+
+#city-suggestions li {
+    padding: 10px;
+    list-style: none;
+    list-style-type: none;
+    cursor: pointer;
+    background-color: #fff;
+    transform: scale(0.9);
+}
+
+#city-suggestions li:hover {
+    background-color: #f0f0f0;
+    transform: scale(1);
+}

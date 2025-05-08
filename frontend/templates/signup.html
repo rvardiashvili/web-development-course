@@ -1,113 +1,358 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Signup Form</title>
-        <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-        <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
-    </head>
-    <body>
-        <div class="container">
-            <a href="/auth/login" class="back"><i class="fa-solid fa-arrow-left"></i></a>
-            <div class="form-container">
-                <div class="switch">
-                    <div class="button-wrapper active" id="employee-button"><p>Employee</p></div>
-                    <div class="button-wrapper" id="employer-button"><p>Employer</p></div>
-                </div>
-                <form id="signup-form" class="inner-form">
-                    <input type="hidden" name="user_type" id="account-type" value="employee">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup Form</title>
+<script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
+<link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dropdown_cities.css') }}">
 
-                    <input type="email" name="email" placeholder="E-Mail..." required>
-                    <input type="text" name="full_name" placeholder="Full Name" required>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+</head>
+<body>
+<div class="container">
+<a href="/auth/login" class="back"><i class="fa-solid fa-arrow-left"></i></a>
+<div class="form-container">
+<div id="switch" class="switch">
+<div class="button-wrapper active" id="employee-button"><p>Employee</p></div>
+<div class="button-wrapper" id="employer-button"><p>Employer</p></div>
+</div>
+<form id="signup-form" class="inner-form">
+<input type="hidden" name="user_type" id="account-type" value="employee">
+<div id="step1" class="form-step">
+<input type="email" name="email" placeholder="E-Mail..." required>
+<input type="text" name="full_name" placeholder="Full Name" required>
+<div class="phone-wrapper">
+<input id="phone" type="tel" name="mobile_number" required/>
+</div>
 
-                    <div id="employee-fields">
-                        <input type="date" name="date_of_birth" placeholder="Date of birth">
-                    </div>
+<input type="password" name="password" id="password" placeholder="Password..." required>
+<button class="sign-in" id="next" type="button">Next</button>
+</div>
+<div class="form-step" id="step2" style="display:none;">
+<div id="employee-fields" class="field-type-class" style="display: none;">
+<input type="date" name="date_of_birth" placeholder="Date of birth" >
+<input type="hidden" name="country_id" id="country-id" >
+<input type="hidden" name="city_id" id="city-id" >
+<input type="text" name="profession" placeholder="profession">
+<div class="geographic-data">
 
-                    <div id="employer-fields" style="display: none;">
-                        <input type="text" name="business_name" placeholder="Business Name">
-                        <input type="text" name="business_type" placeholder="Business Type">
-                    </div>
+<input list="countries" name="citizenship" class="geo-input" id="country-input" autocomplete="off" placeholder="Citizenship" >
+<datalist id="countries"></datalist>
+<div class="autocomplete-wrapper geo-input">
+<input type="text" id="city-input" class="geo-input" name="current_location" autocomplete="nope" placeholder="Current City Of Residence" autocomplete="off" >
+<ul id="city-suggestions" class="suggestions"></ul>
+</div>
+</div>
+</div>
+<div id="employer-fields" class="field-type-class" style="display: none;">
+<input type="text" name="business_name" placeholder="Business Name" >
+<input type="text" name="business_type" placeholder="Business Type" >
+</div>
+<div class="form-buttons">
+<button class="sign-in" type="button" id="prev">Previous</button>
+<button class="sign-in" type="submit" id="submit" style="display: none;">Sign Up</button>
+</div>
+</div>
+</form>
+</div>
 
-                    <input type="password" name="password" placeholder="Password..." required>
-                    <input type="password" name="repeat_password" placeholder="Repeat Password..." required>
+<div class="logo-container">
+<h1>kAI</h1>
+<h4>JobSeekAi</h4>
+<p>right opportunity deserves</p>
+<p>the right talent</p>
+<div class="brand-logos">
+<i class="fa-brands fa-instagram"></i>
+<i class="fa-brands fa-facebook"></i>
+<i class="fa-brands fa-x-twitter"></i>
+</div>
+</div>
+</div>
 
-                    <button class="sign-in" type="submit">Sign Up</button>
+<script>
+const employeeBtn = document.getElementById("employee-button");
+const employerBtn = document.getElementById("employer-button");
+const accountType = document.getElementById("account-type");
+const employeeFields = document.getElementById("employee-fields");
+const employerFields = document.getElementById("employer-fields");
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+const nextBtn = document.getElementById("next");
+const prevBtn = document.getElementById("prev");
+const passwordField = document.getElementById("password");
+const submitBtn = document.getElementById("submit");
+const switchDiv = document.getElementById("switch");
 
-                    <div class="options">
-                        <br>
-                        <label><input class="checkbox" type="checkbox" name="remember"> Remember Me</label>
-                        <div class="spacer"></div>
-                    </div>
-                </form>
-            </div>
+employeeBtn.addEventListener("click", () => {
+employeeBtn.classList.add("active");
+employerBtn.classList.remove("active");
+accountType.value = "employee";
+});
 
-            <div class="logo-container">
-                <h1>kAI</h1>
-                <h4>JobSeekAi</h4>
-                <p>right opportunity deserves</p>
-                <p>the right talent</p>
-                <div class="brand-logos">
-                    <i class="fa-brands fa-instagram"></i>
-                    <i class="fa-brands fa-facebook"></i>
-                    <i class="fa-brands fa-x-twitter"></i>
-                </div>
-            </div>
-        </div>
+employerBtn.addEventListener("click", () => {
+employerBtn.classList.add("active");
+employeeBtn.classList.remove("active");
+accountType.value = "employer";
+});
 
-        <script>
-            const employeeBtn = document.getElementById("employee-button");
-            const employerBtn = document.getElementById("employer-button");
-            const accountType = document.getElementById("account-type");
-            const employeeFields = document.getElementById("employee-fields");
-            const employerFields = document.getElementById("employer-fields");
+nextBtn.addEventListener("click", () => {
+step1.style.display = "none";
+step2.style.display = "flex";
+submitBtn.style.display = "block";
+switchDiv.style.display = "none";
 
-            employeeBtn.addEventListener("click", function () {
-                employeeBtn.classList.add("active");
-                employerBtn.classList.remove("active");
-                accountType.value = "employee";
-                employeeFields.style.display = "block";
-                employerFields.style.display = "none";
-            });
+if (accountType.value === "employee") {
+employeeFields.style.display = "flex";
+employerFields.style.display = "none";
+} else {
+employeeFields.style.display = "none";
+employerFields.style.display = "flex";
+}
+});
+prevBtn.addEventListener("click", () => {
+step1.style.display = "flex";
+step2.style.display = "none";
+submitBtn.style.display = "none";
+switchDiv.style.display = "flex";
+});
 
-            employerBtn.addEventListener("click", function () {
-                employerBtn.classList.add("active");
-                employeeBtn.classList.remove("active");
-                accountType.value = "employer";
-                employeeFields.style.display = "none";
-                employerFields.style.display = "block";
-            });
+const countryMap = new Map();
+fetch('/geographic/countries')
+.then(r => r.json())
+.then(list => {
+list.sort((a, b) => a.name.localeCompare(b.name))
+.forEach(({id, name}) => {
+countryMap.set(name, id);
+const opt = document.createElement('option');
+opt.value = name;
+opt.textContent = name;
+document.getElementById('countries').appendChild(opt);
+});
+});
+const countryInput = document.getElementById('country-input');
+countryInput.addEventListener('change', () => {
+const selected = countryInput.value;
+const cid = countryMap.get(selected) || '';
+document.getElementById('country-id').value = cid;
+});
 
-            document.getElementById('signup-form').addEventListener('submit', function(e) {
-                e.preventDefault();  // Prevent the default form submission
 
-                // Get form data
-                const formData = new FormData(this);
-                const data = {};
-                formData.forEach((value, key) => { data[key] = value });
+// City autocomplete
+const cityInput = document.getElementById('city-input');
+const suggBox = document.getElementById('city-suggestions');
+let cityValid = false;
+let debounce;
+const cityMap = new Map();
 
-                // Send the data using Fetch API
-                fetch('/auth/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.message) {
-                        window.location.href = '/feed';  // Example: Redirect to the dashboard
-                    } else if (result.error) {
-                        alert(result.error);  // Show error message
-                    }
-                })
-                .catch(error => {
-                    alert('An error occurred. Please try again later.');
-                });
-        });
-        </script>
-    </body>
-    </html>
+
+cityInput.addEventListener('input', () => {
+cityValid = false;
+const q = cityInput.value.trim();
+suggBox.innerHTML = '';
+
+if (q.length < 2) {
+suggBox.classList.remove('show');
+return;
+}
+
+clearTimeout(debounce);
+debounce = setTimeout(() => {
+fetch(`/geographic/cities?q=${encodeURIComponent(q)}`)
+.then(r => r.json())
+.then(data => {
+cityMap.clear();
+suggBox.innerHTML = '';
+if (!data.length) {
+suggBox.classList.remove('show');
+return;
+}
+data.forEach(({id, display}) => {
+cityMap.set(display, id);
+const li = document.createElement('li');
+li.textContent = display;
+li.addEventListener('click', () => {
+cityInput.value = display;
+cityValid = true;
+document.getElementById('city-id').value = id;
+suggBox.innerHTML = '';
+suggBox.classList.remove('show');
+});
+suggBox.appendChild(li);
+});
+suggBox.classList.add('show');
+})
+.catch(console.error);
+}, 300);
+});
+
+// hide when clicking outside
+document.addEventListener('click', e => {
+if (!e.target.closest('.autocomplete-wrapper')) {
+suggBox.classList.remove('show');
+}
+});
+
+
+const phoneInputField = document.querySelector("#phone");
+const phoneInput = window.intlTelInput(phoneInputField, {
+utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+nationalMode: false, // Recommended: shows country code in the input
+initialCountry: "auto", // GeoIP lookup
+geoIpLookup: function(callback) {
+fetch("https://ipapi.co/json")
+.then(function(res) { return res.json(); })
+.then(function(data) { callback(data.country_code); })
+.catch(function() { callback("us"); }); // Default to US on error
+},
+autoPlaceholder: "aggressive", // Shows example numbers
+// separateDialCode: true, // Uncomment if you want the dial code separate in the input visual
+});
+
+// Form submission
+const form = document.getElementById('signup-form');
+form.addEventListener('submit', function(e) {
+e.preventDefault();
+
+// --- Validations ---
+// Conditional validation for employee specific fields
+if (accountType.value === "employee") {
+const dobField = form.elements['date_of_birth'];
+const citizenshipField = form.elements['citizenship']; // This is your <input list="countries" name="citizenship">
+const cityLocationField = form.elements['current_location']; // This is your <input type="text" id="city-input">
+
+if (!dobField.value) {
+alert('Please enter your Date of Birth.');
+dobField.focus();
+return;
+}
+// Validate citizenship selection
+const allowedCountries = Array.from(document.querySelectorAll('#countries option')).map(o => o.value);
+if (!citizenshipField.value || !allowedCountries.includes(citizenshipField.value)) {
+alert('Please select a valid country for Citizenship from the list.');
+form.elements['country-input'].focus(); // Focus the visible input for citizenship
+return;
+}
+// Validate city selection
+if (!cityLocationField.value.trim()) {
+alert('Please enter your Current City of Residence.');
+cityLocationField.focus();
+return;
+}
+if (!cityValid) { // cityValid is your flag from autocomplete logic
+alert('Please select a valid city from the suggestions.');
+cityInput.focus(); // cityInput is the DOM element for city input
+return;
+}
+}
+// Conditional validation for employer specific fields
+else if (accountType.value === "employer") {
+const businessNameField = form.elements['business_name'];
+const businessTypeField = form.elements['business_type'];
+if (!businessNameField.value.trim()) {
+alert('Please enter the Business Name.');
+businessNameField.focus();
+return;
+}
+if (!businessTypeField.value.trim()) {
+alert('Please enter the Business Type.');
+businessTypeField.focus();
+return;
+}
+}
+
+// Phone number validation (common to both user types)
+if (!phoneInputField.value.trim()) { // Check if it's empty after trimming
+alert('Phone number is required.');
+phoneInputField.focus();
+return;
+}
+if (!phoneInput.isValidNumber()) {
+alert('The phone number entered is not valid. Please check the number and selected country.');
+phoneInputField.focus();
+return;
+}
+
+// --- Prepare data for submission ---
+const formData = new FormData(this);
+const data = {};
+formData.forEach((value, key) => {
+data[key] = value;
+});
+
+// Override mobile_number with the full international (E.164) format
+const internationalPhoneNumber = phoneInput.getNumber(); // e.g., "+17024181234"
+data.mobile_number = internationalPhoneNumber;
+
+// Add the selected country's dial code to the JSON payload
+const selectedCountryData = phoneInput.getSelectedCountryData();
+if (selectedCountryData.dialCode) {
+data.country_dial_code = `+${selectedCountryData.dialCode}`; // e.g., "+1"
+} else if (internationalPhoneNumber) {
+// Fallback: try to extract from E.164 number if dialCode somehow not available
+const match = internationalPhoneNumber.match(/^\+(\d+)/);
+if (match && match[1]) {
+data.country_dial_code = `+${match[1]}`;
+}
+}
+
+
+// Clean up fields not relevant to the selected user_type
+if (data.user_type === "employee") {
+delete data.business_name;
+delete data.business_type;
+} else if (data.user_type === "employer") {
+delete data.date_of_birth;
+delete data.citizenship;
+delete data.current_location;
+delete data.country_id; // Hidden input for employee
+delete data.city_id; // Hidden input for employee
+}
+
+// Log the data to be sent for debugging (optional)
+console.log("Data to be sent:", data);
+
+// --- Perform the fetch request ---
+fetch('/auth/signup', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify(data)
+})
+.then(r => {
+if (!r.ok) {
+// Try to parse error from backend if response is not OK
+return r.json().then(errData => {
+// If backend sends error in a specific format, e.g., { error: "message" }
+throw new Error(errData.error || `Server error: ${r.status}`);
+}).catch(() => {
+// If r.json() fails or backend error format is different
+throw new Error(`Server error: ${r.status} ${r.statusText}`);
+});
+}
+return r.json();
+})
+.then(result => {
+if (result.message) { // Assuming backend sends a 'message' on success
+window.location.href = '/feed';
+} else if (result.error) { // Check for explicit error from backend
+alert(result.error);
+} else {
+// Handle cases where the response is 2xx but not in the expected success format
+alert('Signup successful, but an unexpected response was received.');
+// window.location.href = '/feed'; // Or redirect anyway
+}
+})
+.catch(error => {
+console.error("Signup fetch error:", error);
+alert(`An error occurred: ${error.message}`);
+});
+});
+</script>
+</body>
+</html>

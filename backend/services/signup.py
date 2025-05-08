@@ -29,7 +29,15 @@ def signup(email, password, full_name, user_type, extra_data={}):
             dob = extra_data.get('date_of_birth')
             if dob:
                 dob = datetime.datetime.strptime(dob, '%Y-%m-%d').date()
-            employee = Employees(user_id=new_user.user_id, date_of_birth=dob)
+            
+            employee = Employees(
+                user_id=new_user.user_id, 
+                date_of_birth=dob,
+                mobile_number=extra_data.get('mobile_number'),
+                citizenship=extra_data.get('citizenship'),
+                profession=extra_data.get('profession'),
+                city=extra_data.get('city')  
+                )
             db.session.add(employee)
 
         elif user_type == 'employer':
