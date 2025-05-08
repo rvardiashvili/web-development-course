@@ -7,23 +7,21 @@
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
-
-
 </head>
 <body>
     <div class="container">
         <a href="/" class="back"><i class="fa-solid fa-arrow-left"></i></a> 
         <div class="form-container">
-            <form method = "post" action="/login">
+            <form id="login-form" class="inner-form">
                 <div class="switch">
                     <div class="button-wrapper active" id="employee"><p> Employee </p></div>
                     <div class="button-wrapper" id="employer"><p> Employer </p></div>
                 </div>  
                 <div class="inner-form">
-                    <input type="text" placeholder="E-Mail or Username" name="username">
-                    <input type="hidden" id = "account-type" value="employee" name="account-type">
-                    <input type="password" placeholder="Password..." name="password">
-                <button class="sign-in">Sign In</button>
+                    <input type="text" placeholder="E-Mail or Username" name="username" id="username">
+                    <input type="hidden" id="account-type" value="employee" name="account-type">
+                    <input type="password" placeholder="Password..." name="password" id="password">
+                    <button type="submit" class="sign-in">Sign In</button>
                     <div class="options">
                         <br>
                         <label><input class="checkbox" type="checkbox" name="checkbox">Remember Me</label>
@@ -43,7 +41,6 @@
                 <i class="fa-brands fa-instagram"></i>
                 <i class="fa-brands fa-facebook"></i>
                 <i class="fa-brands fa-x-twitter"></i>
-                
             </div>
         </div>
     </div>
@@ -61,6 +58,35 @@
             type.value = switches[0].id; 
         });
 
+        // Handle form submission without refresh
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent the default form submission
+
+            // Get form data
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value });
+
+            // Send the data using Fetch API
+            fetch('/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.message) {
+                    window.location.href = '/feed';  // Example: Redirect to the dashboard
+                } else if (result.error) {
+                    alert(result.error);  // Show error message
+                }
+            })
+            .catch(error => {
+                alert('An error occurred. Please try again later.');
+            });
+        });
     </script>
 </body>
 </html>

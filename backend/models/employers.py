@@ -5,3 +5,4 @@ class Employers(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id', ondelete='CASCADE'), primary_key=True)
     business_name = db.Column(db.String(255), nullable=False)
     business_type = db.Column(db.String(255))
+    user = db.relationship('Users', backref='employer')

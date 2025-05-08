@@ -1,84 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup Form</title>
-    <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-    <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
-</head>
-<body>
-    <div class="container">
-        <a href="/auth/login" class="back"><i class="fa-solid fa-arrow-left"></i></a>
-        <div class="form-container">
-            <div class="switch">
-                <div class="button-wrapper active" id="employee-button"><p>Employee</p></div>
-                <div class="button-wrapper" id="employer-button"><p>Employer</p></div>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Signup Form</title>
+        <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+        <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
+    </head>
+    <body>
+        <div class="container">
+            <a href="/auth/login" class="back"><i class="fa-solid fa-arrow-left"></i></a>
+            <div class="form-container">
+                <div class="switch">
+                    <div class="button-wrapper active" id="employee-button"><p>Employee</p></div>
+                    <div class="button-wrapper" id="employer-button"><p>Employer</p></div>
+                </div>
+                <form id="signup-form" class="inner-form">
+                    <input type="hidden" name="user_type" id="account-type" value="employee">
+
+                    <input type="email" name="email" placeholder="E-Mail..." required>
+                    <input type="text" name="full_name" placeholder="Full Name" required>
+
+                    <div id="employee-fields">
+                        <input type="date" name="date_of_birth" placeholder="Date of birth">
+                    </div>
+
+                    <div id="employer-fields" style="display: none;">
+                        <input type="text" name="business_name" placeholder="Business Name">
+                        <input type="text" name="business_type" placeholder="Business Type">
+                    </div>
+
+                    <input type="password" name="password" placeholder="Password..." required>
+                    <input type="password" name="repeat_password" placeholder="Repeat Password..." required>
+
+                    <button class="sign-in" type="submit">Sign Up</button>
+
+                    <div class="options">
+                        <br>
+                        <label><input class="checkbox" type="checkbox" name="remember"> Remember Me</label>
+                        <div class="spacer"></div>
+                    </div>
+                </form>
             </div>
-            <form class="inner-form" action="/signup" method="POST">
-                <input type="hidden" name="user_type" id="account-type" value="employee">
 
-                <input type="email" name="email" placeholder="E-Mail..." required>
-                <input type="text" name="full_name" placeholder="Full Name" required>
-
-                <div id="employee-fields">
-                    <input type="date" name="date_of_birth" placeholder="Date of birth">
+            <div class="logo-container">
+                <h1>kAI</h1>
+                <h4>JobSeekAi</h4>
+                <p>right opportunity deserves</p>
+                <p>the right talent</p>
+                <div class="brand-logos">
+                    <i class="fa-brands fa-instagram"></i>
+                    <i class="fa-brands fa-facebook"></i>
+                    <i class="fa-brands fa-x-twitter"></i>
                 </div>
-
-                <div id="employer-fields" style="display: none;">
-                    <input type="text" name="business_name" placeholder="Business Name">
-                    <input type="text" name="business_type" placeholder="Business Type">
-                </div>
-
-                <input type="password" name="password" placeholder="Password..." required>
-                <input type="password" name="repeat_password" placeholder="Repeat Password..." required>
-
-                <button class="sign-in" type="submit">Sign Up</button>
-
-                <div class="options">
-                    <br>
-                    <label><input class="checkbox" type="checkbox" name="remember"> Remember Me</label>
-                    <div class="spacer"></div>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <div class="logo-container">
-            <h1>kAI</h1>
-            <h4>JobSeekAi</h4>
-            <p>right opportunity deserves</p>
-            <p>the right talent</p>
-            <div class="brand-logos">
-                <i class="fa-brands fa-instagram"></i>
-                <i class="fa-brands fa-facebook"></i>
-                <i class="fa-brands fa-x-twitter"></i>
-            </div>
-        </div>
-    </div>
+        <script>
+            const employeeBtn = document.getElementById("employee-button");
+            const employerBtn = document.getElementById("employer-button");
+            const accountType = document.getElementById("account-type");
+            const employeeFields = document.getElementById("employee-fields");
+            const employerFields = document.getElementById("employer-fields");
 
-    <script>
-        const employeeBtn = document.getElementById("employee-button");
-        const employerBtn = document.getElementById("employer-button");
-        const accountType = document.getElementById("account-type");
-        const employeeFields = document.getElementById("employee-fields");
-        const employerFields = document.getElementById("employer-fields");
+            employeeBtn.addEventListener("click", function () {
+                employeeBtn.classList.add("active");
+                employerBtn.classList.remove("active");
+                accountType.value = "employee";
+                employeeFields.style.display = "block";
+                employerFields.style.display = "none";
+            });
 
-        employeeBtn.addEventListener("click", function () {
-            employeeBtn.classList.add("active");
-            employerBtn.classList.remove("active");
-            accountType.value = "employee";
-            employeeFields.style.display = "block";
-            employerFields.style.display = "none";
+            employerBtn.addEventListener("click", function () {
+                employerBtn.classList.add("active");
+                employeeBtn.classList.remove("active");
+                accountType.value = "employer";
+                employeeFields.style.display = "none";
+                employerFields.style.display = "block";
+            });
+
+            document.getElementById('signup-form').addEventListener('submit', function(e) {
+                e.preventDefault();  // Prevent the default form submission
+
+                // Get form data
+                const formData = new FormData(this);
+                const data = {};
+                formData.forEach((value, key) => { data[key] = value });
+
+                // Send the data using Fetch API
+                fetch('/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.message) {
+                        window.location.href = '/feed';  // Example: Redirect to the dashboard
+                    } else if (result.error) {
+                        alert(result.error);  // Show error message
+                    }
+                })
+                .catch(error => {
+                    alert('An error occurred. Please try again later.');
+                });
         });
-
-        employerBtn.addEventListener("click", function () {
-            employerBtn.classList.add("active");
-            employeeBtn.classList.remove("active");
-            accountType.value = "employer";
-            employeeFields.style.display = "none";
-            employerFields.style.display = "block";
-        });
-    </script>
-</body>
-</html>
+        </script>
+    </body>
+    </html>

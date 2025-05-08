@@ -6,7 +6,10 @@ CREATE TABLE `Users` (
   `password_hash` VARCHAR(255) NOT NULL,
   `full_name` VARCHAR(255) NOT NULL,
   `user_type` ENUM ('employee', 'employer', 'admin') NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `is_active` BOOLEAN DEFAULT TRUE,
+  `is_authenticated` BOOLEAN DEFAULT TRUE,
+  `is_anonymous` BOOLEAN DEFAULT False
 );
 
 CREATE TABLE `Employees` (

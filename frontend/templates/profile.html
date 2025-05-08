@@ -37,8 +37,8 @@
                     <div class="profile-pic"><img src="{{ url_for('static', filename='media/pfp.jpg')}}"></div>
                     <div class="text-info">
                         <div class="text-info-1">
-                            <h1 class="name">Werner Heisenberg</h1>
-                            <p class = "email">Heisenberg@lospolloshermanos.mx</p>
+                            <h1 class="name">{{ session.get('user_name', 'Default Name') }}</h1>
+                            <p class = "email">{{ session.get('user_email', 'Default email') }}</p>
                         </div>
                         <div class="text-info-2">
                             <div class = "stats">
