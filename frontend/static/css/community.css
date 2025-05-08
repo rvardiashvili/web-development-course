@@ -1,0 +1,122 @@
+    .profile-card {
+        width: 100%;
+        margin: 0 auto;
+        border-radius: 15px;
+        text-align: center;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .profile-image-wrapper {  
+        position: relative;
+        width: 100%;
+        height: 300px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .profile-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center; /* Ensures the central part of image is shown */
+        display: block;
+      }
+
+    
+    .profile-overlay {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: linear-gradient(to top,
+        rgba(0, 0, 0, 0.70) 0%,
+
+        rgba(0, 0, 0, 0) 100%);
+        color: white;
+        padding: 20px 10px 20px;
+        text-align: left;
+        border-radius: 10px;
+    }
+
+        
+    .profile-overlay h2 {
+        margin: 0;
+        font-size: 28px;
+    }
+    
+    .profile-overlay p {
+        margin: 5px 0 0;
+        font-size: 16px;
+        color: #ddd;
+    }
+    
+    .settings-icon {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 22px;
+        cursor: pointer;
+        color: white;
+        padding: 6px;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .settings-icon:hover {
+        color: rgba(0,0,0,0.7);
+    }
+
+    .back {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 22px;
+        cursor: pointer;
+        color: white;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        text-decoration: none;
+    }
+    
+    .back:hover {
+        color: rgba(0,0,0,0.7);
+    }
+    
+    .community-meta {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        padding: 10px 0;
+        border-top: 1px solid #eee;
+        font-size: 16px;
+        background-color: white;
+        flex-wrap: wrap;
+    }
+    
+    .meta-item {
+        color: #333;
+        font-weight: 500;
+        padding: 5px 10px;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    
+    .meta-item strong {
+        font-size: 17px;
+        color: black;
+        margin-left: 5px;
+    }
+    
+    .meta-item:hover {
+        color: #007bff;
+        cursor: pointer;
+    }
+    

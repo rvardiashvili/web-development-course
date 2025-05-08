@@ -37,6 +37,8 @@
     background: none;
     font-size: large;
     font-weight: bold;
+}:focus{
+    outline: none;
 }
 
 .posts-main{

@@ -2,13 +2,41 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 60px;
     padding: 10px 10px;
 }
 
-.left-bar {
+.left-bar{
     position: fixed;
 }
+
+.group{
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: left;
+    align-items: center;
+    font-size: medium;
+    font-weight: normal;
+    overflow: hidden;
+}
+
+.group:hover{
+    background-color: #797979;
+    color: white;
+}
+
+.main-feed {
+    width: 80vw;
+    background-color: #ffffff;
+    border-radius: 30px;
+    padding: 15px;
+    margin-left: 17vw;
+}
+
 
 .left-bar-upper {
     width: 15vw;

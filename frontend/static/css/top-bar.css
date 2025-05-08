@@ -3,14 +3,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #e0e0e0; /* slightly deeper for contrast */
+  background-color: #e0e0e0;
   border-radius: 40px;
   gap: 30px;
   height: 50px;
+  width: 95vw;
   padding: 0 20px;
-  position: relative;
+
+  position: fixed;
+  top: 10px; /* or 0 if you want it right at the top */
+  left: 50%;
+  transform: translateX(-50%);
+  
   z-index: 1000;
 }
+
 
 /* Left section (only present when logged in) */
 .topnav .nav-left {

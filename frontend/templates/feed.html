@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/feed.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">
+
+
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -23,16 +28,16 @@
             <div class="left-bar-upper">
                 <div class="profile-box">
                     <div class="user-main">
-                        <div class="profile-pic"><img src="{{ url_for('static', filename='media/pfp.jpg')}}"></div>
-                        <hl class="username">@WHeisenberg</hl>
+                        <div class="profile-pic"><img src="{{ url_for('static', filename=session.get('profile_pic', 'media/default/pfp.jpg'))}}"></div>
+                        <hl class="username">{{ session.get('user_name', 'Default Name') }}</hl>
                     </div>
                     <div class="text-info-stats">
-                        <p>AI matches: ###</p>
-                        <p>Profession</p>
+                        <p>AI matches: {{ session.get('matches', '###') }}</p>
+                        <p>{{ session.get('profession', 'Default profession') }}</p>
                     </div>
                     <div class="text-info-personal">
-                        <span>Location</span>
-                        <span>+00 000 000 000</span>
+                        <span>{{ session.get('location', 'Default location') }}</span>
+                        <span>{{ session.get('number', 'Default number') }}</span>
                     </div>
                 </div>
             </div>
@@ -40,19 +45,54 @@
                 <div class="left-bar-lower">
                     <div class="community-box">
                         <div class="community-sign">
-                            <div class="community-logo"><img src="{{ url_for('static', filename='media/pfp.jpg')}}"></div>
+                            <i class="fa-solid fa-people-group" title="Communities"></i>
                             <hl class="community-name">Communities</hl>
                         </div>
                         <div class="community-groups">
-                            <div class="community-group-logo"><img src="{{ url_for('static', filename='media/pfp.jpg')}}"></div>
-                            <hl class="group-name">Community A</hl>
+                            <a class="group">
+                                <div class="community-group-logo">
+                                    <img src="{{ url_for('static', filename=session.get('profile_pic', 'media/default/community.png')) }}">
+                                </div>
+                                <hl class="group-name">Community A</hl>
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+
+        </div>
+        <div class="main-feed">
+            {% include 'components/posts.html' %}
         </div>
     </div>
-    <div class="main-feed"></div>
-    </div>
+    <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
+    <script type="module">
+        import { initPostTypeButtons } from "{{ url_for('static', filename='js/posts.js') }}";
+        
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const communityLink = document.querySelector('.group');
+            const mainFeed = document.querySelector('.main-feed');
+        
+            communityLink.addEventListener('click', function (e) {
+                e.preventDefault();
+        
+                fetch("{{ url_for('feed.community') }}")
+                    .then(response => response.text())
+                    .then(html => {
+                        mainFeed.innerHTML = html;
+                        initPostTypeButtons(); // <-- re-bind listeners
+                        const back = document.querySelector('.back');
+                        back.addEventListener('click', function () {
+                            window.location.href = '/feed';
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Failed to load community content:', err);
+                    });
+            });
+        });
+        </script>
+        
 
 </html>
