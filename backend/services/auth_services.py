@@ -42,9 +42,10 @@ def signup(email, password, full_name, user_type, extra_data={}):
             db.session.add(employer)
 
         db.session.commit()
-
         # Optionally auto-login the user after successful signup
         login_user(new_user)
+        session['user_name'] = user.full_name
+        session['user_email'] = user.email
 
         return jsonify({'message': 'Signup successful', 'user_id': new_user.user_id}), 201
 
