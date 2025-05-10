@@ -5,12 +5,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}"> {# We will add styles for languages here #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/experience-tab.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_settings_popup.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/experience-tab.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/details_popup.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
@@ -34,8 +34,8 @@
                         <p class="username">@{{ viewed_user.username }}</p>
                         <div class="text-info-2">
                             <div class = "stats">
-                                <span>followers: ###</span>
-                                <span>AI matches: ###</span>
+                                <span id="followers">Followers: <a id="followers-btn" href="#">###</a></span> {# Added id for JS listener #}
+                                <span id="following">Following: <a id="following-btn" href="#">###</a></span> {# Added id for JS listener #}
                             </div>
                         </div>
                         {% if viewed_user.user_type == 'employee' %}
@@ -149,7 +149,7 @@
                     <div id="bio-messages"></div>
                 </section>
 
-                 <section id="work-experience-settings" class=".settings-section">
+                 <section id="work-experience-settings">
                     <h2>Work Experience</h2>
                     <div class="settings-entries-list" id="work-experience-list">
                         </div>
@@ -181,7 +181,7 @@
                     <div class="settings-messages"></div>
                 </section>
 
-                 <section id="projects-settings"  class=".settings-section">
+                 <section id="projects-settings">
                     <h2>Projects</h2>
                      <div class="settings-entries-list" id="projects-list">
                         </div>
@@ -207,7 +207,7 @@
                     <div class="settings-messages"></div>
                 </section>
 
-                 <section id="education-settings"  class=".settings-section">
+                 <section id="education-settings">
                     <h2>Education</h2>
                      <div class="settings-entries-list" id="education-list">
                         </div>
@@ -499,7 +499,7 @@
         </div>
 
 
-        <div id="details-popup" class="modal">
+        <div id="details-popup" class="modal"> {# Added inline style to hide by default #}
             <div class="modal-content">
                 <span class="close-button">&times;</span>
                 <h2 id="details-popup-title"></h2>

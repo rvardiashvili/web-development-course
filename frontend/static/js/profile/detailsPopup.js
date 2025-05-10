@@ -68,7 +68,7 @@ export async function showDetailsPopup(entryId, section, fullEntriesList = null)
     } else if (section === 'education' && profileData.education) {
         entries = profileData.education;
         title = 'Education Details';
-    } else if ((section === 'skills' || section === 'interests') && profileData.employee_details) {
+    } else if ((section === 'skills' || section === 'interests' || section === "follow-list") && profileData.employee_details) {
         // For skills and interests, the full list is passed when clicking "Show All"
         if (fullEntriesList) {
             entries = fullEntriesList;
@@ -131,13 +131,31 @@ export async function showDetailsPopup(entryId, section, fullEntriesList = null)
         } else {
              contentHTML = '<p>List view not available for this section.</p>';
         }
+        if(section === 'follow-list') {
+        contentHTML = entries.map(item => {
+            if (item && item.username) {
+                // Generate HTML structure for profile pic, full name, and username, wrapped in a link
+                return `
+                    <div class='${section}-entry'>
+                        <a href="/profile/${item.username}" class="user-list-link">
+                            <img src="${item.profile_picture || '/static/media/default/pfp.jpg'}" alt="${item.username}'s profile picture" class="user-list-pfp">
+                            <div class="user-text-info">
+                                <p class="user-full-name">${item.full_name || item.username}</p>
+                                <p class="user-username">@${item.username}</p>
+                            </div>
+                        </a>
+                    </div>
+                `;
+            } 
+        }).join('');
+        }
     }
 
     contentHTML = `<div class='${section}-list'>${contentHTML}</div>`;  
     if (detailsPopupContent) detailsPopupContent.innerHTML = contentHTML;
 
     // Open the modal
-    detailsPopup.style.display = 'block';
+    detailsPopup.classList.add('show');
 }
 
 /**
@@ -145,7 +163,7 @@ export async function showDetailsPopup(entryId, section, fullEntriesList = null)
  */
 export function hideDetailsPopup() {
     if (detailsPopup) {
-        detailsPopup.style.display = 'none';
+        detailsPopup.classList.remove('show');
     }
 }
 

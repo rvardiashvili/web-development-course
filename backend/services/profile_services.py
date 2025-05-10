@@ -1,15 +1,15 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import current_app # Use current_app to access config
+from flask import current_app 
 from database.database import db
-from models.users import Users, UserType # Import UserType if defined in users.py
-from models.employee.employees import Employee # Import Employee model
+from models.users import Users, UserType, Followers 
+from models.employee.employees import Employee 
 from models.employee.work_experience import WorkExperience
 from models.employee.project import Project
 from models.employee.education import Education
 from config import UPLOAD_FOLDER, UPLOAD_PATH, ALLOWED_EXTENSIONS
 from datetime import datetime
-from sqlalchemy.types import JSON # Import JSON type for user_flags
+from sqlalchemy.types import JSON 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -20,15 +20,13 @@ def upload_profile_picture(user, file):
         return {'status': 'error', 'message': 'Invalid file type or no file selected.'}
 
     filename = secure_filename(file.filename)
-    # Ensure the directory exists (done in config, but good to be safe)
+
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     filepath = os.path.join(UPLOAD_FOLDER, f"{user.user_id}_{filename}")
     relative_path = os.path.join(UPLOAD_PATH, f"{user.user_id}_{filename}")
 
     try:
-        # Delete old picture if it exists and is not the default
         if user.profile_picture and user.profile_picture != '/static/media/default/pfp.jpg':
-             # Use current_app.root_path to get the absolute path to the static folder
              old_filepath = os.path.join(current_app.root_path, user.profile_picture.lstrip('/'))
              if os.path.exists(old_filepath):
                  os.remove(old_filepath)
@@ -47,13 +45,12 @@ def delete_profile_picture(user):
     if not user.profile_picture or user.profile_picture == '/static/media/default/pfp.jpg':
         return {'status': 'info', 'message': 'No profile picture to delete.'}
 
-    # Use current_app.root_path to get the absolute path to the static folder
     filepath = os.path.join(current_app.root_path, user.profile_picture.lstrip('/'))
 
     try:
         if os.path.exists(filepath):
             os.remove(filepath)
-        user.profile_picture = None # Set to None or the default path
+        user.profile_picture = None
         db.session.commit()
         return {'status': 'success', 'message': 'Profile picture deleted successfully!', 'profile_picture_url': '/static/media/default/pfp.jpg'}
     except Exception as e:
@@ -75,13 +72,10 @@ def update_user_bio(user, bio_text):
 def add_work_experience(user_id, data):
     """Adds a new work experience entry for an employee."""
     try:
-        # Find the employee record for the user
-        # Assuming Employee model has a user_id foreign key
         employee = Employee.query.filter_by(user_id=user_id).first()
         if not employee:
              return {'status': 'error', 'message': 'Employee profile not found.'}
 
-        # Parse dates
         try:
             start_date = datetime.strptime(data.get('start_date'), '%Y-%m-%d').date()
             end_date = datetime.strptime(data.get('end_date'), '%Y-%m-%d').date() if data.get('end_date') else None
@@ -90,7 +84,7 @@ def add_work_experience(user_id, data):
 
         new_experience = WorkExperience(
             user_id=user_id,
-            job_title=data.get('title'), # Use 'title' as per frontend form name
+            job_title=data.get('title'), 
             company=data.get('company'),
             location=data.get('location'),
             start_date=start_date,
@@ -473,3 +467,46 @@ def mark_wizard_shown(user_id):
     """Marks the profile wizard as shown for a user using the user_flags JSON."""
     return update_user_flag(user_id, 'wizard_shown', True)
 
+def follow_user(current_user_id, target_user_id):
+    try:
+        user = Users.query.get(current_user_id)
+        if not user:
+            return {'status': 'error', 'message': 'Current user not found.'}
+        target_user = Users.query.get(target_user_id)
+        if not target_user:
+            return {'status': 'error', 'message': 'Target user not found.'}
+        if current_user_id == target_user_id:
+            return {'status': 'error', 'message': 'Cannot follow yourself.'}
+        print(Followers.query.filter_by(follower_id=current_user_id, followed_id=target_user_id).all())
+        exists = Followers.query.filter_by(follower_id=current_user_id, followed_id=target_user_id).first()
+        if exists:
+            return unfollow_user(current_user_id, target_user_id)
+        newFollower = Followers(follower_id=current_user_id, followed_id=target_user_id)
+        db.session.add(newFollower)
+        db.session.commit()
+        return {'status':'success', 'message': 'User followed successfully.', 'following': True}
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error following user {target_user_id}: {e}")
+        return {'status': 'error', 'message': f'Error following user: {e}'}
+
+def unfollow_user(current_user_id, target_user_id):
+    follow = Followers.query.filter_by(follower_id=current_user_id, followed_id=target_user_id).first()
+    if follow:
+        db.session.delete(follow)
+        db.session.commit()
+        return {'status':'success', 'message': 'User unfollowed successfully.', 'following': False}
+    else:
+        return {'status': 'error', 'message': 'User is not currently following the target user.'}
+                
+def get_follows(user_id):
+    try:
+        follows_enteries = Followers.query.filter_by(follower_id=user_id).all()
+        followed_by_enteries = Followers.query.filter_by(followed_id=user_id).all()
+
+        followers = [following.followed_id for following in follows_enteries]
+        following = [followed_by.follower_id for followed_by in followed_by_enteries]
+        return {'status': 'success', 'message': 'Followers loaded successfully.', 'followers': followers, 'following': following   }
+    except Exception as e:
+        current_app.logger.error(f"Error fetching followers for user {user_id}: {e}")
+        return {'status': 'error', 'message': f'Error fetching followers: {e}'}

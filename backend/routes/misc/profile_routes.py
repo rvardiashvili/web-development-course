@@ -265,3 +265,30 @@ def get_user_profile_route(user_id):
         # Return error status and message if user not found or service failed
         status_code = 404 if profile_data and 'not found' in profile_data.get('message', '').lower() else 500
         return jsonify(profile_data or {'status': 'error', 'message': 'Failed to fetch profile data.'}), status_code
+
+@profile_api_bp.route('/follow/<int:current_user_id>/<int:target_user_id>', methods=['GET'])
+@login_required
+def follow_user_route(current_user_id, target_user_id):
+    if current_user_id != target_user_id:
+        result = profile_services.follow_user(current_user_id, target_user_id)
+
+        if result['status'] == 'success':
+            return jsonify(result), 200
+        else:
+            status_code = 404 if 'not found' in result.get('message', '').lower() else 500
+            return jsonify(result), status_code
+
+    return jsonify({'status': 'error', 'message': 'Cannot follow yourself.'}), 400
+
+@profile_api_bp.route('/follows/<int:user_id>', methods=['GET'])
+def get_follows_route(user_id):
+    follows_data = profile_services.get_follows(user_id)
+
+    if follows_data and follows_data.get('status') =='success':
+        return jsonify(follows_data), 200
+    else:
+        # Return error status and message if user not found or service failed
+        status_code = 404 if follows_data and 'not found' in follows_data.get('message', '').lower() else 500
+        return jsonify(follows_data or {'status': 'error', 'message': 'Failed to fetch follow data.'}), status_code
+
+

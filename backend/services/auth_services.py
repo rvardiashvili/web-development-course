@@ -132,11 +132,11 @@ def login(email, password):
             login_user(user)
             session['user_name'] = user.full_name
             session['user_email'] = user.email
-            set_user_session(user, user.user_type.name)
+            set_user_session(user, user.user_type)
             return jsonify({
                 'message': 'Login successful',
                 'user_id': user.user_id,
-                'user_type': user.user_type.name
+                'user_type': user.user_type
             }), 200
         else:
             return jsonify({'error': 'Invalid password'}), 401

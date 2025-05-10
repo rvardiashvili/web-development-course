@@ -17,7 +17,7 @@ import { setupProfilePicListeners } from './profilePicListeners.js'; // Forms ar
 import { setupWizardListeners, showWizardStep } from './wizardLogic.js'; // Import wizard setup and step function
 import { setupSettingsFormListeners } from './settingsFormListeners.js'; // Forms are handled internally or via lists passed in setup
 import { renderLanguages } from './languageDisplay.js';
-
+import { setFollowListener, toggleFollowStatus, fetchAndRenderFollows } from './follow.js';
 
 // --- DOM References (Top Level - for elements expected to be present early) ---
 const editProfileButton = document.getElementById('edit-profile-button');
@@ -33,9 +33,13 @@ const currentUserType = document.body.dataset.currentUserType;
 // --- Initial Setup on DOM Ready ---
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM fully loaded and parsed. profileApp.js executing.');
-
     // --- Collect Lists of Forms and Message Containers AFTER DOMContentLoaded ---
     // Get fresh references to all forms and message containers here
+    setFollowListener(currentUserId, viewedUserId, document.getElementById('followers-btn'), document.getElementById('following-btn'));
+    fetchAndRenderFollows(viewedUserId,document.getElementById('followers-btn'), document.getElementById('following-btn'))
+    if(currentUserId != viewedUserId){
+        toggleFollowStatus(viewedUserId, currentUserId, document.getElementById('followers-btn'), document.getElementById('following-btn'));
+    }
     const allFormsToHide = [
         document.getElementById('edit-bio-form'), // Settings bio form
         document.getElementById('edit-skills-form'), // Settings skills form

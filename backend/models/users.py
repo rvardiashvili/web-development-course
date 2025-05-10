@@ -10,10 +10,11 @@ from sqlalchemy.types import JSON # Import JSON type
 # NO imports of Employee, Employer, Post, GroupMembership, EmployerAccount here
 
 # Helper table for Followers (Many-to-Many) - Can be defined here or in its own file
-Followers = db.Table('Followers',
-    db.Column('follower_id', db.Integer, sa.ForeignKey('Users.user_id'), primary_key=True),
-    db.Column('followed_id', db.Integer, sa.ForeignKey('Users.user_id'), primary_key=True)
-)
+class Followers(db.Model):
+    __tablename__ = 'Followers'
+    follower_id = db.Column(db.Integer, sa.ForeignKey('Users.user_id'), primary_key=True)
+    followed_id =  db.Column(db.Integer, sa.ForeignKey('Users.user_id'), primary_key=True)
+
 
 class UserType(db.Enum):
     employee = 'employee'

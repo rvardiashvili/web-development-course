@@ -238,3 +238,39 @@
 .bio-section .languages:empty {
     display: none;
 }
+
+/* profile.css */
+
+/* Add or update styles for the .stats section */
+.stats {
+    display: flex; /* Arrange stats horizontally */
+    gap: 20px; /* Space between stats */
+    margin-top: 15px; /* Space above the stats */
+    font-size: 1rem; /* Adjust font size as needed */
+    color: var(--text-color); /* Use your theme's text color */
+}
+
+.stats span {
+    /* Style for each stat item */
+    display: flex; /* Align text and link */
+    align-items: center;
+}
+
+.stats a {
+    /* Style for the clickable number/link */
+    color: var(--link-color); /* Use your theme's link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Make the number stand out */
+    margin-left: 5px; /* Space between label and number */
+    cursor: pointer; /* Indicate it's clickable */
+    transition: color 0.2s ease; /* Smooth color transition on hover */
+}
+
+.stats a:hover {
+    color: var(--link-hover-color); /* Change color on hover */
+    text-decoration: underline; /* Add underline on hover */
+}
+
+/* Add other profile-specific styles below */
+/* ... existing styles ... */
+

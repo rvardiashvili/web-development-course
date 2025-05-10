@@ -1,0 +1,247 @@
+/* details_popup.css */
+
+/* Styles for the generic details popup modal overlay */
+/* Target only the specific details popup modal */
+#details-popup.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100vw; /* Full width */
+    height: 100vh; /* Full height */
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: rgba(0,0,0,0.6); /* Black with opacity for the overlay */
+    backdrop-filter: blur(5px); /* Optional: blur background */
+    -webkit-backdrop-filter: blur(5px); /* Safari support */
+    /* Removed padding-top here to allow vertical centering */
+    /* Use flexbox to center the modal content vertically and horizontally */
+
+}
+
+#details-popup.modal.show{
+    display: block;
+
+}
+
+#details-popup-content{
+    min-width: 50%;
+}
+
+/* Styles for the modal content box */
+/* Target only the content within the details popup modal */
+
+
+/* Keyframes for fade-in animation (can remain global or be nested if preferred) */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Target elements within the details popup content */
+#details-popup .modal-content h2 {
+    margin-top: 0;
+    color: var(--heading-color, #1a1a1a); /* Use a heading color from your theme, or default */
+    border-bottom: 1px solid var(--border-color-light, #eee); /* Separator line */
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 1.5rem; /* Adjust heading size */
+}
+
+#details-popup .modal-content p {
+    margin-bottom: 10px; /* Space between paragraphs */
+    line-height: 1.6; /* Improve readability */
+    font-size: 1rem;
+}
+
+#details-popup .modal-content strong {
+    color: var(--accent-color, #007bff); /* Highlight labels */
+    font-weight: bold;
+}
+
+#details-popup .modal-content a {
+    color: var(--link-color, #007bff); /* Style links within the modal */
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+#details-popup .modal-content a:hover {
+    text-decoration: underline;
+    color: var(--link-hover-color, #0056b3);
+}
+
+/* Style for the close button */
+/* Target the close button specifically within the details popup */
+#details-popup .close-button {
+    color: var(--text-color-dark, #333); /* Color of the close button */
+    position: absolute;
+    top: 15px; /* Adjusted position */
+    right: 15px; /* Adjusted position */
+    font-size: 24px; /* Adjusted size */
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+#details-popup .close-button:hover,
+#details-popup .close-button:focus {
+    color: var(--accent-color, #007bff); /* Change color on hover/focus */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styles for the list items when showing followers/following */
+/* Target list items specifically within the details popup */
+#details-popup .follower-entry,
+#details-popup .following-entry {
+    padding: 10px 0; /* Increased padding */
+    border-bottom: 1px solid var(--border-color-light, #eee); /* Light separator */
+    display: flex; /* Use flexbox for alignment if needed */
+    align-items: center;
+}
+
+#details-popup .follower-entry:last-child,
+#details-popup .following-entry:last-child {
+    border-bottom: none; /* No border for the last item */
+}
+
+#details-popup .follower-entry a,
+#details-popup .following-entry a {
+    font-weight: normal; /* Username link doesn't need to be bold */
+    color: var(--link-color, #007bff); /* Link color for usernames */
+    text-decoration: none;
+    flex-grow: 1; /* Allow link to take available space if using flex */
+}
+
+#details-popup .follower-entry a:hover,
+#details-popup .following-entry a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Style for the "Show All" button in lists */
+/* Target the button specifically within the details popup */
+#details-popup .show-all-button {
+    display: block; /* Make button take full width */
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: var(--button-background-color, #f0f0f0); /* Use a button background */
+    color: var(--button-text-color, #333); /* Use a button text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+#details-popup .show-all-button:hover {
+    background-color: var(--button-hover-background-color, #e0e0e0); /* Hover effect */
+}
+
+/* Add other details popup specific styles below */
+/* ... existing styles ... */
+/* details_popup.css */
+
+/* ... existing styles for .modal and .modal-content ... */
+
+/* Styles for the container of each user entry in the list */
+/* Target these specifically within the details popup */
+#details-popup .follower-entry,
+#details-popup .following-entry,
+#details-popup .follow-list-entry { /* Include your existing follow-list class */
+    padding: 10px 0; /* Increased padding */
+    border-bottom: 1px solid var(--border-color-light, #eee); /* Light separator */
+    /* No flexbox here, flexbox will be on the link/content div inside */
+}
+
+#details-popup .follower-entry:last-child,
+#details-popup .following-entry:last-child,
+#details-popup .follow-list-entry:last-child { /* Include your existing follow-list class */
+    border-bottom: none; /* No border for the last item */
+}
+
+/* Style for the link wrapping the user entry */
+#details-popup .user-list-link {
+    display: flex; /* Use flexbox for the link content */
+    align-items: center; /* Vertically center items within the link */
+    text-decoration: none; /* Remove default link underline */
+    color: inherit; /* Inherit text color from parent */
+    width: 100%; /* Make the link take full width */
+}
+
+/* Style for the content div inside the link (profile pic and text) */
+#details-popup .follow-list-list {
+    display: flex; /* Use flexbox for the profile pic and text */
+    align-items: center; /* Vertically center items */
+    gap: 10px; /* Space between profile pic and text */
+    width: 100%; /* Ensure content takes full width */
+}
+
+#details-popup .follow-list-entry{
+    display: flex;
+    width: 100%; /* Make the link take full width */
+    border-radius: 50px;
+    padding: 10px 10px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    justify-content: center;
+    align-items: center;
+    align-items: center;
+    padding: 5px;
+}
+
+#details-popup .follow-list-entry:hover{
+    transform: scale(1.1);
+}
+
+
+/* Style for the profile picture in the list */
+#details-popup .user-list-pfp {
+    width: 80px; /* Adjust size as needed */
+    height: 80px; /* Adjust size as needed */
+    border-radius: 50%; /* Make it round */
+    object-fit: cover; /* Cover the area without distorting aspect ratio */
+    border: 1px solid var(--border-color-light, #eee); /* Optional: light border */
+    flex-shrink: 0; /* Prevent shrinking */
+
+}
+
+/* Style for the text container (full name and username) */
+#details-popup .user-text-info {
+    display: flex;
+    flex-direction: column; /* Stack full name and username vertically */
+    justify-content: center; /* Vertically center text block */
+    flex-grow: 1; /* Allow text info to take available space */
+    align-items: flex-start;
+    padding: 4px;
+}
+
+.follow-list-entry{
+
+
+}
+
+.follow-list-list{
+    width: 100%;
+}
+
+/* Style for the full name */
+#details-popup .modal-content .user-full-name {
+    margin-bottom: 0; /* Remove default paragraph margin */
+    font-weight: bold; /* Make full name bold */
+    color: var(--text-color-dark, #333); /* Ensure dark color for full name */
+    font-size: 1rem; /* Adjust font size */
+    line-height: 1.2; /* Adjust line height */
+    padding: 0;
+}
+
+/* Style for the username */
+#details-popup .user-username {
+    margin-top: 0; /* Remove default paragraph margin */
+    font-size: 0.85rem; /* Smaller font size for username */
+    color: var(--text-color-light, #666); /* Gray color for username */
+    padding: 0;
+}
+
+/* ... rest of the details_popup.css styles ... */
