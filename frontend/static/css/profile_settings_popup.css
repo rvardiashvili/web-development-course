@@ -60,6 +60,7 @@ body::-webkit-scrollbar-track {
     position: relative; /* For close button positioning and nested popups */
     font-family: Arial, sans-serif;
     /* --- Styles for making the content scrollable --- */
+    overflow-x: hidden;
     overflow-y: auto; /* Enable vertical scrolling for THIS container if content overflows */
     max-height: 90vh; /* Limit the maximum height to enable scrolling */
     /* --- End of scrollable styles --- */
