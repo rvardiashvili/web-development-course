@@ -124,7 +124,7 @@ export async function showDetailsPopup(entryId, section, fullEntriesList = null)
         // Display the full list (used for Skills and Interests "Show All")
         if (section === 'skills' || section === 'interests') {
             if (entries.length > 0) {
-                contentHTML = '<ul>' + entries.map(item => `<li>${item}</li>`).join('') + '</ul>';
+                contentHTML =  entries.map(item => `<div class='${section}-entry'><p>${item}</p></div>`).join('');
             } else {
                 contentHTML = `<p>No ${section.replace('-', ' ')} listed.</p>`;
             }
@@ -133,7 +133,7 @@ export async function showDetailsPopup(entryId, section, fullEntriesList = null)
         }
     }
 
-
+    contentHTML = `<div class='${section}-list'>${contentHTML}</div>`;  
     if (detailsPopupContent) detailsPopupContent.innerHTML = contentHTML;
 
     // Open the modal

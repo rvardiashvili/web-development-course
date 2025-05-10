@@ -2,7 +2,7 @@
 
 import { showMessage, hideAllAddEditForms, clearMessageContainers, renderEntries } from './utils.js'; // Ensure clearMessageContainers is imported
 import { getProfileDataCache } from './detailsPopup.js'; // Import the function to get the cached profile data
-
+import { setupBioListeners } from './bio.js';
 
 // Get references to elements for Work Experience, Projects, and Education sections
 // These are used for finding message containers and lists (declared at top level)
@@ -460,9 +460,6 @@ export async function saveEntry(form, messages, sectionId, fetchModalDataCallbac
 export function setupExperienceListeners(fetchMainPageDataCallback, fetchModalDataCallback) {
 
     // Wait for the DOM to be fully loaded before setting up listeners that interact with DOM elements
-    document.addEventListener('DOMContentLoaded', () => {
-
-        console.log('DOMContentLoaded fired in experienceSections.js');
 
         // Event listeners for the "Add New" buttons in the settings modal
         addButtons.forEach(button => {
@@ -569,7 +566,7 @@ export function setupExperienceListeners(fetchMainPageDataCallback, fetchModalDa
         console.log('  Projects Form:', projectsForm);
         console.log('  Education Form:', educationForm);
 
-
+        setupBioListeners()
         if (workExperienceForm && workExperienceMessageContainer) {
             console.log('Attaching submit listener to Work Experience form:', workExperienceForm); // Log attachment
             // Primary submit listener
@@ -653,7 +650,7 @@ export function setupExperienceListeners(fetchMainPageDataCallback, fetchModalDa
 
         // Note: Edit and Delete button listeners are added dynamically in renderEntries
         // They call the editEntry and deleteEntry functions defined above.
-    });
+
 }
 
 // Export functions for use in other modules

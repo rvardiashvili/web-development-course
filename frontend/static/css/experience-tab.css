@@ -364,3 +364,10 @@
     flex-shrink: 0; /* Prevent shrinking */
 }
 
+.skills-entery:hover,
+.interests-entery:hover,
+.education-entery:hover,
+.projects-entery:hover,
+.work-experience-entery:hover{
+    transform: scale(1.1);
+}

@@ -38,7 +38,6 @@ const currentUserType = document.body.dataset.currentUserType;
 export function setupSettingsFormListeners() {
 
     // Wait for the DOM to be fully loaded before setting up listeners
-    document.addEventListener('DOMContentLoaded', () => {
 
         // Event listener for Bio form submission
         if (editBioForm && bioMessageContainer) {
@@ -212,7 +211,6 @@ export function setupSettingsFormListeners() {
         } else {
              console.warn('Languages settings form not found.');
         }
-    });
 }
 
 // Export forms for use in profileApp.js (for hideAllAddEditForms)
