@@ -1,7 +1,7 @@
 <div class="dropdown">
     <a href="#" class="profile-btn" id="profileDropdownBtn"><i class="fa-solid fa-user"></i></a>
     <div class="dropdown-content" id="profileDropdownContent">
-        <a href="{{ url_for('profile.profile') }}">
+        <a href="{{ url_for('profile.profile', username=current_user.username) }}">
           <i class="fa-solid fa-id-badge"></i> Profile
         </a>
         <a href="#">

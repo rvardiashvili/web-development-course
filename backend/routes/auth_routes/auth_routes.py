@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template
-from services.auth_services import signup, login, logout
+from services.auth_services import signup, login, logout, username_exists, email_exists
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -10,6 +10,7 @@ def signup_route():
     password = data.get('password')
     full_name = data.get('full_name')
     user_type = data.get('user_type')
+    username = data.get('username')
     extra_data = {
         'date_of_birth': data.get('date_of_birth'),
         'city_id': data.get('city_id'),
@@ -24,7 +25,7 @@ def signup_route():
     }
     print(extra_data)
 
-    return signup(email, password, full_name, user_type, extra_data)
+    return signup(email, password, full_name, username, user_type, extra_data)
 
 @auth_bp.route('/login', methods=['POST'])
 def login_route():
@@ -36,3 +37,14 @@ def login_route():
 @auth_bp.route('/logout')
 def logout_route():
     return logout()
+
+@auth_bp.route('/checkusername', methods=['GET'])
+def check_username():
+    username = request.args.get('username')
+    return {'exists': username_exists(username)}
+
+#check email exists
+@auth_bp.route('/checkemail', methods=['GET'])
+def check_email():
+    email = request.args.get('email')
+    return {'exists': email_exists(email)}

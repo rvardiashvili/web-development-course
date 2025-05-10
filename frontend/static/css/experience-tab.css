@@ -1,4 +1,6 @@
-.experience-block{
+/* experience-tab.css */
+
+.experience-block {
     border: solid black 5px;
     border-radius: 70px;
     padding: 20px;
@@ -12,8 +14,7 @@
     flex-direction: column;
 }
 
-
-.inner-block{
+.inner-block {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -21,31 +22,39 @@
     width: 97%;
 }
 
-.experience-tab{
+.experience-tab {
     width: 97%;
     height: 70px;
     background-color: #d9d9d9;
     text-align: center;
     border-radius: 50px;
     margin-bottom: 10px;
-    align-items: center;    
+    align-items: center;
     display: flex;
     justify-content: center;
     font-weight: bold;
     font-size: x-large;
     cursor: pointer;
+    transition: background-color 0.3s ease; /* Add hover effect */
 }
 
-.drop-down{
+.experience-tab:hover {
+    background-color: #cccccc;
+}
+
+.drop-down {
     cursor: pointer;
     transform: scale(1.8);
+    transition: transform 0.3s ease; /* Smooth rotation */
 }
 
-.tittle{
-    margin-left: 20px
+.tittle {
+    margin-left: 20px;
+    align-self: flex-start; /* Align title to the start */
+    margin-bottom: 10px; /* Add space below title */
 }
 
-.experience-tab-expanded{
+.experience-tab-expanded {
     width: 97%;
     height: fit-content;
     background-color: #d9d9d9;
@@ -58,10 +67,11 @@
     flex-direction: column;
     font-weight: bold;
     font-size: x-large;
-    cursor: pointer;
+    /* cursor: pointer; Removed cursor from container, added to entries */
     padding: 10px;
 }
-.experience-list{
+
+.experience-list {
     display: flex;
     flex-direction: row;
     height: fit-content;
@@ -70,38 +80,45 @@
     padding: 20px 30px;
     width: 90%;
     overflow-x: auto;
-
+    /* Removed text-align: center; from list container */
 }
 
-.experience-entery{
+/* Styling for individual entry divs */
+.work-experience-entery,
+.projects-entery,
+.education-entery,
+.skills-entery,
+.interests-entery {
+    background-color: #fcfcfccc;
+    border-radius: 50px;
+    flex-shrink: 0;
+    display: flex; /* Use flexbox for centering/alignment */
+    flex-direction: column; /* Stack content vertically by default */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    /* Adjusted padding for entries */
+    padding: 10px 20px; /* Reduced vertical padding */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+    text-align: center; /* Center text within the div */
+    font-weight: normal; /* Reset font weight for content */
+    font-size: medium; /* Adjust font size for content */
+    color: #333; /* Default text color */
+    overflow: hidden; /* Hide overflow text */
+    white-space: normal; /* Allow text to wrap */
+}
+
+/* Specific dimensions and layout for each entry type */
+.work-experience-entery {
     height: 220px;
     width: 220px;
-    background-color: #fcfcfccc;
-    flex-shrink: 0;
-    border-radius: 50px;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    text-align: center; /* Center text */
 }
 
-.experience-tab-expanded{
-    width: 97%;
-    height: fit-content;
-    background-color: #d9d9d9;
-    text-align: center;
-    border-radius: 50px;
-    margin-bottom: 10px;
+.projects-list {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-weight: bold;
-    font-size: x-large;
-    cursor: pointer;
-    padding: 10px;
-}
-
-
-.projects-list{
-    display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Projects list is a column */
     height: fit-content;
     justify-content: flex-start;
     gap: 20px;
@@ -111,18 +128,60 @@
     overflow-y: auto;
 }
 
-.projects-entery{
+.projects-entery {
     height: 150px;
-    width: 100%;
-    background-color: #fcfcfccc;
-    overflow-y: hide;
-    flex-shrink: 0;
-    border-radius: 50px;
+    width: 100%; /* Take full width within the projects-list */
+    overflow-y: auto; /* Changed from hide to auto */
+    text-align: center; /* Center project text */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    padding: 15px 20px; /* Adjust padding for projects */
 }
 
-.education-list{
+.projects-entery h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: large;
+    font-weight: bold;
+    width: 100%; /* Ensure title takes full width */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Keep title on a single line */
+    color: #000; /* Make project title black */
+}
+
+.projects-entery .description {
+    font-size: medium;
+    color: #555;
+    flex-grow: 1; /* Allow description to take available space */
+    overflow: hidden; /* Hide overflowing description */
+    text-overflow: ellipsis; /* Add ellipsis to description */
+    display: -webkit-box; /* For multi-line ellipsis */
+    -webkit-line-clamp: 3; /* Limit description to 3 lines */
+    -webkit-box-orient: vertical;
+    white-space: normal; /* Allow wrapping */
+    margin-bottom: 5px; /* Add space below description */
+}
+
+.projects-entery .technologies {
+    font-size: small;
+    color: #555;
+    margin-top: 5px;
+    /* Adjust alignment for technologies */
+    width: 100%; /* Ensure technologies take full width */
+    text-align: center; /* Center the technologies text */
+    word-break: break-word; /* Allow long technology strings to wrap */
+}
+
+.projects-entery .tech-label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+
+.education-list {
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Education list is a row */
     height: fit-content;
     justify-content: flex-start;
     gap: 20px;
@@ -131,135 +190,177 @@
     overflow-x: auto;
 }
 
-.education-entery{
-    height: 60px;
-    width: 33%;
-    background-color: #fcfcfccc;
-    flex-shrink: 0;
-    border-radius: 50px;
+.education-entery {
+    height: 80px; /* Increased height */
+    width: 33%; /* Restored original width */
+    justify-content: center; /* Center content vertically */
+    padding: 5px 20px; /* Further reduced vertical padding for education entries */
+    align-items: center; /* Center content horizontally */
+    text-align: center; /* Center text */
 }
 
 
-.skills-list{
+.skills-list,
+.interests-list {
     height: auto; /* Expands naturally */
     display: flex;
     justify-content: center;
     gap: 20px;
-    height: 100px;
+    /* Removed fixed height */
     padding: 20px 30px;
+    width: 100%;
+    overflow: hidden; /* Keep overflow hidden for the container */
+    flex-wrap: wrap;
+}
+
+.skills-entery,
+.interests-entery {
+    flex-direction: row; /* Skills and interests are in a row */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    height: 40px; /* Restored original height */
+    width: 29%; /* Restored original width */
+    padding: 5px 15px; /* Adjust padding for smaller items */
+    font-size: small; /* Smaller font size for skills/interests */
+}
+
+
+/* Styling for paragraph tags within entries */
+.work-experience-entery p,
+.education-entery p {
+    margin: 2px 0; /* Adjust margin for paragraphs within entries */
+    padding: 0; /* Remove default paragraph padding */
+    line-height: 1.4; /* Improve readability */
+    word-break: break-word; /* Break long words */
+    width: 100%; /* Ensure paragraphs take full width */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    white-space: nowrap; /* Keep text on a single line unless specified */
+    color: #333; /* Default text color for these paragraphs */
+}
+
+/* Allow work experience dates to wrap if needed */
+.work-experience-entery p:last-child {
+    white-space: normal;
+    text-overflow: clip; /* Prevent ellipsis on dates */
+}
+
+
+/* Specific styling for paragraphs in skills and interests */
+.skills-entery p,
+.interests-entery p {
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    line-height: 1.4;
+    word-break: break-word;
     width: 100%;
     overflow: hidden;
-    flex-wrap: wrap;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: small; /* Ensure font size */
+    color: #333; /* Default text color */
+    font-weight: bold; /* Make skills and interests text bold */
+    text-align: center; /* Center text within the skill/interest entry */
 }
 
-.skills-entery{
-    height: 40px;
-    width: 29%;
-    background-color: #fcfcfccc;
-    border-radius: 50px;
+/* Styling for specific spans within entries */
+.work-experience-entery .entry-title,
+.work-experience-entery .entry-company,
+.education-entery .entry-degree-institution {
+    font-weight: bold; /* Make work experience title/company and education degree/institution bold */
 }
 
-.skills-expanded{
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    width: 50%;
-}
-
-.skills-list::-webkit-scrollbar {
-    width: 5px;
-}
-
-.skills-list::-webkit-scrollbar-thumb {
-    background: rgb(150, 150, 150);
-    border-radius: 4px;
-
-}
-
-.skills-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.interests-list{
-    height: auto; /* Expands naturally */
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    height: 100px;
-    padding: 20px 30px;
-    overflow-y: hidden;
-    flex-wrap: wrap;
-    width: 100%;
-}
-
-.interests-entery{
-    height: 40px;
-    width: 29%;
-    background-color: #fcfcfccc;
-    flex-shrink: 0;
-    border-radius: 50px;
-}
-
-.interests-expanded{
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    width: 50%;
-}
-
-.interests-list::-webkit-scrollbar {
-    width: 5px;
-}
-
-.interests-list::-webkit-scrollbar-thumb {
-    background: rgb(150, 150, 150);
-    border-radius: 4px;
-
-}
-
-.interests-list::-webkit-scrollbar-track {
-    background: transparent;
+.work-experience-entery .entry-dates,
+.education-entery .entry-year {
+    color: gray; /* Gray out work experience dates and education year */
 }
 
 
-experience-list::-webkit-scrollbar {
-    height: 5px;
+/* Allow description to wrap */
+.projects-entery p.description {
+     white-space: normal;
+     text-overflow: ellipsis;
+     display: -webkit-box;
+     -webkit-line-clamp: 3; /* Limit to 3 lines */
+     -webkit-box-orient: vertical;
 }
 
-.experience-list::-webkit-scrollbar-thumb {
-    background: rgb(150, 150, 150);
-    border-radius: 4px;
 
-}
-
-.experience-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.education-list::-webkit-scrollbar {
-    height: 5px;
-}
-
-.education-list::-webkit-scrollbar-thumb {
-    background: rgb(150, 150, 150);
-    border-radius: 4px;
-
-}
-
-.education-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
+/* Scrollbar styles */
+.skills-list::-webkit-scrollbar,
+.interests-list::-webkit-scrollbar,
+.experience-list::-webkit-scrollbar,
+.education-list::-webkit-scrollbar,
 .projects-list::-webkit-scrollbar {
-    width: 5px;
+    height: 5px; /* Horizontal scrollbars */
+    width: 5px; /* Vertical scrollbars */
 }
 
+.skills-list::-webkit-scrollbar-thumb,
+.interests-list::-webkit-scrollbar-thumb,
+.experience-list::-webkit-scrollbar-thumb,
+.education-list::-webkit-scrollbar-thumb,
 .projects-list::-webkit-scrollbar-thumb {
     background: rgb(150, 150, 150);
     border-radius: 4px;
-
 }
 
+.skills-list::-webkit-scrollbar-track,
+.interests-list::-webkit-scrollbar-track,
+.experience-list::-webkit-scrollbar-track,
+.education-list::-webkit-scrollbar-track,
 .projects-list::-webkit-scrollbar-track {
     background: transparent;
 }
+
+
+.skills-expanded {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 50%;
+}
+
+.interests-expanded {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 50%;
+}
+
+/* Style for the "Show All" button */
+.show-all-button {
+    margin-top: 10px;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 20px;
+    background-color: #e0e0e0;
+    cursor: pointer;
+    font-size: small;
+    transition: background-color 0.3s ease;
+}
+
+.show-all-button:hover {
+    background-color: #cccccc;
+}
+
+/* Styling for the skills/interests containers in the "Show All" popup */
+.popup-skills-interests-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Adjust gap as needed */
+    padding: 10px; /* Add padding */
+    justify-content: center; /* Center the items */
+}
+
+.popup-skill-interest-item {
+    background-color: #fcfcfccc; /* Match entry background */
+    border-radius: 20px; /* Slightly smaller border-radius for popup items */
+    padding: 5px 15px; /* Adjust padding */
+    font-size: small;
+    color: #333;
+    font-weight: bold; /* Keep bold as on main page */
+    text-align: center;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+

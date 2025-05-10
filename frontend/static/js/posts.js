@@ -1,4 +1,3 @@
-
 export function initPostTypeButtons() {
     const postTypeSelector = document.querySelectorAll(".post-type-button");
     let active = document.getElementById("All");

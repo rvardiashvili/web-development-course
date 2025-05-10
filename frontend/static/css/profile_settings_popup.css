@@ -1,0 +1,1078 @@
+/* profile_settings_popup.css */
+
+/* --- General Modal Styles (Apply to both Settings and Wizard) --- */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place relative to the viewport */
+    z-index: 10; /* Sit on top of other elements */
+    left: 0;
+    top: 0;
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    /* Remove overflow: auto here, as the body will handle preventing background scroll */
+}
+
+
+/* When the modal is displayed, prevent scrolling on the body */
+/* This class will be added to the body element by JavaScript when a modal opens */
+body.modal-open {
+    overflow: hidden; /* Disables scrolling on the body */
+}
+
+/* Hide scrollbar on body when modal is open */
+body.modal-open::-webkit-scrollbar {
+    width: 0;
+}
+
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Custom scrollbar for modal content */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* Modal Content/Box (Apply to both Settings and Wizard) */
+.modal-content {
+    position: fixed; /* Use fixed positioning to center within the viewport */
+    background-color: #ffffff;
+    /* Use top and transform to truly center the modal regardless of scroll */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    border-radius: 40px; /* Match main body */
+    width: 80%; /* Adjust width as needed */
+    max-width: 600px; /* Limit maximum width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative; /* For close button positioning and nested popups */
+    font-family: Arial, sans-serif;
+    /* --- Styles for making the content scrollable --- */
+    overflow-y: auto; /* Enable vertical scrolling for THIS container if content overflows */
+    max-height: 90vh; /* Limit the maximum height to enable scrolling */
+    /* --- End of scrollable styles --- */
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center content horizontally */
+    text-align: center; /* Center text within content */
+}
+
+
+/* Close button (Apply to both Settings and Wizard) */
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    z-index: 12; /* Ensure close button is above other elements */
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+}
+
+/* Heading inside the popup (Apply to both Settings and Wizard) */
+.modal-content h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%; /* Ensure heading takes full width */
+}
+
+/* --- Profile Settings Specific Styles --- */
+/* Scope these styles to the settings modal ID */
+#profile-settings-popup .modal-content section {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #eaeaea;
+    border-radius: 40px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: visible; /* Ensure sections don't create their own scrollbars */
+    width: 100%; /* Ensure sections take full width */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Scope these styles to the settings modal ID */
+#profile-settings-popup .modal-content section h2 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Container for profile picture and overlay (Scope to settings) */
+#profile-settings-popup .current-profile-pic-container {
+    display: flex;
+    justify-content: center;
+    position: relative; /* Needed for absolute positioning of the overlay */
+    width: 120px; /* Match image size */
+    height: 120px; /* Match image size */
+    border-radius: 50%; /* Keep circular */
+    overflow: hidden; /* Hide overflow from the overlay */
+    cursor: pointer; /* Indicate it's clickable */
+    margin-bottom: 20px; /* Add margin below the picture container */
+}
+
+#profile-settings-popup .current-profile-pic-container img {
+    display: block; /* Remove extra space below image */
+    width: 100%; /* Make image fill container */
+    height: 100%; /* Make image fill container */
+    object-fit: cover;
+    border: 2px solid #d9d9d9; /* Match cv-pdf background */
+    transition: opacity 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Overlay for the camera icon (Scope to settings) */
+#profile-settings-popup .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease; /* Smooth transition */
+    font-size: 30px; /* Size of the camera icon */
+    border-radius: 50%; /* Keep circular */
+}
+
+/* Show overlay on hover (Scope to settings) */
+#profile-settings-popup .current-profile-pic-container:hover .overlay {
+    opacity: 1;
+}
+
+/* Optional: Dim the image on hover (Scope to settings) */
+#profile-settings-popup .current-profile-pic-container:hover img {
+    opacity: 0.7;
+}
+
+/* Nested popup for upload/delete/cancel choice (Scope to settings) */
+#profile-settings-popup .nested-popup {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px; /* Slightly less rounded than the main modal */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 11; /* Above the main modal content */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between buttons */
+    align-items: center; /* Center buttons */
+    width: 80%; /* Adjust width as needed */
+    max-width: 300px; /* Max width for the choice box */
+    text-align: center;
+    margin-bottom: 20px; /* Space below the choice popup */
+     border: 1px solid #eaeaea; /* Match other sections */
+     /* Ensure nested popups don't create their own scrollbars */
+     overflow: visible;
+}
+
+/* Scope these styles to the settings modal ID */
+#profile-settings-popup .popup-choice-button {
+    background: #4a64f2; /* Match save buttons */
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px; /* Match other buttons */
+    cursor: pointer;
+    font-size: large;
+    width: 100%; /* Make buttons fill the choice popup width */
+    text-align: center;
+}
+
+#profile-settings-popup .popup-choice-button:hover {
+    opacity: 0.9;
+}
+
+#profile-settings-popup .popup-choice-button.delete-button {
+    background-color: #e74c3c; /* Red color for delete */
+}
+
+#profile-settings-popup .popup-choice-button.delete-button:hover {
+    background-color: #c0392b;
+}
+
+#profile-settings-popup .popup-choice-button.cancel-button {
+    background-color: #95a5a6; /* Grey color for cancel */
+}
+
+#profile-settings-popup .popup-choice-button.cancel-button:hover {
+    background-color: #7f8c8d;
+}
+
+
+/* Style for the hidden upload form/file input (Scope to settings) */
+#profile-settings-popup #upload-profile-pic-form {
+     display: none; /* Keep the form hidden visually */
+}
+
+/* Bio settings specific styles (Scope to settings) */
+#profile-settings-popup #bio-settings form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; /* Ensure form takes full width within section */
+}
+
+#profile-settings-popup #bio-settings label {
+    font-size: 16px;
+    color: #555;
+}
+
+#profile-settings-popup #bio-settings textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    /* Prevent text areas from having their own scrollbars */
+    overflow: visible;
+}
+
+#profile-settings-popup #bio-settings button[type="submit"] {
+    background: #4a64f2;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    width: fit-content;
+    align-self: center;
+    margin-top: 10px;
+}
+
+#profile-settings-popup #bio-settings button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+
+/* Styles for lists of entries (Work Experience, Projects, Education) (Scope to settings) */
+#profile-settings-popup .settings-entries-list {
+    width: 100%; /* Take full width */
+    margin-bottom: 20px; /* Space below the list */
+    /* Ensure lists don't create their own scrollbars */
+    overflow: visible;
+}
+
+#profile-settings-popup .settings-entry {
+    display: flex;
+    justify-content: space-between; /* Space between details and actions */
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee; /* Separator between entries */
+}
+
+#profile-settings-popup .settings-entry:last-child {
+    border-bottom: none; /* No border for the last entry */
+}
+
+#profile-settings-popup .entry-details {
+    flex-grow: 1; /* Allow details to take available space */
+    margin-right: 10px; /* Space between details and actions */
+    font-size: 16px;
+    color: #333;
+    /* Ensure details don't cause overflow issues within the flex container */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis if text overflows */
+    white-space: nowrap; /* Keep on a single line */
+    text-align: left; /* Align text left */
+}
+
+#profile-settings-popup .entry-actions button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 20px; /* Smaller radius for action buttons */
+    cursor: pointer;
+    font-size: small;
+    margin-left: 5px;
+}
+
+#profile-settings-popup .entry-actions .edit-entry-button {
+    background-color: #f0ad4e; /* Warning color */
+    color: white;
+}
+
+#profile-settings-popup .entry-actions .edit-entry-button:hover {
+    background-color: #ec971f;
+}
+
+#profile-settings-popup .entry-actions .delete-entry-button {
+    background-color: #d9534f; /* Danger color */
+    color: white;
+}
+
+#profile-settings-popup .entry-actions .delete-entry-button:hover {
+    background-color: #c9302c;
+}
+
+/* Style for "Add New" button (Scope to settings) */
+#profile-settings-popup .add-new-button {
+    background: #5cb85c; /* Success color */
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    width: fit-content;
+    align-self: center;
+    margin-bottom: 20px; /* Space below the add button */
+}
+
+#profile-settings-popup .add-new-button:hover {
+    background-color: #4cae4c;
+}
+
+/* Style for Add/Edit Forms (Work Experience, Projects, Education) (Scope to settings) */
+#profile-settings-popup .add-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; /* Take full width */
+    margin-top: 15px; /* Space above the form */
+    padding-top: 15px;
+    border-top: 1px solid #eee; /* Separator above the form */
+     /* Ensure forms don't create their own scrollbars */
+     overflow: visible;
+}
+
+#profile-settings-popup .add-edit-form h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#profile-settings-popup .add-edit-form label {
+    font-size: 16px;
+    color: #555;
+    text-align: left; /* Align labels left */
+}
+
+#profile-settings-popup .add-edit-form input[type="text"],
+#profile-settings-popup .add-edit-form input[type="date"],
+#profile-settings-popup .add-edit-form input[type="url"],
+#profile-settings-popup .add-edit-form textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    resize: vertical; /* Allow vertical resize for textarea */
+    /* Prevent these input elements from having their own scrollbars */
+    overflow: visible;
+}
+
+#profile-settings-popup .add-edit-form button[type="submit"] {
+    background: #4a64f2; /* Primary save color */
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    width: fit-content;
+    align-self: center;
+    margin-top: 10px;
+    margin-right: 10px; /* Space between save and cancel */
+}
+
+#profile-settings-popup .add-edit-form button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+#profile-settings-popup .add-edit-form .cancel-form-button {
+    background-color: #95a5a6; /* Grey color for cancel */
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    width: fit-content;
+    align-self: center;
+    margin-top: 10px;
+}
+
+#profile-settings-popup .add-edit-form .cancel-form-button:hover {
+    background-color: #7f8c8d;
+}
+
+
+/* Styles for Skills, Interests, and Languages forms (simpler structure) (Scope to settings) */
+#profile-settings-popup #skills-settings form,
+#profile-settings-popup #interests-settings form,
+#profile-settings-popup #languages-settings form {
+     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%; /* Ensure form takes full width within section */
+}
+
+#profile-settings-popup #skills-settings label,
+#profile-settings-popup #interests-settings label,
+#profile-settings-popup #languages-settings label {
+    font-size: 16px;
+    color: #555;
+    text-align: left; /* Align labels left */
+}
+
+#profile-settings-popup #skills-settings textarea,
+#profile-settings-popup #interests-settings textarea,
+#profile-settings-popup #languages-settings textarea {
+     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    /* Prevent text areas from having their own scrollbars */
+    overflow: visible;
+}
+
+#profile-settings-popup #skills-settings button[type="submit"],
+#profile-settings-popup #interests-settings button[type="submit"],
+#profile-settings-popup #languages-settings button[type="submit"] {
+     background: #4a64f2;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    width: fit-content;
+    align-self: center;
+    margin-top: 10px;
+}
+
+#profile-settings-popup #skills-settings button[type="submit"]:hover,
+#profile-settings-popup #interests-settings button[type="submit"]:hover,
+#profile-settings-popup #languages-settings button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+
+/* Styles for messages (success, error, info) - Generic for all new sections (Scope to settings) */
+#profile-settings-popup .settings-messages {
+     margin-top: 15px;
+    padding: 0 15px;
+    list-style: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#profile-settings-popup .settings-messages div {
+     padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#profile-settings-popup .settings-messages .success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#profile-settings-popup .settings-messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+#profile-settings-popup .settings-messages .info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Styles for existing flashes (if still used elsewhere, but preferably use .settings-messages) */
+/* Kept for compatibility */
+.flashes {
+    padding: 15px;
+    list-style: none;
+    margin-bottom: 20px;
+    border-radius: 40px; /* Match bio section */
+}
+
+.flashes li {
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.flashes li.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flashes li.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.flashes li.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* --- Profile Setup Wizard Specific Styles --- */
+/* Scope these styles to the wizard modal ID */
+#profile-wizard-popup .modal-content {
+     /* Wizard content can have slightly different max-width if needed */
+     max-width: 500px;
+     padding: 30px; /* Ensure consistent padding */
+}
+
+#profile-wizard-popup .wizard-step {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px; /* Space between elements in a step */
+}
+
+#profile-wizard-popup .wizard-step h2 {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#profile-wizard-popup .wizard-step p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+#profile-wizard-popup .wizard-button {
+    background: #4a64f2;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    transition: opacity 0.3s ease;
+}
+
+#profile-wizard-popup .wizard-button:hover {
+    opacity: 0.9;
+}
+
+#profile-wizard-popup .wizard-button.secondary {
+    background-color: #95a5a6;
+    color: white;
+}
+
+#profile-wizard-popup .wizard-button.secondary:hover {
+    background-color: #7f8c8d;
+}
+
+#profile-wizard-popup .wizard-navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#profile-wizard-popup .wizard-navigation button {
+    flex-grow: 1; /* Allow buttons to grow */
+    margin: 0 5px; /* Space between buttons */
+}
+
+/* Specific styles for wizard sections that reuse settings forms/elements (Scope to wizard) */
+#profile-wizard-popup #wizard-profile-picture-section,
+#profile-wizard-popup #wizard-bio-section,
+#profile-wizard-popup #wizard-work-experience-section,
+#profile-wizard-popup #wizard-projects-section,
+#profile-wizard-popup #wizard-education-section,
+#profile-wizard-popup #wizard-skills-section,
+#profile-wizard-popup #wizard-interests-section,
+#profile-wizard-popup #wizard-languages-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between elements within these sections */
+}
+
+
+
+
+/* Reuse profile picture styles from settings, scoped to wizard */
+#profile-wizard-popup .current-profile-pic-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    margin-bottom: 10px; /* Adjust margin */
+}
+
+#profile-wizard-popup .current-profile-pic-container img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 2px solid #d9d9d9;
+    transition: opacity 0.3s ease;
+}
+
+#profile-wizard-popup .overlay {
+     position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 30px;
+    border-radius: 50%;
+}
+
+#profile-wizard-popup .current-profile-pic-container:hover .overlay {
+    opacity: 1;
+}
+
+#profile-wizard-popup .current-profile-pic-container:hover img {
+    opacity: 0.7;
+}
+
+
+#profile-wizard-popup #wizard-upload-pic-button {
+    margin-top: 10px;
+}
+
+/* Style for the hidden upload form/file input (Scope to wizard) */
+#profile-wizard-popup #wizard-upload-profile-pic-form {
+     display: none; /* Keep the form hidden visually */
+}
+
+
+#profile-wizard-popup #wizard-bio-section form,
+#profile-wizard-popup #wizard-work-experience-section form,
+#profile-wizard-popup #wizard-projects-section form,
+#profile-wizard-popup #wizard-education-section form,
+#profile-wizard-popup #wizard-skills-section form,
+#profile-wizard-popup #wizard-interests-section form,
+#profile-wizard-popup #wizard-languages-section form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between form elements */
+    text-align: left; /* Align form content left */
+}
+
+#profile-wizard-popup #wizard-bio-section label,
+#profile-wizard-popup #wizard-work-experience-section label,
+#profile-wizard-popup #wizard-projects-section label,
+#profile-wizard-popup #wizard-education-section label,
+#profile-wizard-popup #wizard-skills-section label,
+#profile-wizard-popup #wizard-interests-section label,
+#profile-wizard-popup #wizard-languages-section label {
+    font-size: 16px;
+    color: #555;
+    text-align: left;
+}
+
+#profile-wizard-popup #wizard-bio-section textarea,
+#profile-wizard-popup #wizard-work-experience-section input,
+#profile-wizard-popup #wizard-work-experience-section textarea,
+#profile-wizard-popup #wizard-projects-section input,
+#profile-wizard-popup #wizard-projects-section textarea,
+#profile-wizard-popup #wizard-education-section input,
+#profile-wizard-popup #wizard-education-section textarea,
+#profile-wizard-popup #wizard-skills-section textarea,
+#profile-wizard-popup #wizard-interests-section textarea,
+#profile-wizard-popup #wizard-languages-section textarea {
+     padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    resize: vertical;
+}
+
+#profile-wizard-popup #wizard-bio-section button[type="submit"],
+#profile-wizard-popup #wizard-work-experience-section button[type="submit"],
+#profile-wizard-popup #wizard-projects-section button[type="submit"],
+#profile-wizard-popup #wizard-education-section button[type="submit"],
+#profile-wizard-popup #wizard-skills-section button[type="submit"],
+#profile-wizard-popup #wizard-interests-section button[type="submit"],
+#profile-wizard-popup #wizard-languages-section button[type="submit"] {
+    background: #4a64f2;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: large;
+    width: fit-content;
+    align-self: center; /* Center the submit button in the form */
+    margin-top: 10px;
+}
+
+#profile-wizard-popup #wizard-bio-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-work-experience-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-projects-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-education-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-skills-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-interests-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-languages-section button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+/* Ensure messages within wizard steps are styled correctly */
+#profile-wizard-popup .settings-messages {
+     margin-top: 10px; /* Adjust margin */
+     padding: 0; /* Remove padding */
+     width: 100%;
+     box-sizing: border-box;
+}
+
+#profile-wizard-popup .settings-messages div {
+     padding: 8px 12px; /* Adjust padding */
+     margin-bottom: 5px; /* Adjust margin */
+     border-radius: 20px; /* Adjust radius */
+     text-align: center;
+     font-size: 12px; /* Adjust font size */
+}
+
+/* Styles for lists of entries within wizard steps (Work Experience, Projects, Education) */
+#profile-wizard-popup .settings-entries-list {
+    width: 100%; /* Take full width */
+    margin-bottom: 10px; /* Space below the list */
+    overflow: visible; /* Ensure lists don't create their own scrollbars */
+}
+
+#profile-wizard-popup .settings-entry {
+    display: flex;
+    justify-content: space-between; /* Space between details and actions */
+    align-items: center;
+    padding: 8px 0; /* Slightly less padding than settings modal */
+    border-bottom: 1px solid #eee; /* Separator between entries */
+    font-size: 14px; /* Smaller font size */
+}
+
+#profile-wizard-popup .settings-entry:last-child {
+    border-bottom: none; /* No border for the last entry */
+}
+
+#profile-wizard-popup .entry-details {
+    flex-grow: 1; /* Allow details to take available space */
+    margin-right: 8px; /* Space between details and actions */
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+
+#profile-wizard-popup .entry-actions button {
+    padding: 3px 6px; /* Smaller action buttons */
+    border: none;
+    border-radius: 15px; /* Smaller radius */
+    cursor: pointer;
+    font-size: x-small;
+    margin-left: 3px;
+}
+
+#profile-wizard-popup .entry-actions .edit-entry-button {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+#profile-wizard-popup .entry-actions .edit-entry-button:hover {
+    background-color: #ec971f;
+}
+
+#profile-wizard-popup .entry-actions .delete-entry-button {
+    background-color: #d9534f;
+    color: white;
+}
+
+#profile-wizard-popup .entry-actions .delete-entry-button:hover {
+    background-color: #c9302c;
+}
+
+/* Style for "Add New" button within wizard steps */
+#profile-wizard-popup .add-new-button {
+    background: #5cb85c;
+    color: white;
+    padding: 8px 12px; /* Smaller padding */
+    border: none;
+    border-radius: 20px; /* Smaller radius */
+    cursor: pointer;
+    font-size: small; /* Smaller font size */
+    width: fit-content;
+    align-self: center;
+    margin-bottom: 10px; /* Space below the add button */
+}
+
+#profile-wizard-popup .add-new-button:hover {
+    background-color: #4cae4c;
+}
+
+/* Style for Add/Edit Forms within wizard steps */
+#profile-wizard-popup .add-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Smaller gap */
+    width: 100%;
+    margin-top: 10px; /* Smaller margin */
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    overflow: visible;
+}
+
+#profile-wizard-popup .add-edit-form h3 {
+    font-size: 16px; /* Smaller heading */
+    color: #333;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+#profile-wizard-popup .add-edit-form label {
+    font-size: 14px; /* Smaller label font size */
+    color: #555;
+    text-align: left;
+}
+
+#profile-wizard-popup .add-edit-form input,
+#profile-wizard-popup .add-edit-form textarea {
+    padding: 8px; /* Smaller padding */
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Smaller radius */
+    width: 100%;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 14px; /* Smaller font size */
+    resize: vertical;
+    overflow: visible;
+}
+
+#profile-wizard-popup .add-edit-form button[type="submit"],
+#profile-wizard-popup .add-edit-form .cancel-form-button {
+    background: #4a64f2;
+    color: white;
+    padding: 8px 12px; /* Smaller padding */
+    border: none;
+    border-radius: 20px; /* Smaller radius */
+    cursor: pointer;
+    font-size: small; /* Smaller font size */
+    width: fit-content;
+    align-self: center;
+    margin-top: 8px;
+    margin-right: 8px;
+}
+
+#profile-wizard-popup .add-edit-form button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+#profile-wizard-popup .add-edit-form .cancel-form-button {
+    background-color: #95a5a6;
+}
+
+#profile-wizard-popup .add-edit-form .cancel-form-button:hover {
+    background-color: #7f8c8d;
+}
+
+/* Styles for Skills, Interests, Languages forms within wizard steps */
+#profile-wizard-popup #wizard-skills-section form,
+#profile-wizard-popup #wizard-interests-section form,
+#profile-wizard-popup #wizard-languages-section form {
+     display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+#profile-wizard-popup #wizard-skills-section label,
+#profile-wizard-popup #wizard-interests-section label,
+#profile-wizard-popup #wizard-languages-section label {
+    font-size: 14px;
+    color: #555;
+    text-align: left;
+}
+
+#profile-wizard-popup #wizard-skills-section textarea,
+#profile-wizard-popup #wizard-interests-section textarea,
+#profile-wizard-popup #wizard-languages-section textarea {
+     padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+#profile-wizard-popup #wizard-skills-section button[type="submit"],
+#profile-wizard-popup #wizard-interests-section button[type="submit"],
+#profile-wizard-popup #wizard-languages-section button[type="submit"] {
+     background: #4a64f2;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: small;
+    width: fit-content;
+    align-self: center;
+    margin-top: 8px;
+}
+
+#profile-wizard-popup #wizard-skills-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-interests-section button[type="submit"]:hover,
+#profile-wizard-popup #wizard-languages-section button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+
+/* Ensure messages within wizard steps are styled correctly */
+#profile-wizard-popup .settings-messages {
+     margin-top: 10px;
+     padding: 0;
+     width: 100%;
+     box-sizing: border-box;
+}
+
+#profile-wizard-popup .settings-messages div {
+     padding: 8px 12px;
+     margin-bottom: 5px;
+     border-radius: 20px;
+     text-align: center;
+     font-size: 12px;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 20px; /* Reduce padding */
+        max-height: 95vh; /* Adjust max height for smaller screens */
+    }
+
+    .modal-content h1 {
+        font-size: 20px; /* Smaller heading */
+    }
+
+    /* Settings Modal Responsive */
+    #profile-settings-popup .modal-content section {
+        padding: 15px; /* Reduce section padding */
+    }
+
+    #profile-settings-popup .entry-details {
+        font-size: 14px; /* Smaller entry details */
+    }
+
+     #profile-settings-popup .entry-actions button {
+         padding: 3px 8px; /* Smaller action buttons */
+         font-size: x-small;
+     }
+
+    #profile-settings-popup .add-new-button,
+    #profile-settings-popup .add-edit-form button[type="submit"],
+    #profile-settings-popup .add-edit-form .cancel-form-button,
+    #profile-settings-popup #bio-settings button[type="submit"],
+    #profile-settings-popup #skills-settings button[type="submit"],
+    #profile-settings-popup #interests-settings button[type="submit"],
+    #profile-settings-popup #languages-settings button[type="submit"] {
+        font-size: small; /* Smaller button text */
+        padding: 8px 12px; /* Smaller button padding */
+    }
+
+    #profile-settings-popup .add-edit-form label,
+    #profile-settings-popup .add-edit-form input,
+    #profile-settings-popup .add-edit-form textarea,
+    #profile-settings-popup #bio-settings label,
+    #profile-settings-popup #bio-settings textarea,
+    #profile-settings-popup #skills-settings label,
+    #profile-settings-popup #skills-settings textarea,
+    #profile-settings-popup #interests-settings label,
+    #profile-settings-popup #interests-settings textarea,
+    #profile-settings-popup #languages-settings label,
+    #profile-settings-popup #languages-settings textarea {
+        font-size: 14px; /* Smaller form text */
+    }
+
+    /* Wizard responsive adjustments */
+    #profile-wizard-popup .wizard-step h2 {
+        font-size: 18px;
+    }
+
+    #profile-wizard-popup .wizard-step p {
+        font-size: 14px;
+    }
+
+    #profile-wizard-popup .wizard-button {
+         padding: 10px 20px;
+         font-size: small;
+    }
+
+    #profile-wizard-popup .wizard-navigation {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px; /* Space between stacked buttons */
+    }
+
+    #profile-wizard-popup .wizard-navigation button {
+        margin: 0; /* Remove horizontal margin */
+    }
+
+     #profile-wizard-popup .settings-messages div {
+         font-size: 10px; /* Even smaller message text */
+         padding: 6px 10px;
+     }
+}

@@ -1,8 +1,17 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+
+
 <div class="sidebar-dropdown">
     <i class="fa-solid fa-magnifying-glass dropdown-trigger"></i>
     <div class="sidebar-dropdown-content">
       <div id="search">
-        <input type="text" placeholder="Search..">
-      </div>  
+        <input type="text" placeholder="Search.." id="search-input">
+        <div id="search-results-dropdown" class="search-dropup-content">
+            </div>
       </div>
-    </div>
+      
+      </div>
+</div>
+
+
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>

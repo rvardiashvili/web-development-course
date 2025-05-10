@@ -51,7 +51,13 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-
+    margin-bottom: 0;
+}
+.text-info-1 p, .text-info-1 h1{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
 }
 .text-info-3 {
     margin-top: 10px;
@@ -169,3 +175,66 @@
     font-size: large;
 }
 
+.username{
+    color: gray;
+    margin-top: 0;
+}
+
+.bio-section .languages {
+    max-width: 100%; /* Ensure it doesn't exceed container width */
+    display: block; /* Make it a block element */
+    margin-bottom: 5px; /* Add some space between languages and bio */
+    font-weight: bold; /* Keep the bold styling for the container */
+    min-height: 1em; /* Add a minimum height */
+    /* Add some padding and border for visual separation */
+    padding: 5px 0;
+    border-bottom: 1px solid #eee; /* Subtle separator */
+}
+
+.bio-section .languages .language-entry {
+    display: inline-block; /* Display language entries inline */
+    margin-right: 20px; /* Increased space between language entries */
+    cursor: pointer; /* Indicate interactive */
+    position: relative; /* Needed for absolute positioning of level */
+    /* Removed padding-top here to avoid empty space when level is hidden */
+    line-height: 1.2; /* Ensure consistent line spacing */
+    text-align: center; /* Center the language name within its span */
+}
+
+.bio-section .languages .language-name {
+    font-weight: bold; /* Ensure language name is bold */
+    display: block; /* Make the name a block within its container */
+}
+
+.bio-section .languages .language-level {
+    font-weight: normal; /* Level text is not bold */
+    color: #555; /* Muted color for level */
+    font-size: 0.9em; /* Slightly smaller font size for the level */
+    /* Initially hide the level */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.2s ease-in-out; /* Smooth transition for opacity, visibility, and transform */
+
+    /* Position the level absolutely above and centered over the language name */
+    position: absolute;
+    bottom: 100%; /* Position directly above the language name */
+    left: 50%; /* Start from the horizontal center of the parent */
+    transform: translateX(-50%) translateY(5px); /* Center horizontally and initial vertical position (adjust translateY as needed) */
+
+    white-space: nowrap; /* Prevent wrapping for the level */
+    /* Removed padding, background, border, border-radius, box-shadow */
+    z-index: 1; /* Ensure the level appears above other content */
+}
+
+.bio-section .languages .language-entry:hover .language-level {
+    visibility: visible; /* Show the level on hover */
+    opacity: 1; /* Fade in the level on hover */
+    /* Final vertical position on hover (adjust translateY as needed) */
+    transform: translateX(-50%) translateY(-5px); /* Maintain horizontal centering and slide up */
+}
+
+
+/* Add a rule to hide the languages element completely if it has no content */
+.bio-section .languages:empty {
+    display: none;
+}

@@ -28,8 +28,11 @@
             <div class="left-bar-upper">
                 <div class="profile-box">
                     <div class="user-main">
-                        <div class="profile-pic"><img src="{{ url_for('static', filename=session.get('profile_pic', 'media/default/pfp.jpg'))}}"></div>
-                        <hl class="username">{{ session.get('user_name', 'Default Name') }}</hl>
+                        <div class="profile-pic"><img src="{{ current_user.profile_picture if current_user.profile_picture else url_for('static', filename='media/default/pfp.jpg') }}"></div>
+                        <div class="userdata">
+                            <hl class="user_name">{{ session.get('user_name', 'Default Name') }}</hl>
+                            <p class="username">@{{ session.get('username', 'def') }}</p>
+                        </div>
                     </div>
                     <div class="text-info-stats">
                         <p>AI matches: {{ session.get('matches', '###') }}</p>

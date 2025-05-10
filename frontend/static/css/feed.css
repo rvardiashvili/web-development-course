@@ -80,8 +80,7 @@
     flex-direction: row;
     align-items: center;
     gap: 5px;
-    font-size: larger;
-    font-weight: bold;
+
 }
 
 .community-sign {
@@ -119,4 +118,20 @@
     flex-direction: row;
     justify-content: space-between;
     color: rgb(86, 86, 86);
+}
+
+.user_name{
+    font-size: x-large;
+    font-weight: bold;
+}
+.username{
+    font-weight: normal;
+    color: #8b8b8b;
+    margin: 0;
+}
+.userdata{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0;
 }

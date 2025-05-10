@@ -1,46 +1,53 @@
-USE kai;
+  USE kai;
 
--- Base Users Table
-CREATE TABLE `Users` (
-  `user_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `email` VARCHAR(255) UNIQUE NOT NULL,
-  `password_hash` VARCHAR(255) NOT NULL,
-  `full_name` VARCHAR(255) NOT NULL,
-  `user_type` ENUM ('employee', 'employer', 'admin') NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `is_active` BOOLEAN DEFAULT TRUE,
-  `is_authenticated` BOOLEAN DEFAULT TRUE,
-  `is_anonymous` BOOLEAN DEFAULT FALSE
-);
+  -- Base Users Table
+  CREATE TABLE `Users` (
+    `user_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `profile_picture` VARCHAR(225),           
+    `username` VARCHAR(255) UNIQUE NOT NULL,    
+    `email` VARCHAR(255) UNIQUE NOT NULL,
+    `password_hash` VARCHAR(255) NOT NULL,
+    `full_name` VARCHAR(255) NOT NULL,
+    `bio` TEXT,             
+    `user_type` ENUM ('employee', 'employer', 'admin') NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `user_flags` JSON DEFAULT '{}',             
+    `is_active` BOOLEAN DEFAULT TRUE,
+    `is_authenticated` BOOLEAN DEFAULT TRUE,
+    `is_anonymous` BOOLEAN DEFAULT FALSE 
+  );
 
--- Countries for citizenship
-CREATE TABLE `Countries` (
-  `country_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `country_name` VARCHAR(100) NOT NULL UNIQUE
-);
+  -- Countries for citizenship
+  CREATE TABLE `Countries` (
+    `country_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `country_name` VARCHAR(100) NOT NULL UNIQUE
+  );
 
--- Cities for location data
-CREATE TABLE `Cities` (
-  `city_id` INT PRIMARY KEY AUTO_INCREMENT,
-  `city` VARCHAR(100),
-  `state` VARCHAR(100),
-  `country_id` INT,
-  FOREIGN KEY (`country_id`) REFERENCES `Countries` (`country_id`) ON DELETE CASCADE
-);
+  -- Cities for location data
+  CREATE TABLE `Cities` (
+    `city_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `city` VARCHAR(100),
+    `state` VARCHAR(100),
+    `country_id` INT,
+    FOREIGN KEY (`country_id`) REFERENCES `Countries` (`country_id`) ON DELETE CASCADE
+  );
 
 
--- Employees Table with extended info
-CREATE TABLE `Employees` (
-  `user_id` INT PRIMARY KEY,
-  `date_of_birth` DATE,
-  `mobile_number` VARCHAR(20),
-  `profession` VARCHAR(255),
-  `citizenship_id` INT,
-  `current_location_id` INT,
-  FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
-  FOREIGN KEY (`citizenship_id`) REFERENCES `Countries` (`country_id`),
-  FOREIGN KEY (`current_location_id`) REFERENCES `Cities` (`city_id`)
-);
+  -- Employees Table with extended info
+  CREATE TABLE `Employees` (
+    `user_id` INT PRIMARY KEY,
+    `date_of_birth` DATE,
+    `mobile_number` VARCHAR(20),
+    `profession` VARCHAR(255),
+    `citizenship_id` INT,
+    `skills` TEXT,                
+    `interests` TEXT,             
+    `languages` TEXT,             
+    `current_location_id` INT,
+    FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`citizenship_id`) REFERENCES `Countries` (`country_id`),
+    FOREIGN KEY (`current_location_id`) REFERENCES `Cities` (`city_id`)
+  );
 
 -- Job Preferences
 CREATE TABLE `JobPreferences` (
@@ -149,4 +156,40 @@ CREATE TABLE `Followers` (
   PRIMARY KEY (`follower_id`, `followed_id`),
   FOREIGN KEY (`follower_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
   FOREIGN KEY (`followed_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE
+);
+
+-- 2. Create a table for Work Experiences
+CREATE TABLE `WorkExperiences` (
+  `experience_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` INT,
+  `job_title` VARCHAR(255) NOT NULL,
+  `company` VARCHAR(255) NOT NULL,
+  `location` VARCHAR(255), -- Assuming location per job is relevant
+  `start_date` DATE NOT NULL,
+  `end_date` DATE, -- NULL if current job
+  `description` TEXT,
+  FOREIGN KEY (`user_id`) REFERENCES `Employees` (`user_id`) ON DELETE CASCADE
+);
+
+-- 3. Create a table for Projects
+CREATE TABLE `Projects` (
+  `project_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` INT,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT,
+  `technologies` TEXT, -- Comma-separated or JSON, depending on expected complexity
+  `link` VARCHAR(255), -- URL to the project
+  FOREIGN KEY (`user_id`) REFERENCES `Employees` (`user_id`) ON DELETE CASCADE
+);
+
+-- 4. Create a table for Education
+CREATE TABLE `Education` (
+  `education_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` INT,
+  `degree` VARCHAR(255) NOT NULL,
+  `institution` VARCHAR(255) NOT NULL,
+  `field_of_study` VARCHAR(255), -- Optional field
+  `year_of_completion` VARCHAR(20), -- Using VARCHAR to allow for 'Expected 2025' or ranges
+  `notes` TEXT,
+  FOREIGN KEY (`user_id`) REFERENCES `Employees` (`user_id`) ON DELETE CASCADE
 );

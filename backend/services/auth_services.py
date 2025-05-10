@@ -5,13 +5,16 @@ from flask_login import login_user, logout_user, current_user
 import bcrypt
 
 from models.users import Users, UserType
-from models.employees import Employees
-from models.employers import Employers
-from models.geographic import Cities, Countries
+from models.employee.employees import Employee
+from models.employer.employers import Employer
+from models.misc.geographic import Cities, Countries
 from database.database import db
 
 def email_exists(email):
     return Users.query.filter_by(email=email).first() is not None
+
+def username_exists(username):
+    return Users.query.filter_by(username=username).first() is not None
 
 def hash_password(password):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -21,7 +24,7 @@ def create_employee(user_id, data):
         dob = data.get('date_of_birth')
         dob = datetime.datetime.strptime(dob, '%Y-%m-%d').date() if dob else None
         print(data.get('city_id'), data.get('city'), data.get('country_id'), data.get('profession'), data.get('mobile_number'))  # these are the)
-        employee = Employees(
+        employee = Employee(
             user_id=user_id,
             date_of_birth=dob,
             current_location_id=data.get('city_id'),
@@ -36,7 +39,7 @@ def create_employee(user_id, data):
 
 def create_employer(user_id, data):
     try:
-        employer = Employers(
+        employer = Employer(
             user_id=user_id,
             business_name=data.get('business_name'),
             business_type=data.get('business_type')
@@ -50,8 +53,10 @@ def set_user_session(user, user_type):
     login_user(user)
     session['user_name'] = user.full_name
     session['user_email'] = user.email
+    session['username'] = user.username
+    current_user = user
     if user_type == 'employee':
-        employee = Employees.query.filter_by(user_id=user.user_id).first()
+        employee = Employee.query.filter_by(user_id=user.user_id).first()
         if employee:
             print(employee.current_location_id, employee.citizenship_id, employee.profession, employee.mobile_number, employee.date_of_birth)
             city = Cities.query.filter_by(city_id=employee.current_location_id).first()
@@ -65,7 +70,7 @@ def set_user_session(user, user_type):
             session['citizenship'] = citizenship.country_name
             session['user_type'] = "employee"
     elif user_type == 'employer':
-        employer = Employers.query.filter_by(user_id=user.user_id).first()
+        employer = Employer.query.filter_by(user_id=user.user_id).first()
         if employer:
             session['business_name'] = employer.business_name
             session['business_type'] = employer.business_type
@@ -73,8 +78,9 @@ def set_user_session(user, user_type):
 
     
 # Signup function
-def signup(email, password, full_name, user_type, extra_data={}):
-    if user_type not in UserType._value2member_map_:
+def signup(email, password, full_name, username, user_type, extra_data={}):
+    valid_user_types = ["employee", "employer", "admin"]
+    if user_type not in valid_user_types:
         return jsonify({'error': 'Invalid user type'}), 400
 
     if email_exists(email):
@@ -87,7 +93,8 @@ def signup(email, password, full_name, user_type, extra_data={}):
             email=email,
             password_hash=password_hash,
             full_name=full_name,
-            user_type=UserType(user_type)
+            user_type=user_type,
+            username=username
         )
         db.session.add(new_user)
         db.session.commit()
@@ -103,8 +110,9 @@ def signup(email, password, full_name, user_type, extra_data={}):
         return jsonify({
             'message': 'Signup successful',
             'user_id': new_user.user_id,
-            'user_type': new_user.user_type.name,
-            'full_name': new_user.full_name
+            'user_type': new_user.user_type,
+            'full_name': new_user.full_name,
+            'username' : new_user.username
         }), 201
 
     except Exception as e:

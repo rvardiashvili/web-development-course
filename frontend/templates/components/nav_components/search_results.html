@@ -1,0 +1,61 @@
+
+{% if results.users %}
+        <section>
+            <h2>Users</h2>
+            <ul>
+                {% for user in results.users %}
+                <li><a href="{{ url_for('profile.profile', username=user.username) }}">{{ user.full_name }} (@{{ user.username }})</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if results.groups %}
+        <section>
+            <h2>Groups</h2>
+            <ul>
+                {% for group in results.groups %}
+                <li><a href="{{ url_for('groups.view_group', group_id=group.group_id) }}">{{ group.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if results.employers %}
+        <section>
+            <h2>Employers</h2>
+            <ul>
+                {% for employer in results.employers %}
+                <li><a href="{{ url_for('employers.view_employer', employer_id=employer.user_id) }}">{{ employer.business_name }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if results.posts %}
+        <section>
+            <h2>Posts</h2>
+            <ul>
+                {% for post in results.posts %}
+                <li><a href="{{ url_for('posts.view_post', post_id=post.post_id) }}">{{ post.content | truncate(100) }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if results.job_postings %}
+        <section>
+            <h2>Job Postings</h2>
+            <ul>
+                {% for job in results.job_postings %}
+                <li><a href="{{ url_for('jobs.view_job', job_id=job.job_id) }}">{{ job.title }} at {{ job.employer.business_name if job.employer }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+        {% endif %}
+
+        {% if not results.users and not results.groups and not results.employers and not results.posts and not results.job_postings %}
+            <p>No results found for "{{ query }}".</p>
+        {% endif %}
+    </div>
+

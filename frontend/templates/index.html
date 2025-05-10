@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -41,10 +42,8 @@
             <div class = "posting"></div>
         </div>
     </div>
-    <div class="footer">
-        <a href="">Terms of Service</a>
-        <span class="divider">|</span>
-        <a href="">Privacy Policy</a>
-    </div>
+    {% include 'components/footer.html' %}
+
 </body>
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
 </html>

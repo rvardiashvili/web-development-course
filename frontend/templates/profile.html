@@ -1,57 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Profile Settings</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/side-bar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/experience-tab.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_settings_popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/experience-tab.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/details_popup.css') }}">
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
 </head>
-<body>
+<body data-viewed-user-id="{{ viewed_user.user_id }}" data-current-user-id="{{ current_user.user_id }}" data-current-user-type="{{ current_user.user_type }}">
     {% include 'components/sidenav.html' %}
     <div class="main-body">
         <div class="header">
             <div class="profile-container">
                 <div class="profile-info">
-                    <div class="profile-pic"><img src="{{ url_for('static', filename='media/default/pfp.jpg')}}"></div>
+                    <div class="profile-pic"><img src="{{ viewed_user.profile_picture if viewed_user.profile_picture else url_for('static', filename='media/default/pfp.jpg') }}"></div>
                     <div class="text-info">
                         <div class="text-info-1">
-                            <h1 class="name">{{ session.get('user_name', 'Default Name') }}</h1>
-                            <p class = "email">{{ session.get('user_email', 'Default email') }}</p>
+                            <h1 class="name">{{ viewed_user.full_name }}</h1>
+                            <p class = "email">{{ viewed_user.email }}</p>
                         </div>
+                        <p class="username">@{{ viewed_user.username }}</p>
                         <div class="text-info-2">
                             <div class = "stats">
                                 <span>followers: ###</span>
                                 <span>AI matches: ###</span>
                             </div>
                         </div>
-                        <div class="profession">Chemist</div>
-                        <div class="text-info-3">
-                            <div class="location"> Albaqurqe, TX, USA</div>
-                            <div class="number">+00 000 000 000</div>
-                        </div>
+                        {% if viewed_user.user_type == 'employee' %}
+                            <div class="profession">{{ additional_data.profession }}</div>
+                            <div class="text-info-3">
+                                <div class="location">{{ city }}</div>
+                                <div class="number">{{ additional_data.mobile_number }}</div>
+                            </div>
+                        {% elif viewed_user.user_type == 'employer' %}
+                            <div class="business-name">{{ session.get('business_name', 'Default Business') }}</div>
+                        {% endif %}
                     </div>
                 </div>
-                <button class="follow-button">Follow</button>
+                {% if viewed_user.username != session.get('username') %}
+                    <button class="follow-button">Follow</button>
+                {% endif %}
                 <div class="profile-actions">
-                    <button class="edit-profile">Edit Profile</button>
-                    <i class="fa-solid fa-gear settings"></i>
+                    {% if viewed_user.username == session.get('username') %}
+                        <button id="edit-profile-button" class="edit-profile">Edit Profile</button>
+                        <i class="fa-solid fa-gear settings"></i>
+                    {% endif %}
                 </div>
             </div>
             <div class="buttons">
             </div>
             <div class="bio-wrapper">
                 <div class="bio-section">
-                    <p class="languages"><strong>English | German | Georgian</strong></p>
-                    <p class="bio">bio: JobSeekAI is an AI-driven job matching platform designed to help users find their ideal job by analyzing their profiles...</p>
+                    {# Placeholder for dynamically loaded languages #}
+                    <p class="languages" id="main-languages-display"><strong></strong></p>
+                    <p class="bio">{{ viewed_user.bio }}</p>
                 </div>
                 <div class="cv-pdf"><h1>CV / Resume PDF</h1></div>
             </div>
@@ -60,118 +74,442 @@
             <div class="experience-tab" id="work-experience" style="display: flex;">Work Experience</div>
             <div class="experience-tab-expanded" id="work-experience-expanded" style="display: none;">
                 <div class="tittle">Work Experience:</div>
-                <div class="experience-list">
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                    <div class="experience-entery"></div>
-                </div>
+                <div class="experience-list" id="main-work-experience-list">
+                    </div>
             </div>
             <div class="experience-tab" id="projects">Projects</div>
             <div class="experience-tab-expanded" id="projects-expanded" style="display: none;">
                 <div class="tittle">Projects expanded</div>
-                <div class="projects-list">
-                    <div class="projects-entery"></div>
-                    <div class="projects-entery"></div>
-                    <div class="projects-entery"></div>
-                    <div class="projects-entery"></div>
-                    <div class="projects-entery"></div>
-                </div>
+                <div class="projects-list" id="main-projects-list">
+                     </div>
             </div>
             <div class="experience-tab" id="eudcation">Eudcation</div>
             <div class="experience-tab-expanded" id="eudcation-expanded" style="display: none;">
                 <div class="tittle">Eudcation:</div>
-                <div class="education-list">
-                    <div class="education-entery"></div>
-                    <div class="education-entery"></div>
-                    <div class="education-entery"></div>
-                    <div class="education-entery"></div>
-                </div>
-            
+                <div class="education-list" id="main-education-list">
+                     </div>
             </div>
             <div class="inner-block">
                 <div class="experience-tab inner" id="skills">Skills</div>
                 <div class="experience-tab-expanded inner" id="skills-expanded" style="display: none;">
                     <div class="tittle">Skills:</div>
-                    <div class="skills-list">
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                        <div class="skills-entery"></div>
-                    </div>
+                    <div class="skills-list" id="main-skills-list">
+                         </div>
                 </div>
                 <div class="experience-tab inner" id="interests">Interests</div>
                 <div class="experience-tab-expanded inner" id="interests-expanded" style="display: none;">
                     <div class="tittle">Interests:</div>
-                    <div class="interests-list">
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                        <div class="interests-entery"></div>
-                    </div>
+                    <div class="interests-list" id="main-interests-list">
+                         </div>
                 </div>
+                {# Removed the Languages tab and its expanded content #}
             </div>
             <i class="fa-solid fa-chevron-down drop-down"></i>
         </div>
-    {% include 'components/posts.html' %}
-    <div class="footer">
-        <a href="">Terms of Service</a>
-        <span class="divider">|</span>
-        <a href="">Privacy Policy</a>
-    </div>
-    <script>
-        expTab = document.querySelectorAll(".experience-tab");
-        expTabExpanded = document.getElementsByClassName("experience-tab-expanded");
-        expandButton = document.querySelector(".drop-down")
-        expanded = null;
-        hidden = null;
-        isFullyExpanded=false;
-        expTab.forEach((tab) => {
-            tab.addEventListener("click", function(){
-                if(isFullyExpanded)
-                    return;
-                if(expanded){
-                    expanded.style.display="none";
-                    hidden.style.display="flex";
-                }
-                expanded = document.getElementById(tab.id+"-expanded");
-                expanded.style.display = "flex";
-                tab.style.display="none";
-                hidden = tab;
-            });
-        });
-        
-            expandButton.addEventListener("click", function(){
-            for(i = 0; i < expTab.length; i++){
-                if(!isFullyExpanded){
-                    expTab[i].style.display="none";
-                    expTabExpanded[i].style.display="flex";
-                    expandButton.style.transform = "rotate(180deg)  scale(1.8)";
-                }
-                else if(isFullyExpanded){
-                    expTab[i].style.display="flex";
-                    expTabExpanded[i].style.display="none";
-                    expandButton.style.transform = "rotate(0deg)  scale(1.8)";
+        {% include 'components/posts.html' %}
+        {% include 'components/footer.html' %}
 
-                }
-            }
-            isFullyExpanded=!isFullyExpanded;
-        });
+        <div id="profile-settings-popup" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h1>Profile Settings</h1>
+
+                <div id="profile-picture-messages">
+                </div>
+
+                <section id="profile-picture-settings">
+                    <h2>Profile Picture</h2>
+                    <div class="current-profile-pic-container">
+                         <img id="current-profile-image" src="{{ current_user.profile_picture if current_user.profile_picture else url_for('static', filename='media/default/pfp.jpg') }}"
+                             alt="Current Profile Picture" width="150">
+                         <div class="overlay"><i class="fas fa-camera"></i></div>
+                    </div>
+
+                    <div id="profile-pic-choice-popup" class="nested-popup" style="display: none;">
+                        <button id="upload-new-pic-button" class="popup-choice-button">Upload New Profile Picture</button>
+                        {% if current_user.profile_picture and current_user.profile_picture != url_for('static', filename='media/default/pfp.jpg') %}
+                        <button id="delete-pic-button" class="popup-choice-button delete-button">Delete Current Profile Picture</button>
+                        {% endif %}
+                         <button type="button" id="cancel-choice-button" class="popup-choice-button cancel-button">Cancel</button>
+                    </div>
+
+                    <form id="upload-profile-pic-form" enctype="multipart/form-data" style="display: none;">
+                         <input type="file" name="profile_pic" accept="image/*">
+                         </form>
+
+                </section>
+
+                <section id="bio-settings">
+                    <h2>Bio</h2>
+                    <form id="edit-bio-form">
+                        <label for="bio">Edit your bio:</label>
+                        <textarea id="bio" name="bio" rows="4" cols="50">{{ current_user.bio if current_user.bio else '' }}</textarea>
+                        <button type="submit">Save Bio</button>
+                    </form>
+                    <div id="bio-messages"></div>
+                </section>
+
+                 <section id="work-experience-settings" class=".settings-section">
+                    <h2>Work Experience</h2>
+                    <div class="settings-entries-list" id="work-experience-list">
+                        </div>
+                    <button class="add-new-button" data-section="work-experience">Add New Work Experience</button>
+                    <form class="add-edit-form" id="add-edit-work-experience-form" style="display: none;">
+                        <h3>Add/Edit Work Experience</h3>
+                        <input type="hidden" name="entry_id">
+                        <label for="exp-title">Job Title:</label>
+                        <input type="text" id="exp-title" name="title" required>
+
+                        <label for="exp-company">Company:</label>
+                        <input type="text" id="exp-company" name="company" required>
+
+                         <label for="exp-location">Location:</label>
+                        <input type="text" id="exp-location" name="location">
+
+                        <label for="exp-start-date">Start Date:</label>
+                        <input type="date" id="exp-start-date" name="start_date" required>
+
+                        <label for="exp-end-date">End Date (or leave blank if current):</label>
+                        <input type="date" id="exp-end-date" name="end_date">
+
+                        <label for="exp-description">Description:</label>
+                        <textarea id="exp-description" name="description" rows="4"></textarea>
+
+                         <button type="submit">Save Work Experience</button>
+                         <button type="button" class="cancel-form-button cancel-button">Cancel</button>
+                    </form>
+                    <div class="settings-messages"></div>
+                </section>
+
+                 <section id="projects-settings"  class=".settings-section">
+                    <h2>Projects</h2>
+                     <div class="settings-entries-list" id="projects-list">
+                        </div>
+                    <button class="add-new-button" data-section="projects">Add New Project</button>
+                    <form class="add-edit-form" id="add-edit-projects-form" style="display: none;">
+                        <h3>Add/Edit Project</h3>
+                         <input type="hidden" name="entry_id">
+                        <label for="project-title">Project Title:</label>
+                        <input type="text" id="project-title" name="title" required>
+
+                        <label for="project-description">Description:</label>
+                        <textarea id="project-description" name="description" rows="4"></textarea>
+
+                         <label for="project-technologies">Technologies Used:</label>
+                        <input type="text" id="project-technologies" name="technologies">
+
+                         <label for="project-link">Project Link (Optional):</label>
+                        <input type="url" id="project-link" name="link">
+
+                         <button type="submit">Save Project</button>
+                         <button type="button" class="cancel-form-button cancel-button">Cancel</button>
+                    </form>
+                    <div class="settings-messages"></div>
+                </section>
+
+                 <section id="education-settings"  class=".settings-section">
+                    <h2>Education</h2>
+                     <div class="settings-entries-list" id="education-list">
+                        </div>
+                    <button class="add-new-button" data-section="education">Add New Education</button>
+                     <form class="add-edit-form" id="add-edit-education-form" style="display: none;">
+                        <h3>Add/Edit Education</h3>
+                         <input type="hidden" name="entry_id">
+                        <label for="edu-degree">Degree/Certification:</label>
+                        <input type="text" id="edu-degree" name="degree" required>
+
+                        <label for="edu-institution">Institution:</label>
+                        <input type="text" id="edu-institution" name="institution" required>
+
+                         <label for="edu-field-of-study">Field of Study (Optional):</label>
+                        <input type="text" id="edu-field-of-study" name="field_of_study">
+
+                        <label for="edu-year">Year of Completion (or expected):</label>
+                        <input type="text" id="edu-year" name="year_of_completion">
+                         <label for="edu-notes">Notes (Optional):</label>
+                        <textarea id="edu-notes" name="notes" rows="4"></textarea>
+
+                         <button type="submit">Save Education</button>
+                         <button type="button" class="cancel-form-button cancel-button">Cancel</button>
+                    </form>
+                    <div class="settings-messages"></div>
+                </section>
+
+                 <section id="skills-settings">
+                    <h2>Skills</h2>
+                    <form id="edit-skills-form">
+                        <label for="skills-textarea">List your skills (comma-separated):</label>
+                        <textarea id="skills-textarea" name="skills" rows="4" cols="50">{{ current_user.skills if current_user.skills else '' }}</textarea>
+                        <button type="submit">Save Skills</button>
+                    </form>
+                    <div class="settings-messages"></div>
+                </section>
+
+                 <section id="interests-settings">
+                    <h2>Interests</h2>
+                    <form id="edit-interests-form">
+                        <label for="interests-textarea">List your interests (comma-separated):</label>
+                        <textarea id="interests-textarea" name="interests" rows="4" cols="50">{{ current_user.interests if current_user.interests else '' }}</textarea>
+                        <button type="submit">Save Interests</button>
+                    </form>
+                     <div class="settings-messages"></div>
+                </section>
+
+                 {% if current_user.user_type == 'employee' %}
+                 <section id="languages-settings">
+                    <h2>Languages</h2>
+                    <form id="edit-languages-form">
+                        <label for="languages-textarea">List your languages (comma-separated):</label>
+                        <textarea id="languages-textarea" name="languages" rows="4" cols="50">{{ additional_data.languages if additional_data and additional_data.languages else '' }}</textarea>
+                        <button type="submit">Save Languages</button>
+                    </form>
+                     <div class="settings-messages"></div>
+                 </section>
+                 {% endif %} {# Added missing endif for languages settings #}
 
 
-    </script>
-    <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
-</body>
+            </div>
+        </div>
+
+        <div id="profile-wizard-popup" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="wizard-close-button">&times;</span>
+                <h1 id="wizard-title">Welcome to Your Profile!</h1>
+
+                <div id="wizard-messages" class="settings-messages"></div>
+
+                <div id="wizard-steps">
+                    <div class="wizard-step" id="wizard-step-1">
+                        <h2>Let's set up your profile.</h2>
+                        <p>This quick wizard will help you add essential information to make your profile stand out.</p>
+                        <button class="wizard-button" id="wizard-start-button">Start Setup</button>
+                        <button class="wizard-button secondary" id="wizard-skip-button">Skip for Now</button>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-2" style="display: none;">
+                         <h2>Add a Profile Picture</h2>
+                         <p>A profile picture helps others recognize you.</p>
+                         <div id="wizard-profile-picture-section">
+                             {# Made the image itself clickable #}
+                             <div class="current-profile-pic-container wizard-profile-pic-clickable">
+                                 <img id="wizard-profile-image" src="{{ current_user.profile_picture if current_user.profile_picture else url_for('static', filename='media/default/pfp.jpg') }}"
+                                     alt="Current Profile Picture" width="150">
+                                 <div class="overlay"><i class="fas fa-camera"></i></div>
+                             </div>
+                             {# Removed the explicit upload button #}
+                             <form id="wizard-upload-profile-pic-form" enctype="multipart/form-data" style="display: none;">
+                                 <input type="file" name="profile_pic" accept="image/*">
+                             </form>
+                             <div id="wizard-profile-picture-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-3" style="display: none;">
+                         <h2>Write Your Bio</h2>
+                         <p>Tell others a little about yourself.</p>
+                         <div id="wizard-bio-section">
+                             <form id="wizard-edit-bio-form">
+                                <label for="wizard-bio">Your Bio:</label>
+                                <textarea id="wizard-bio" name="bio" rows="4" cols="50">{{ current_user.bio if current_user.bio else '' }}</textarea>
+                                {# Removed Save Bio button #}
+                            </form>
+                            <div id="wizard-bio-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    {% if current_user.user_type == 'employee' %}
+                    <div class="wizard-step" id="wizard-step-4" style="display: none;">
+                         <h2>Add Work Experience</h2>
+                         <p>Highlight your professional background. Add at least one entry to get started.</p>
+                         <div id="wizard-work-experience-section">
+                              <div class="settings-entries-list" id="wizard-work-experience-list">
+                                   </div>
+                             <button class="add-new-button" data-section="work-experience" id="wizard-add-work-experience-button">Add New Work Experience</button>
+                             <form class="add-edit-form" id="wizard-add-edit-work-experience-form" style="display: none;">
+                                 <h3>Add Work Experience</h3>
+                                 <input type="hidden" name="entry_id">
+                                 <label for="wizard-exp-title">Job Title:</label>
+                                 <input type="text" id="wizard-exp-title" name="title" required>
+
+                                 <label for="wizard-exp-company">Company:</label>
+                                 <input type="text" id="wizard-exp-company" name="company" required>
+
+                                  <label for="wizard-exp-location">Location:</label>
+                                 <input type="text" id="wizard-exp-location" name="location">
+
+                                 <label for="wizard-exp-start-date">Start Date:</label>
+                                 <input type="date" id="wizard-exp-start-date" name="start_date" required>
+
+                                 <label for="wizard-exp-end-date">End Date (or leave blank if current):</label>
+                                 <input type="date" id="wizard-exp-end-date" name="end_date">
+
+                                 <label for="wizard-exp-description">Description:</label>
+                                 <textarea id="wizard-exp-description" name="description" rows="4"></textarea>
+
+                                  <button type="submit" class="wizard-button">Save Experience</button>
+                                  <button type="button" class="cancel-form-button wizard-cancel-form-button cancel-button">Cancel</button>
+                             </form>
+                             <div id="wizard-work-experience-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-5" style="display: none;">
+                         <h2>Add Projects</h2>
+                         <p>Showcase your work. Add at least one project.</p>
+                         <div id="wizard-projects-section">
+                              <div class="settings-entries-list" id="wizard-projects-list">
+                                   </div>
+                             <button class="add-new-button" data-section="projects" id="wizard-add-project-button">Add New Project</button>
+                             <form class="add-edit-form" id="wizard-add-edit-projects-form" style="display: none;">
+                                 <h3>Add Project</h3>
+                                  <input type="hidden" name="entry_id">
+                                 <label for="wizard-project-title">Project Title:</label>
+                                 <input type="text" id="wizard-project-title" name="title" required>
+
+                                 <label for="wizard-project-description">Description:</label>
+                                 <textarea id="wizard-project-description" name="description" rows="4"></textarea>
+
+                                  <label for="wizard-project-technologies">Technologies Used:</label>
+                                 <input type="text" id="wizard-project-technologies" name="technologies">
+
+                                  <label for="wizard-project-link">Project Link (Optional):</label>
+                                 <input type="url" id="wizard-project-link" name="link">
+
+                                  <button type="submit" class="wizard-button">Save Project</button>
+                                  <button type="button" class="cancel-form-button wizard-cancel-form-button cancel-button">Cancel</button>
+                             </form>
+                             <div id="wizard-projects-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-6" style="display: none;">
+                         <h2>Add Education</h2>
+                         <p>Include your academic background. Add at least one entry.</p>
+                         <div id="wizard-education-section">
+                              <div class="settings-entries-list" id="wizard-education-list">
+                                   </div>
+                             <button class="add-new-button" data-section="education" id="wizard-add-education-button">Add New Education</button>
+                              <form class="add-edit-form" id="wizard-add-edit-education-form" style="display: none;">
+                                 <h3>Add Education</h3>
+                                  <input type="hidden" name="entry_id">
+                                 <label for="wizard-edu-degree">Degree/Certification:</label>
+                                 <input type="text" id="wizard-edu-degree" name="degree" required>
+
+                                 <label for="wizard-edu-institution">Institution:</label>
+                                 <input type="text" id="wizard-edu-institution" name="institution" required>
+
+                                  <label for="wizard-edu-field-of-study">Field of Study (Optional):</label>
+                                 <input type="text" id="wizard-edu-field-of-study" name="field_of_study">
+
+                                 <label for="wizard-edu-year">Year of Completion (or expected):</label>
+                                 <input type="text" id="wizard-edu-year" name="year_of_completion">
+                                  <label for="wizard-edu-notes">Notes (Optional):</label>
+                                 <textarea id="wizard-edu-notes" name="notes" rows="4"></textarea>
+
+                                  <button type="submit" class="wizard-button">Save Education</button>
+                                  <button type="button" class="cancel-form-button wizard-cancel-form-button cancel-button">Cancel</button>
+                             </form>
+                             <div id="wizard-education-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-7" style="display: none;">
+                         <h2>Add Your Skills</h2>
+                         <p>List the skills you possess.</p>
+                         <div id="wizard-skills-section">
+                             <form id="wizard-edit-skills-form">
+                                 <label for="wizard-skills-textarea">List your skills (comma-separated):</label>
+                                 <textarea id="wizard-skills-textarea" name="skills" rows="4" cols="50">{{ additional_data.skills if additional_data and additional_data.skills else '' }}</textarea>
+                                 {# Removed Save Skills button #}
+                             </form>
+                             <div id="wizard-skills-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-8" style="display: none;">
+                         <h2>Add Your Interests</h2>
+                         <p>Share your professional interests.</p>
+                         <div id="wizard-interests-section">
+                             <form id="wizard-edit-interests-form">
+                                 <label for="wizard-interests-textarea">List your interests (comma-separated):</label>
+                                 <textarea id="wizard-interests-textarea" name="interests" rows="4" cols="50">{{ additional_data.interests if additional_data and additional_data.interests else '' }}</textarea>
+                                 {# Removed Save Interests button #}
+                             </form>
+                             <div id="wizard-interests-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+                    <div class="wizard-step" id="wizard-step-9" style="display: none;">
+                         <h2>Add Languages</h2>
+                         <p>List the languages you speak and your proficiency levels.</p>
+                         <div id="wizard-languages-section">
+                             <form id="wizard-edit-languages-form">
+                                 <label for="wizard-languages-textarea">List your languages (e.g., English (Fluent), Spanish (Conversational)):</label>
+                                 <textarea id="wizard-languages-textarea" name="languages" rows="4" cols="50">{{ additional_data.languages if additional_data and additional_data.languages else '' }}</textarea>
+                                 {# Removed Save Languages button #}
+                             </form>
+                             <div id="wizard-languages-messages" class="settings-messages"></div>
+                         </div>
+                         <div class="wizard-navigation">
+                            <button class="wizard-button secondary" data-nav="prev">Previous</button>
+                            <button class="wizard-button" data-nav="next">Next</button>
+                        </div>
+                    </div>
+
+
+                    {% endif %} {# Added missing endif for the employee specific wizard steps #}
+
+                    <div class="wizard-step" id="wizard-step-10" style="display: none;">
+                         <h2>Setup Complete!</h2>
+                         <p>Your profile is now more complete. You can always edit your information later in the Profile Settings.</p>
+                         <button class="wizard-button" id="wizard-go-to-profile">Go to Profile</button>
+                     </div>
+
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+        <div id="details-popup" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 id="details-popup-title"></h2>
+                <div id="details-popup-content">
+                    </div>
+            </div>
+            </div>
+        </div>
+
+        <script type="module" src="{{ url_for('static', filename='js/profile/profileApp.js') }}"></script>
+        <script type="module" src="{{ url_for('static', filename='js/posts.js') }}"></script>
+    </body>
 </html>

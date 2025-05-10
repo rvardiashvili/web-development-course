@@ -1,5 +1,5 @@
 from database.database import db  
-from models.geographic import Countries, Cities
+from models.misc.geographic import Countries, Cities
 from flask import jsonify, request
 
 def get_countries():
