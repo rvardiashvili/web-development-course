@@ -64,3 +64,16 @@ export async function getLikeStatusApi(postId) {
     const response = await fetch(`/post/${postId}/like_status`);
     return response.json();
 }
+
+/**
+ * Makes an API call to delete a post.
+ * @param {number} postId - The ID of the post to delete.
+ * @returns {Promise<object>} - A promise that resolves to the JSON result from the API.
+ */
+export async function deletePostApi(postId) {
+    const response = await fetch(`/post/${postId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+    });
+    return response.json();
+}

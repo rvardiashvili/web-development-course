@@ -105,6 +105,11 @@ def _serialize_post(post, current_user_id=None):
         post_dict['user_liked'] = False
         post_dict['user_emote_type'] = None
 
+    # Mark if the post belongs to the current user
+    if current_user_id and post.user_id == current_user_id:
+        post_dict['is_own_post'] = True
+    else:
+        post_dict['is_own_post'] = False
 
     return post_dict
 
@@ -267,9 +272,6 @@ def get_post_list(filters, current_user_id=None):
         return {'status': 'error', 'message': f'An error occurred: {str(e)}', 'code': 500}
 
 def like_post(post_id, user_id, emote_type='like'):
-    """
-    Records a user's like/emote on a post.
-    """
     try:
         post = Posts.query.get(post_id)
         if not post:
@@ -282,11 +284,11 @@ def like_post(post_id, user_id, emote_type='like'):
             else:
                 # Update emote type if already liked by the user with a different emote
                 existing_like.emote_type = emote_type
-                existing_like.created_at = datetime.datetime.utcnow() # Update timestamp
+                existing_like.liked_at = datetime.datetime.utcnow() # Update timestamp
                 db.session.commit()
                 return {'status': 'success', 'message': 'Emote updated successfully.', 'code': 200, 'action': 'updated'}
         else:
-            new_like = liked_by(post_id=post_id, user_id=user_id, emote_type=emote_type, created_at=datetime.datetime.utcnow())
+            new_like = liked_by(post_id=post_id, user_id=user_id, emote_type=emote_type, liked_at=datetime.datetime.utcnow())
             db.session.add(new_like)
             db.session.commit()
             return {'status': 'success', 'message': 'Post liked successfully.', 'code': 201, 'action': 'liked'}
@@ -336,4 +338,28 @@ def get_like_status(post_id, user_id):
         current_app.logger.error(f"Error getting like status for post {post_id} by user {user_id}: {e}")
         return {'status': 'error', 'message': f'Failed to get like status: {str(e)}', 'code': 500}
 
+def delete_post(post_id, user_id):
+    """
+    Deletes a post. Only the owner of the post can delete it.
+    If the post has an associated media file, it will also be deleted from the filesystem.
+    """
+    try:
+        post = Posts.query.filter_by(post_id=post_id, user_id=user_id).first()
+        if not post:
+            return {'status': 'error', 'message': 'Post not found or you do not have permission to delete it.', 'code': 404}
 
+        # Delete associated media file if it exists
+        if post.media_url:
+            # Construct the absolute path to the file
+            filepath = os.path.join(current_app.root_path, post.media_url.lstrip('/'))
+            if os.path.exists(filepath):
+                os.remove(filepath)
+                current_app.logger.info(f"Deleted media file: {filepath}")
+
+        db.session.delete(post)
+        db.session.commit()
+        return {'status': 'success', 'message': 'Post deleted successfully.', 'code': 200}
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting post {post_id} by user {user_id}: {e}")
+        return {'status': 'error', 'message': f'Failed to delete post: {str(e)}', 'code': 500}

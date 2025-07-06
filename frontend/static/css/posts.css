@@ -195,7 +195,6 @@
     border: 1px solid #bee5eb;
 }
 
-/* Styles for the "Create New Post" button outside the modal */
 .create-post-button {
     background-color: #28a745; /* Green color for create action */
     color: white;
@@ -210,6 +209,46 @@
 
 .create-post-button:hover {
     background-color: #218838;
+}
+
+/* Updated Styles for the Remove Post Button (Trash Bin SVG) */
+.remove-post-button {
+    /* Removed padding and font-size as content is now an SVG */
+    background: none; /* Make background transparent */
+    border: none; /* Remove border */
+    cursor: pointer;
+    padding: 5px; /* Add some padding around the icon itself */
+    border-radius: 50%; /* Make it round */
+    display: inline-flex; /* Use flex to center the SVG */
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 35px; /* Set a fixed width and height for the button */
+    height: 35px;
+}
+
+.remove-post-button:hover {
+    background-color: rgba(220, 53, 69, 0.1); /* Subtle red background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.remove-post-button:active {
+    transform: scale(0.95); /* Shrink on click */
+}
+
+/* Styles for the SVG icon inside the button */
+.remove-post-button .trash-icon {
+    width: 20px; /* Adjust size of the SVG icon */
+    height: 20px;
+    stroke: #dc3545; /* Red color for the trash icon outline */
+    stroke-width: 2; /* Adjust stroke thickness */
+    fill: transparent; /* No fill initially */
+    transition: stroke 0.3s ease, fill 0.3s ease;
+}
+
+.remove-post-button:hover .trash-icon {
+    stroke: #c82333; /* Darker red on hover */
+    /* You could add a subtle fill here too if desired, e.g., fill: rgba(220, 53, 69, 0.05); */
 }
 
 

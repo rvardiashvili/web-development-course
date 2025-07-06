@@ -136,3 +136,19 @@ def get_like_status_route(post_id):
         return jsonify(like_status_data), 200
     else:
         return jsonify(like_status_data), 404 # Post not found or other error
+
+@posts_bp.route('/<int:post_id>', methods=['DELETE'])
+@login_required
+def delete_post_route(post_id):
+    """
+    Deletes a post. Only the owner of the post can delete it.
+    """
+    user_id = current_user.user_id
+
+    result = post_services.delete_post(post_id, user_id)
+
+    if result['status'] == 'success':
+        return jsonify(result), 200
+    else:
+        status_code = 404 if 'not found' in result.get('message', '').lower() else 500
+        return jsonify(result), status_code

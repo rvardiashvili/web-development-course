@@ -1,6 +1,6 @@
 // post_display.js - Handles fetching and displaying posts
 
-import { fetchPostsApi, likePostApi, unlikePostApi, getLikeStatusApi } from './post_api.js'; // Import new API functions
+import { fetchPostsApi, likePostApi, unlikePostApi, getLikeStatusApi, deletePostApi } from './post_api.js'; // Import new API functions
 
 // DOM Elements (assuming postsListContainer exists in your HTML)
 const postsListContainer = document.getElementById('posts-list');
@@ -12,6 +12,7 @@ const singlePostProfilePic = document.querySelector('.single-post-profile-pic');
 const singlePostUsername = document.querySelector('.single-post-username');
 const singlePostContentText = document.querySelector('.single-post-content-text');
 const singlePostMediaContainer = document.querySelector('.single-post-media-container');
+const singlePostActionsContainer = document.querySelector('.single-post-actions');
 const singlePostMeta = document.querySelector('.single-post-meta');
 // Removed global queries for singlePostLikeCountElement and singlePostLikeButtonElement
 // as they will be queried inside openSinglePostModal for reliability.
@@ -276,14 +277,50 @@ function openSinglePostModal(postData) {
     // Update the local reference to the new button
     modalLikeButtonElement = newLikeButton;
 
-
     // Attach event listener to the new button
     modalLikeButtonElement.addEventListener('click', () => {
         // Pass the postData object reference to handleLikeUnlike
         handleLikeUnlike(postData.post_id, postData, modalLikeButtonElement, modalLikeCountElement);
     });
 
+    // Clear previous action buttons before adding new ones
+    singlePostActionsContainer.querySelectorAll('.remove-post-button').forEach(button => button.remove());
 
+
+if (postData.is_own_post) {
+    const removePostButton = document.createElement('button');
+    removePostButton.className = 'remove-post-button';
+
+    removePostButton.innerHTML = `
+        <svg class="trash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+    `;
+
+    removePostButton.addEventListener('click', async (event) => {
+        event.stopPropagation();
+        
+        if (confirm('Are you sure you want to delete this post?')) {
+            try {
+                const result = await deletePostApi(postData.post_id);
+                if (result.status === 'success') {
+                    alert('Post deleted successfully!');
+                    singlePostViewModal.style.display = 'none'; // Close modal
+
+                } else {
+                    alert(`Failed to delete post: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error deleting post:', error);
+                alert('An error occurred while trying to delete the post.');
+            }
+        }
+    });
+    singlePostActionsContainer.appendChild(removePostButton);
+}
     // Display the modal
     singlePostViewModal.style.display = 'flex';
 }
