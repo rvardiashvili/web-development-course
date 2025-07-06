@@ -18,5 +18,5 @@ class liked_by(db.Model):
     __tablename__ = 'liked_by'
     post_id = db.Column(db.Integer, db.ForeignKey('Posts.post_id', ondelete='CASCADE'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.user_id', ondelete='CASCADE'),  primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    liked_at = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     emote_type = db.Column(db.String(255), nullable=False)
