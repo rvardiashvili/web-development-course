@@ -120,14 +120,15 @@ CREATE TABLE `Posts` (
 );
 
 CREATE TABLE `liked_by` (
-  `post_id` INT PRIMARY KEY,
-  `user_id` INT PRIMARY KEY,
+  `post_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `liked_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `emote_type` ENUM('heart', 'thumbs up', 'fire', 'laugh') DEFAULT 'heart',
+  PRIMARY KEY (`post_id`, `user_id`), -- Correct way to define a composite primary key
   FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
   FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE
-
 );
+
 
 -- Messages
 CREATE TABLE `Messages` (
