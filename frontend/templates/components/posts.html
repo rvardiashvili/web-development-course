@@ -1,28 +1,91 @@
-<div class="posts">
-    <div class = "post-type-selector">
-        <button class="post-type-button" id="All">All</button>
-        <button class="post-type-button" id="Articles">Articles</button>
-        <button class="post-type-button" id="Images">Images</button>
-        <button class="post-type-button" id="Videos">Videos</button>
-    </div>
-    <div class="posts-middle">
-        <div class="posts-separator"></div>
-        <div class="sorter">
-            <label>Sort by:</label>
-            <select class="sort-by">
-                <option value="recent">Recent</option>
-                <option value="top">Top</option>
-            </select>
+<!-- profile.html -->
+<!-- ... (head and other body content) ... -->
+
+        <!-- Your existing posts section HTML -->
+        <div class="posts">
+            <div class = "post-type-selector">
+                <button class="post-type-button" id="All">All</button>
+                <button class="post-type-button" id="Articles">Articles</button>
+                <button class="post-type-button" id="Images">Images</button>
+                <button class="post-type-button" id="Videos">Videos</button>
+            </div>
+            <div class="posts-middle">
+                <div class="posts-separator"></div>
+                <div class="sorter">
+                    <label>Sort by:</label>
+                    <select class="sort-by">
+                        <option value="recent">Recent</option>
+                        <option value="top">Top</option>
+                    </select>
+                </div>
+            </div>
+            <div class="posts-suggestions-container">
+                <div class="posts-main">
+                    <!-- This is where the posts will be rendered by post_display.js -->
+                    <div id="posts-list" class="posts-container">
+                        <h1>Loading Posts...</h1>
+                    </div>
+                </div>
+                <div class="suggestions">
+                    <h1>Suggestions:</h1>
+                    <div class="suggestions-separator"></div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="posts-suggestions-container">
-    <div class="posts-main">
-        <h1>No Posts Yet</h1>
-    </div>
-    <div class="suggestions">
-        <h1>Suggestions:</h1>
-        <div class="suggestions-separator"></div>
-    </div>
-    </div>
-</div>
-</div>
+
+        <!-- This is where your separate post creation component HTML would go -->
+        <!-- For example, as a standalone section or a modal trigger -->
+        <div class="post-creation-area" style="margin-top: 20px; text-align: center;">
+            <button id="create-new-post-button" class="action-button create-post-button">Create New Post</button>
+        </div>
+
+        <!-- The Modal for Post Creation -->
+        <div id="post-creation-modal" class="modal">
+            <!-- Modal content -->
+            <div class="post-creation-modal-content">
+                <span class="close-button">&times;</span>
+                <div class="post-creation-section" id="post-creation-section">
+                    <h2>Create New Post</h2>
+                    <form id="post-form" class="post-form-style">
+                        <textarea id="post-content" placeholder="What's on your mind?"></textarea>
+                        <input type="file" id="post-media" accept="image/*,video/*">
+                        <select id="post-visibility">
+                            <option value="public">Public</option>
+                            <option value="friends">Friends Only</option>
+                            <option value="private">Private</option>
+                            <option value="group">Group (if applicable)</option>
+                        </select>
+                        <button type="submit">Post</button>
+                    </form>
+                    <div id="post-messages" class="message-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Single Post View Modal -->
+        <div id="single-post-view-modal" class="modal">
+            <div class="single-post-modal-content">
+                <span class="close-button single-post-close-button">&times;</span>
+                <div class="single-post-container">
+                    <div class="single-post-user-info">
+                        <img class="single-post-profile-pic" src="" alt="Profile Picture">
+                        <span class="single-post-username"></span>
+                    </div>
+                    <p class="single-post-content-text"></p>
+                    <div class="single-post-media-container">
+                        <!-- Media (image or video) will be inserted here by JS -->
+                    </div>
+                    <div class="single-post-actions">
+                        <span class="single-post-like-count">0 Likes</span>
+                        <button class="single-post-like-button">Like</button>
+                    </div>
+                    <div class="single-post-meta"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image Enlargement Overlay -->
+        <div id="enlarged-image-overlay" class="image-overlay">
+            <span class="close-button image-overlay-close-button">&times;</span>
+            <img class="enlarged-image" src="" alt="Enlarged Image">
+        </div>

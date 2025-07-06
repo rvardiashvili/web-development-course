@@ -7,12 +7,16 @@ from models.employee.employees import Employee
 from models.employee.work_experience import WorkExperience
 from models.employee.project import Project
 from models.employee.education import Education
+from models.employee.resume import Resume
 from config import UPLOAD_FOLDER, UPLOAD_PATH, ALLOWED_EXTENSIONS
 from datetime import datetime
 from sqlalchemy.types import JSON 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    
+def allowed_file_pdf(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {"pdf", }
 
 def upload_profile_picture(user, file):
     """Handles uploading and updating user profile picture."""
@@ -510,3 +514,62 @@ def get_follows(user_id):
     except Exception as e:
         current_app.logger.error(f"Error fetching followers for user {user_id}: {e}")
         return {'status': 'error', 'message': f'Error fetching followers: {e}'}
+
+def get_resume(user_id):
+    try:
+        resume = Resume.query.filter_by(user_id=user_id).first()
+        path = resume.resume_path
+        if resume and resume.resume_path:
+            return resume.resume_path
+        else:
+            return {'status': 'error', 'message': 'Resume not found for this user.'}
+    except Exception as e:
+        current_app.logger.error(f"Error fetching resume for user {user_id}: {e}")
+        return {'status': 'error', 'message': f'Error fetching resume: {e}'}
+
+
+
+def upload_resume(user, file):
+    """Uploads or updates a user's resume and updates the Resume table."""
+    if not file or not allowed_file_pdf(file.filename):
+        return {'status': 'error', 'message': 'Invalid file type or no file selected.'}
+
+    filename = secure_filename(file.filename)
+
+    # Build user folder and file path
+    user_folder = os.path.join(UPLOAD_FOLDER, f"user_{user.user_id}")
+    os.makedirs(user_folder, exist_ok=True)
+
+    filepath = os.path.join(user_folder, f"{user.user_id}_{filename}")
+    relative_path = os.path.join(UPLOAD_PATH, f"user_{user.user_id}", f"{user.user_id}_{filename}")
+
+    try:
+        # Look up existing resume
+        resume = Resume.query.filter_by(user_id=user.user_id).first()
+
+        # If exists, delete old file
+        if resume and resume.resume_path and os.path.exists(resume.resume_path):
+            os.remove(resume.resume_path)
+
+        # Save new file
+        file.save(filepath)
+
+        # Update or create resume entry
+        if resume:
+            resume.resume_path = filepath
+        else:
+            resume = Resume(user_id=user.user_id, resume_path=filepath)
+            db.session.add(resume)
+
+        db.session.commit()
+
+        return {
+            'status': 'success',
+            'message': 'Resume uploaded and saved successfully.',
+            'resume_url': relative_path
+        }
+
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error uploading resume for user {user.user_id}: {e}")
+        return {'status': 'error', 'message': f'Failed to upload resume: {str(e)}'}

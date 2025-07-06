@@ -1,0 +1,38 @@
+
+
+/* Animation for modal appearance */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Specific styles for PDF viewer */
+.pdf-viewer-container {
+    width: 100%;
+    height: calc(100vh - 150px); /* Adjust height based on header/footer space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pdf-viewer-container iframe {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

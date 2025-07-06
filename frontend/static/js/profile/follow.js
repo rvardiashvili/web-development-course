@@ -54,7 +54,7 @@ export function setFollowListener(currentUserId, targetUserId, followers_element
 }
 
 async function triggerFollow(currentUserId, targetUserId, followers_element = NaN, following_element = NaN){
-    const response = await fetch(`/api/profile/follow/${currentUserId}/${targetUserId}`);
+    const response = await fetch(`/api/profile/follow/${targetUserId}`);
     const data = await response.json();
 
     if (data.status === 'success') {

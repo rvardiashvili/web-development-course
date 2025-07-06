@@ -1,6 +1,9 @@
+/* posts.css */
+
+/* --- Existing Styles for Post Type Selector and Sorter --- */
 .post-type-selector{
     display: flex;
-    direction: row;
+    flex-direction: row; /* Changed from 'direction' to 'flex-direction' for correctness */
     align-items: center;
     gap:5px;
     margin-top: 30px;
@@ -17,11 +20,11 @@
 
 #All{
     border: solid black 2px;
-
 }
+
 .posts-middle{
     display: flex;
-    direction: row;
+    flex-direction: row; /* Changed from 'direction' to 'flex-direction' for correctness */
     align-items: center;
     justify-content: space-evenly;
     padding: 10px 15px;
@@ -32,14 +35,18 @@
     background-color: black;
 }
 
-.sort-by{
+.sorter select { /* Targeted the select specifically */
     border: none;
     background: none;
     font-size: large;
     font-weight: bold;
-}:focus{
+    /* Removed :focus here, apply directly to select if needed */
+}
+
+.sorter select:focus { /* Added focus style for select */
     outline: none;
 }
+
 
 .posts-main{
     text-align: center;
@@ -50,5 +57,565 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+}
+
+/* --- New/Updated Styles for Post Creation Modal --- */
+
+/* The Modal (background) */
+.modal {
+    /* This class should be applied to the outer div of your modal, e.g., <div id="post-creation-modal" class="modal"> */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    padding: 20px; /* Add some padding around the modal content */
+}
+
+/* Modal Content/Box */
+.post-creation-modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centered automatically by flexbox now */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Adjust width as needed, max-width is often better */
+    max-width: 500px; /* Max width for larger screens */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative; /* Needed for absolute positioning of close button */
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+
+/* Close Button */
+.close-button {
+    color: #aaa;
+    float: right; /* Use float if not using flexbox for modal-content directly */
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute; /* Position relative to .modal-content */
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Animation for modal appearance */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+/* Styles for the post creation form itself, when it's inside the modal */
+.post-creation-section {
+    /* No need for display: none here, as the .modal class handles visibility */
+    /* Remove margin-top if it causes unwanted spacing inside the modal */
+    margin-top: 0; /* Override any previous margin-top */
+    padding: 0; /* Ensure no extra padding from this class */
+}
+
+.post-form-style {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between form elements */
+}
+
+.post-form-style textarea,
+.post-form-style input[type="file"],
+.post-form-style select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Inter', sans-serif; /* Ensure consistent font */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.post-form-style button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.post-form-style button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+}
+
+.post-form-style button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.post-form-style .cancel-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.post-form-style .cancel-button:hover {
+    background-color: #5a6268;
+}
+
+.message-container {
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.message-container.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message-container.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message-container.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Styles for the "Create New Post" button outside the modal */
+.create-post-button {
+    background-color: #28a745; /* Green color for create action */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.create-post-button:hover {
+    background-color: #218838;
+}
+
+
+/* --- Styles for Post Display --- */
+
+.posts-container {
+
+    padding: 20px; /* Padding around the grid */
+    max-width: 1200px; /* Max width for the container */
+    margin: 20px auto; /* Center the container */
+}
+
+.post-item {
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    text-align: left; /* Align text within the post item */
+    cursor: pointer; /* Indicate that the post item is clickable */
+}
+
+.post-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.post-user-info {
+    display: flex;
     align-items: center;
+    margin-bottom: 10px;
+    text-decoration: none; /* Remove underline from link */
+    color: inherit; /* Inherit text color */
+}
+
+.post-profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid #007bff; /* A small border for profile pic */
+}
+
+.post-username {
+    font-weight: bold;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.post-content-text {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #555;
+    word-wrap: break-word; /* Ensure long words break */
+    white-space: pre-wrap; /* Preserve whitespace and line breaks */
+}
+
+.post-media {
+    max-width: 100%; /* Ensure media fits within the post item */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: block; /* Remove extra space below image */
+    cursor: zoom-in; /* Indicate that image can be enlarged */
+}
+
+.post-media.video {
+    width: 100%; /* Ensure video takes full width */
+    max-height: 400px; /* Limit video height */
+    object-fit: contain; /* Ensure video content is visible */
+    cursor: default; /* Video not zoomable */
+}
+
+.post-meta {
+    font-size: 0.85em;
+    color: #777;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+    margin-top: auto; /* Push meta to the bottom of the flex container */
+}
+
+/* New styles for like section */
+.post-like-section {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align to the right */
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 10px;
+    gap: 15px; /* Space between count and button */
+}
+
+.like-count {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.like-button {
+    background: none; /* Make button background transparent */
+    border: none;
+    cursor: pointer;
+    padding: 0; /* Remove default button padding */
+    display: inline-flex; /* To properly center the SVG */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Base style for the SVG icon */
+.like-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+    stroke: #888; /* Outline color (e.g., a subtle gray) */
+    stroke-width: 2; /* Thickness of the outline */
+    fill: transparent; /* Initially transparent fill */
+    transition: fill 0.3s ease, stroke 0.3s ease; /* Smooth transition for fill and stroke */
+}
+
+/* Style when the icon is "liked" (filled with color) */
+.like-icon.liked {
+    fill: #e74c3c; /* Red color when liked */
+    stroke: #e74c3c; /* Ensure outline also matches fill or remove if not desired */
+}
+
+/* Optional: Hover effect for better UX */
+.like-button:hover .like-icon {
+    stroke: #e74c3c; /* Change outline to red on hover */
+    fill: rgba(231, 76, 60, 0.2); /* Subtle fill on hover */
+}
+
+
+/* Styles for messages when posts are loading, not found, or error */
+.loading-message,
+.no-posts-message,
+.error-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2em;
+    color: #666;
+    grid-column: 1 / -1; /* Make these messages span all columns in the grid */
+}
+
+.error-message {
+    color: #dc3545; /* Red for errors */
+    font-weight: bold;
+}
+
+/* --- Single Post View Modal Styles --- */
+.single-post-modal-content {
+    background-color: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    width: 95%;
+    max-width: 700px; /* Larger max-width for single post view */
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    position: relative;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh; /* Limit height to prevent overflow */
+    overflow-y: auto; /* Enable scrolling for content if needed */
+}
+
+.single-post-close-button {
+    position: sticky; /* Keep close button visible when scrolling */
+    top: -20px; /* Adjust as needed to position it inside padding */
+    align-self: flex-end; /* Align to the right in flex container */
+    background-color: #fff; /* Ensure it stands out */
+    border-radius: 50%;
+    padding: 5px 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1001; /* Ensure it's above other content */
+}
+
+.single-post-container {
+    padding-top: 20px; /* Space for the close button */
+}
+
+.single-post-user-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.single-post-profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 3px solid #007bff;
+}
+
+.single-post-username {
+    font-weight: bold;
+    color: #222;
+    font-size: 1.3em;
+}
+
+.single-post-content-text {
+    margin-bottom: 20px;
+    line-height: 1.7;
+    color: #444;
+    font-size: 1.1em;
+    white-space: pre-wrap; /* Preserve whitespace and line breaks */
+}
+
+.single-post-media-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.single-post-media-container img,
+.single-post-media-container video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.single-post-media-container img {
+    cursor: zoom-in; /* Indicate zoomable image */
+}
+
+.single-post-media-container video {
+    max-height: 60vh; /* Limit video height in modal */
+    object-fit: contain;
+}
+
+/* New styles for single post actions (like count and button) */
+.single-post-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align to the right */
+    padding-top: 15px;
+    border-top: 1px solid #f5f5f5;
+    margin-top: 15px;
+    gap: 20px; /* Space between count and button */
+}
+
+.single-post-like-count {
+    font-weight: bold;
+    color: #555;
+    font-size: 1.1em;
+}
+
+.single-post-like-button {
+    background: none; /* Make button background transparent */
+    border: none;
+    cursor: pointer;
+    padding: 0; /* Remove default button padding */
+    display: inline-flex; /* To properly center the SVG */
+    align-items: center;
+    justify-content: center;
+}
+
+.single-post-like-button .like-icon {
+    width: 28px; /* Slightly larger icon in modal */
+    height: 28px;
+}
+
+
+.single-post-meta {
+    font-size: 0.9em;
+    color: #888;
+    border-top: 1px solid #f5f5f5;
+    padding-top: 15px;
+    text-align: right;
+}
+
+/* --- Image Enlargement Overlay Styles --- */
+.image-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2000; /* Sit on top of everything, including other modals */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.8); /* Darker background for image overlay */
+    justify-content: center;
+    align-items: center;
+}
+
+.enlarged-image {
+    max-width: 90%;
+    max-height: 90%;
+    display: block;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    animation-name: zoomIn;
+    animation-duration: 0.3s;
+}
+
+.image-overlay-close-button {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+    z-index: 2001; /* Above the image */
+}
+
+.image-overlay-close-button:hover,
+.image-overlay-close-button:focus {
+    color: #bbb;
+    text-decoration: none;
+}
+
+@keyframes zoomIn {
+    from {transform: scale(0.8); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .posts-container {
+        grid-template-columns: 1fr; /* Single column on smaller screens */
+        padding: 10px;
+    }
+
+    .post-item {
+        padding: 10px;
+    }
+
+    .post-type-selector {
+        flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+        justify-content: center;
+    }
+
+    .post-type-button {
+        width: 100px; /* Adjust button width */
+        padding: 8px;
+        font-size: medium;
+    }
+
+    .posts-middle {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .single-post-modal-content {
+        padding: 20px;
+        width: 98%;
+    }
+
+    .single-post-profile-pic {
+        width: 40px;
+        height: 40px;
+    }
+
+    .single-post-username {
+        font-size: 1.1em;
+    }
+
+    .single-post-content-text {
+        font-size: 1em;
+    }
+
+    .image-overlay-close-button {
+        font-size: 30px;
+        top: 10px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .post-type-button {
+        width: 80px;
+        font-size: small;
+    }
+
+    .post-profile-pic {
+        width: 35px;
+        height: 35px;
+    }
+
+    .post-username {
+        font-size: 1em;
+    }
+
+    .post-content-text {
+        font-size: 0.9em;
+    }
+
+    .post-meta {
+        font-size: 0.8em;
+    }
+
+    .single-post-modal-content {
+        padding: 15px;
+    }
 }

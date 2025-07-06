@@ -68,15 +68,16 @@
             {% include 'components/posts.html' %}
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/posts.js') }}"></script>
     <script type="module">
-        import { initPostTypeButtons } from "{{ url_for('static', filename='js/posts.js') }}";
+        import { setupPostsDisplayModule } from "{{ url_for('static', filename='js/posts/post.js') }}";
+        import { setupPostCreationModule } from "{{ url_for('static', filename='js/posts/post_create.js') }}";
         
 
         document.addEventListener('DOMContentLoaded', function () {
             const communityLink = document.querySelector('.group');
             const mainFeed = document.querySelector('.main-feed');
-        
+            setupPostsDisplayModule();
+            setupPostCreationModule();
             communityLink.addEventListener('click', function (e) {
                 e.preventDefault();
         

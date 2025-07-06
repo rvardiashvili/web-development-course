@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file
 from flask_login import login_required, current_user # Assuming Flask-Login
 from services import profile_services # Import your service functions
 
@@ -266,9 +266,10 @@ def get_user_profile_route(user_id):
         status_code = 404 if profile_data and 'not found' in profile_data.get('message', '').lower() else 500
         return jsonify(profile_data or {'status': 'error', 'message': 'Failed to fetch profile data.'}), status_code
 
-@profile_api_bp.route('/follow/<int:current_user_id>/<int:target_user_id>', methods=['GET'])
+@profile_api_bp.route('/follow/<int:target_user_id>', methods=['GET'])
 @login_required
-def follow_user_route(current_user_id, target_user_id):
+def follow_user_route(target_user_id):
+    current_user_id = current_user.user_id 
     if current_user_id != target_user_id:
         result = profile_services.follow_user(current_user_id, target_user_id)
 
@@ -291,4 +292,28 @@ def get_follows_route(user_id):
         status_code = 404 if follows_data and 'not found' in follows_data.get('message', '').lower() else 500
         return jsonify(follows_data or {'status': 'error', 'message': 'Failed to fetch follow data.'}), status_code
 
+@profile_api_bp.route('/resume/<int:user_id>', methods=['GET'])
+def get_resume(user_id):
+    resume_path = profile_services.get_resume(user_id)
+    try:
+        return send_file(resume_path, mimetype='application/pdf', as_attachment=False)
+    except FileNotFoundError:
+        return jsonify({'status': 'error', 'message': 'Resume file not found.'}), 404
+    except Exception as e:
+        print(e)
+        return jsonify({'status': 'error', 'message': 'Could not serve resume file.'}), 500
 
+
+@profile_api_bp.route('/resume/upload_resume', methods=['POST'])
+@login_required
+def upload_resume():
+    if 'resume' not in request.files:
+        return jsonify({'status': 'error', 'message': 'No file part'}), 400
+
+    file = request.files['resume']
+    result = profile_services.upload_resume(current_user, file)
+
+    if result['status'] == 'success':
+        return jsonify(result), 200
+    else:
+        return jsonify(result), 400 # Use 400 for client errors, 500 for server errors

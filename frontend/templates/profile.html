@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/experience-tab.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/scrollbar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pdf_viewer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_settings_popup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/details_popup.css') }}">
@@ -138,7 +139,16 @@
                          </form>
 
                 </section>
-
+                <section id="resume">
+                    <h3>Manage Your Resume</h3>
+                    <p>Upload your latest CV/Resume in PDF format.</p>
+                    <form id="upload-resume-form" enctype="multipart/form-data" style="display: none;">
+                        <input type="file" id="resume-file-input" name="resume" accept="application/pdf">
+                    </form>
+                    <button class="action-button" id="upload-new-resume-button">Upload New Resume</button>
+                    <button class="action-button" id="view-my-resume-button" style="display: none;">View My Resume</button>
+                    <button class="action-button delete-button" id="delete-resume-button" style="display: none;">Delete Resume</button>
+                    <div id="resume-upload-message" class="message-container"></div>
                 <section id="bio-settings">
                     <h2>Bio</h2>
                     <form id="edit-bio-form">
@@ -290,13 +300,11 @@
                          <h2>Add a Profile Picture</h2>
                          <p>A profile picture helps others recognize you.</p>
                          <div id="wizard-profile-picture-section">
-                             {# Made the image itself clickable #}
                              <div class="current-profile-pic-container wizard-profile-pic-clickable">
                                  <img id="wizard-profile-image" src="{{ current_user.profile_picture if current_user.profile_picture else url_for('static', filename='media/default/pfp.jpg') }}"
                                      alt="Current Profile Picture" width="150">
                                  <div class="overlay"><i class="fas fa-camera"></i></div>
                              </div>
-                             {# Removed the explicit upload button #}
                              <form id="wizard-upload-profile-pic-form" enctype="multipart/form-data" style="display: none;">
                                  <input type="file" name="profile_pic" accept="image/*">
                              </form>
@@ -509,6 +517,15 @@
             </div>
         </div>
 
+        <div id="resume-viewer-popup" class="modal">
+            <div class="modal-content">
+                <span class="close-button" id="resume-viewer-close-button">&times;</span>
+                <h2>Your CV / Resume</h2>
+                <div class="pdf-viewer-container">
+                    <iframe id="resume-pdf-iframe" src="" frameborder="0" width="100%" height="600px"></iframe>
+                </div>
+            </div>
+        </div>
         <script type="module" src="{{ url_for('static', filename='js/profile/profileApp.js') }}"></script>
         <script type="module" src="{{ url_for('static', filename='js/posts.js') }}"></script>
     </body>

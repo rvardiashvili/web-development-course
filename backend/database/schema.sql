@@ -119,6 +119,16 @@ CREATE TABLE `Posts` (
   FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE
 );
 
+CREATE TABLE `liked_by` (
+  `post_id` INT PRIMARY KEY,
+  `user_id` INT PRIMARY KEY,
+  `liked_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `emote_type` ENUM('heart', 'thumbs up', 'fire', 'laugh') DEFAULT 'heart',
+  FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE
+
+);
+
 -- Messages
 CREATE TABLE `Messages` (
   `message_id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -192,4 +202,26 @@ CREATE TABLE `Education` (
   `year_of_completion` VARCHAR(20), -- Using VARCHAR to allow for 'Expected 2025' or ranges
   `notes` TEXT,
   FOREIGN KEY (`user_id`) REFERENCES `Employees` (`user_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `Resume` (
+  `resume_id` INT PRIMARY KEY AUTO_INCREMENT, -- Use AUTO_INCREMENT for easy ID generation
+  `user_id` INT,
+  `resume_path` VARCHAR(255) NOT NULL,
+  `title` VARCHAR(100), -- Add a title for the resume
+  `is_main` BOOLEAN DEFAULT FALSE, -- Flag for the main resume (Req 1)
+  `is_public` BOOLEAN DEFAULT FALSE, -- Optional: Flag if a resume is publicly visible
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE
+);
+
+-- Table for Sharing Resumes (Req 4)
+CREATE TABLE `SharedResumes` (
+  `shared_with_user_id` INT,
+  `resume_id` INT,
+  `shared_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`shared_with_user_id`, `resume_id`), -- A user can only be shared a specific resume once
+  FOREIGN KEY (`shared_with_user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`resume_id`) REFERENCES `RESUME` (`resume_id`) ON DELETE CASCADE
 );

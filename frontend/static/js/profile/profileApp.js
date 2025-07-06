@@ -18,6 +18,9 @@ import { setupWizardListeners, showWizardStep } from './wizardLogic.js'; // Impo
 import { setupSettingsFormListeners } from './settingsFormListeners.js'; // Forms are handled internally or via lists passed in setup
 import { renderLanguages } from './languageDisplay.js';
 import { setFollowListener, toggleFollowStatus, fetchAndRenderFollows } from './follow.js';
+import { setupResumeListeners, setupResumeUploadListeners } from './resume.js';
+import { setupPostsDisplayModule } from '../posts/post.js'; // Main module for post display and filtering
+import { setupPostCreationModule } from '../posts/post_create.js'; // Module for post creation form
 
 // --- DOM References (Top Level - for elements expected to be present early) ---
 const editProfileButton = document.getElementById('edit-profile-button');
@@ -37,6 +40,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Get fresh references to all forms and message containers here
     setFollowListener(currentUserId, viewedUserId, document.getElementById('followers-btn'), document.getElementById('following-btn'));
     fetchAndRenderFollows(viewedUserId,document.getElementById('followers-btn'), document.getElementById('following-btn'))
+    setupResumeListeners(viewedUserId);
+    setupResumeUploadListeners();
+
+
+    setupPostsDisplayModule(viewedUserId);
+    // Setup the post creation module, but only if viewing own profile
+    setupPostCreationModule(currentUserId);
+        
+
+
+
     if(currentUserId != viewedUserId){
         toggleFollowStatus(viewedUserId, currentUserId, document.getElementById('followers-btn'), document.getElementById('following-btn'));
     }
