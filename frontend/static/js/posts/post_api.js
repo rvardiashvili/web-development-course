@@ -29,7 +29,7 @@ export async function fetchPostsApi(queryParams) {
  * @param {string} [emoteType='like'] - The type of emote (e.g., 'like', 'heart').
  * @returns {Promise<object>} - A promise that resolves to the JSON result from the API.
  */
-export async function likePostApi(postId, emoteType = 'like') {
+export async function likePostApi(postId, emoteType = 'heart') {
     const response = await fetch(`/post/${postId}/like`, {
         method: 'POST',
         headers: {
