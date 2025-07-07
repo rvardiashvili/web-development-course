@@ -226,3 +226,14 @@ CREATE TABLE `SharedResumes` (
   FOREIGN KEY (`shared_with_user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE,
   FOREIGN KEY (`resume_id`) REFERENCES `RESUME` (`resume_id`) ON DELETE CASCADE
 );
+
+-- Add the missing columns to the Groups table
+ALTER TABLE `Groups`
+ADD COLUMN `profile_picture` VARCHAR(255) DEFAULT '/static/media/communities/pfp/default.jpg',
+ADD COLUMN `cover_picture` VARCHAR(255) DEFAULT '/static/media/communities/cover/default.jpg',
+ADD COLUMN `creator_id` INT NOT NULL;
+
+-- Add the foreign key constraint for the creator_id
+ALTER TABLE `Groups`
+ADD CONSTRAINT `fk_groups_creator`
+FOREIGN KEY (`creator_id`) REFERENCES `Users`(`user_id`);

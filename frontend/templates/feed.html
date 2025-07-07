@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/posts.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/members_popup.css') }}">
 
 
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
@@ -23,6 +24,9 @@
     {% else %}
         {% include 'components/topnav_logged_out.html' %}
     {% endif %}
+    <script type="text/javascript">
+        window.current_user_id = "{{ current_user.user_id if current_user.is_authenticated else '' }}";
+    </script>
     <div class="main-body">
         <div class="left-bar">
             <div class="left-bar-upper">
@@ -30,7 +34,7 @@
                     <div class="user-main">
                         <div class="profile-pic"><img src="{{ current_user.profile_picture if current_user.profile_picture else url_for('static', filename='media/default/pfp.jpg') }}"></div>
                         <div class="userdata">
-                            <hl class="user_name">{{ session.get('user_name', 'Default Name') }}</hl>
+                            <span class="user_name">{{ session.get('user_name', 'Default Name') }}</span>
                             <p class="username">@{{ session.get('username', 'def') }}</p>
                         </div>
                     </div>
@@ -48,17 +52,13 @@
                 <div class="left-bar-lower">
                     <div class="community-box">
                         <div class="community-sign">
-                            <i class="fa-solid fa-people-group" title="Communities"></i>
-                            <hl class="community-name">Communities</hl>
+                            <i class="fa-solid fa-people-group" title="My Communities"></i>
+                            <span class="community-name">My Communities</span>
                         </div>
-                        <div class="community-groups">
-                            <a class="group">
-                                <div class="community-group-logo">
-                                    <img src="{{ url_for('static', filename=session.get('profile_pic', 'media/default/community.png')) }}">
-                                </div>
-                                <hl class="group-name">Community A</hl>
-                            </a>
-                        </div>
+                        <div class="community-groups-wrapper">
+                            <div class="community-groups" id="community-list"></div>
+                        <button id="addCommunityButton" title="Add Community"><i class="fa-solid fa-plus"></i></button>
+                        </div>  
                     </div>
                 </div>
             </div>
@@ -68,35 +68,338 @@
             {% include 'components/posts.html' %}
         </div>
     </div>
+
+    <!-- Add Community Modal -->
+    <div id="add-community-modal" class="modal">
+        <div class="community-creation-modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Create a New Community</h2>
+            <form id="create-community-form" enctype="multipart/form-data">
+                <div id="community-creation-messages" class="message-container" style="display: none;"></div>
+                
+                <label for="community-name">Community Name</label>
+                <input type="text" id="community-name" name="name" required>
+                
+                <label for="community-description">Description</label>
+                <textarea id="community-description" name="description" rows="4" required></textarea>
+                
+                <label for="community-pfp">Community Picture (Optional)</label>
+                <input type="file" id="community-pfp" name="profile_picture" accept="image/*">
+                
+                <button type="submit">Create Community</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Members Popup Modal -->
+    <div id="members-popup-modal" class="modal">
+        <div class="members-popup-content">
+            <span class="close-button">&times;</span>
+            <h2>Community Members</h2>
+            <div id="member-list-container" class="member-list-container">
+                <p>Loading members...</p>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
+        // Moved imports here so they are always executed when feed.html loads
         import { setupPostsDisplayModule } from "{{ url_for('static', filename='js/posts/post.js') }}";
         import { setupPostCreationModule } from "{{ url_for('static', filename='js/posts/post_create.js') }}";
-        
+        import { setupCommunityPage } from "{{ url_for('static', filename='js/community.js') }}";
+
+        // --- Community Action Handlers ---
+
+        const createActionButton = (text, className, onClick) => {
+            const button = document.createElement('button');
+            button.textContent = text;
+            button.className = `community-action-btn ${className}`;
+            button.addEventListener('click', onClick);
+            return button;
+        };
+
+        const handleJoinGroup = async (communityId) => {
+            try {
+                const response = await fetch(`/api/groups/${communityId}/join`, { method: 'POST' });
+                const result = await response.json();
+                if (response.ok && result.status === 'success') {
+                    // Re-initialize to update the button to "Leave" and refresh member count
+                    window.initializeCommunityPage(communityId);
+                } else {
+                    alert(`Error: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Failed to join group:', error);
+                alert('An error occurred while trying to join the group.');
+            }
+        };
+
+        const handleLeaveGroup = async (communityId) => {
+            if (!confirm('Are you sure you want to leave this group?')) return;
+            try {
+                const response = await fetch(`/api/groups/${communityId}/leave`, { method: 'POST' });
+                const result = await response.json();
+                if (response.ok && result.status === 'success') {
+                    // Re-initialize to update the button to "Join" and refresh member count
+                    window.initializeCommunityPage(communityId);
+                } else {
+                    alert(`Error: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Failed to leave group:', error);
+                alert('An error occurred while trying to leave the group.');
+            }
+        };
+
+        const handleRemoveGroup = async (communityId) => {
+            if (!confirm('Are you sure you want to permanently delete this group? This action cannot be undone.')) return;
+            try {
+                const response = await fetch(`/api/groups/${communityId}`, { method: 'DELETE' });
+                if (response.ok) {
+                    alert('Group deleted successfully.');
+                    window.location.href = "{{ url_for('feed.feed') }}"; // Redirect to the main feed
+                } else {
+                    const result = await response.json();
+                    alert(`Error: ${result.message || 'Failed to delete group.'}`);
+                }
+            } catch (error) {
+                console.error('Failed to delete group:', error);
+                alert('An error occurred while trying to delete the group.');
+            }
+        };
+
+        // Define a function that can be called to initialize the community page
+        // This function is now part of the main feed.html script.
+        window.initializeCommunityPage = function(communityId) {
+        console.log('initializing page')
+
+        if (communityId) {
+            fetch(`/api/groups/${communityId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const coverImage = document.querySelector('.profile-image-wrapper img');
+                    if (data.profile_picture) {
+                        coverImage.src = data.profile_picture;
+                    } else {
+                        coverImage.src = "{{ url_for('static', filename='media/default/community_cover.png') }}";
+                    }
+                    window.is_member = data.is_member;
+                    window.is_admin = data.is_admin;
+                    window.is_moderator = data.is_moderator;
+
+                    document.querySelector('.profile-overlay h2').textContent = data.name || 'Community Name';
+                    document.querySelector('.profile-overlay p').textContent = data.description || 'A space for thoughtful discussions.';
+
+                    // Update meta information (members, events, pins) - using placeholder data as backend doesn't provide these
+                    document.querySelector('.community-meta .meta-item:nth-child(1) strong').textContent = data.members_count;
+                    document.querySelector('.community-meta .meta-item:nth-child(2) strong').textContent = data.events_count || '0';
+                    document.querySelector('.community-meta .meta-item:nth-child(3) strong').textContent = data.pins_count || '0';
+
+                    // --- Add Join/
+                    // Leave/Remove Button ---
+                    // This assumes your API at `/api/groups/${communityId}` now returns
+                    // `is_member: true/false` and `is_admin: true/false` for the current user.
+                    const actionButtonContainer = document.querySelector('.community-action-button-container');
+                    if (actionButtonContainer) {
+                        actionButtonContainer.innerHTML = ''; // Clear previous button
+                        let button;
+
+                        if (data.is_admin) {
+                            button = createActionButton('Remove Group', 'remove-group-btn', () => handleRemoveGroup(communityId));
+                        } else if (data.is_member) {
+                            button = createActionButton('Leave Group', 'leave-group-btn', () => handleLeaveGroup(communityId));
+                        } else {
+                            button = createActionButton('Join Group', 'join-group-btn', () => handleJoinGroup(communityId));
+                        }
+                        if (button) actionButtonContainer.appendChild(button);
+                    }
+                })
+                .catch(error => console.error('Error fetching community data:', error));
+        }
+
+        // Add event listener for the back button
+        const backButton = document.querySelector('.profile-image-wrapper .back');
+        if (backButton) {
+            backButton.addEventListener('click', function() {
+                window.history.back(); // Go back to the previous page in history
+            });
+        }
+
+
+    };
+
 
         document.addEventListener('DOMContentLoaded', function () {
-            const communityLink = document.querySelector('.group');
             const mainFeed = document.querySelector('.main-feed');
+            // Initial setup for the main feed posts (when on the main feed page)
+            // No contextId needed for the general feed unless filtering by current user's friends etc.
             setupPostsDisplayModule();
             setupPostCreationModule();
-            communityLink.addEventListener('click', function (e) {
-                e.preventDefault();
-        
-                fetch("{{ url_for('feed.community') }}")
-                    .then(response => response.text())
-                    .then(html => {
-                        mainFeed.innerHTML = html;
-                        initPostTypeButtons(); // <-- re-bind listeners
-                        const back = document.querySelector('.back');
-                        back.addEventListener('click', function () {
-                            window.location.href = '/feed';
-                        });
-                    })
-                    .catch(err => {
-                        console.error('Failed to load community content:', err);
-                    });
+
+            // --- Community Creation Modal Logic ---
+            const addCommunityModal = document.getElementById('add-community-modal');
+            const addCommunityButton = document.getElementById('addCommunityButton');
+            const closeCommunityModalButton = addCommunityModal.querySelector('.close-button');
+            const createCommunityForm = document.getElementById('create-community-form');
+            const communityMessages = document.getElementById('community-creation-messages');
+
+            const showCommunityMessage = (type, message) => {
+                communityMessages.className = `message-container ${type}`;
+                communityMessages.textContent = message;
+                communityMessages.style.display = 'block';
+            };
+
+            addCommunityButton.addEventListener('click', () => {
+                addCommunityModal.style.display = 'flex';
             });
+
+            closeCommunityModalButton.addEventListener('click', () => {
+                addCommunityModal.style.display = 'none';
+                communityMessages.style.display = 'none';
+                createCommunityForm.reset();
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target === addCommunityModal) {
+                    addCommunityModal.style.display = 'none';
+                    communityMessages.style.display = 'none';
+                    createCommunityForm.reset();
+                }
+            });
+
+            createCommunityForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(createCommunityForm);
+
+                try {
+                    const response = await fetch("{{ url_for('groups.create_group') }}", {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok && result.status === 'success') {
+                        showCommunityMessage('success', 'Community created successfully!');
+                        setTimeout(() => {
+                            addCommunityModal.style.display = 'none';
+                            createCommunityForm.reset();
+                            window.location.reload(); // Simple refresh for now
+                        }, 2000);
+                    } else {
+                        showCommunityMessage('error', result.message || 'Failed to create community.');
+                    }
+                } catch (error) {
+                    console.error('Error creating community:', error);
+                    showCommunityMessage('error', 'An unexpected error occurred.');
+                }
+            });
+
+            // Function to load and display community content
+            const loadCommunityContent = async (communityId) => {
+                mainFeed.innerHTML = ''; // Clear current content
+                try {
+                    // Fetch only the HTML structure of community.html
+                    const response = await fetch("{{ url_for('feed.get_community_content') }}");
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const html = await response.text();
+                    mainFeed.innerHTML = html; // Insert the HTML structure
+
+                    // Now that the HTML is in the DOM, call the initialization function
+                    // This function will now handle its own post module initialization
+                    window.initializeCommunityPage(communityId, );
+
+                    // Reinitialize posts modules for the newly loaded content
+                    // Pass the communityId as the contextId for the posts module
+                    // Call these directly after HTML is injected and initializeCommunityPage is called
+                    console.log('Reinitializing posts modules after community load with ID:', communityId); // Debug log
+                    setupCommunityPage(communityId, window.is_member, window.is_admin, window.is_moderator);
+                    setupPostsDisplayModule(communityId, 1);
+                    setupPostCreationModule(communityId); // Pass communityId if post creation is specific to a group
+                    
+                } catch (error) {
+                    console.error('Error loading community HTML content:', error);
+                    mainFeed.innerHTML = '<p class="error-message">Failed to load community content.</p>';
+                }
+            };
+
+
+            // --- Fetch and Display Communities in Left Bar ---
+            const communityListDiv = document.getElementById('community-list');
+
+            const fetchCommunities = async () => {
+                try {
+                    const response = await fetch("{{ url_for('groups.get_user_groups') }}");
+
+                    const communities = await response.json();
+                    
+                    communityListDiv.innerHTML = ''; // Clear existing communities
+
+                    if (communities.length === 0) {
+                        communityListDiv.innerHTML = '<p class="no-communities">No communities joined yet.</p>'; 
+                        return;
+                    }
+
+                    communities.forEach(community => {
+                        const communityElement = document.createElement('a');
+                        communityElement.href = `/feed/community/${community.group_id}`; // Set the correct URL
+                        communityElement.classList.add('group');
+                        communityElement.dataset.communityId = community.group_id; // Store community ID
+                        communityElement.innerHTML = `
+                            <div class="community-group-logo">
+                                <img src="${community.profile_picture || "{{ url_for('static', filename='media/default/community.png') }}"}">
+                            </div>
+                            <span class="group-name">${community.name}</span>
+                        `;
+                        communityListDiv.appendChild(communityElement);
+
+                        // Add event listener for each community link
+                        communityElement.addEventListener('click', function (e) {
+                            e.preventDefault(); // Prevent default link behavior
+                            const communityId = this.dataset.communityId; 
+                            loadCommunityContent(communityId); // Load content and initialize
+                            window.history.pushState({}, '', `/feed/community/${communityId}`); // Update URL
+                        });
+                    });
+                } catch (error) {
+                    console.error('Error fetching communities:', error);
+                    communityListDiv.innerHTML = '<p class="error-message">Failed to load communities.</p>';
+                }
+            };
+
+            fetchCommunities(); // Call on page load
+
+            // Handle initial page load if URL is /feed/community/{communityId}
+            // This relies on Flask passing initial_community_id to the template
+            const initialCommunityId = "{{ initial_community_id | default('') }}";
+            if (initialCommunityId) {
+                loadCommunityContent(initialCommunityId);
+            }
+
+            // Listen for popstate event (browser back/forward buttons)
+            window.addEventListener('popstate', (event) => {
+                const path = window.location.pathname;
+                const communityMatch = path.match(/\/feed\/community\/(\d+)/);
+
+                if (communityMatch) {
+                    // If the URL is for a community page, load that community's content.
+                    const communityId = communityMatch[1];
+                    loadCommunityContent(communityId);
+                } else if (path === '/feed' || path === '/feed/') {
+                    // If the URL is the main feed, reload the page to restore its original state.
+                    window.location.reload();
+                }
+            });
+
         });
-        </script>
+    </script>
         
 
 </html>

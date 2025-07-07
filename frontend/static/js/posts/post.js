@@ -6,7 +6,7 @@
 // Post creation logic is handled in post_create.js.
 // API interactions are in post_api.js.
 
-import { fetchAndRenderUserPosts } from './post_display.js';
+import { fetchAndRenderUserPosts, setupSinglePostModalListeners, setupImageEnlargementListeners } from './post_display.js';
 
 // These variables maintain the state of the filters and sort order
 // for the currently displayed posts. They are private to this module.
@@ -16,9 +16,9 @@ let currentSortBy = 'recent';
 // DOM Elements specific to the posts display component.
 // These are assumed to be present within the HTML structure where this module is used.
 // The 'postsListContainer' is where the actual post items will be rendered.
-const postsListContainer = document.getElementById('posts-list');
-const postTypeButtons = document.querySelectorAll(".post-type-button");
-const sortBySelect = document.querySelector(".sort-by");
+let postsListContainer = document.getElementById('posts-list');
+let postTypeButtons = document.querySelectorAll(".post-type-button");
+let sortBySelect = document.querySelector(".sort-by");
 
 
 /**
@@ -27,10 +27,11 @@ const sortBySelect = document.querySelector(".sort-by");
  * triggers a refresh of the displayed posts.
  *
  * @param {number} contextId - The ID relevant to the current page context
+ * @param {number} contextType - The ID relevant to the current page context
  * (e.g., viewedUserId for a profile page, groupId for a group page, or null for a general feed).
  * This ID will be passed to fetchAndRenderUserPosts (or a more generic fetchAndRenderPosts).
  */
-async function refreshPostsDisplay(contextId) {
+async function refreshPostsDisplay(contextId, contextType) {
     const selectedPostType = currentActivePostTypeButton ? currentActivePostTypeButton.id : 'All';
     const selectedSortBy = sortBySelect ? sortBySelect.value : 'recent';
 
@@ -48,7 +49,7 @@ async function refreshPostsDisplay(contextId) {
     // For a profile page, 'public' is a common default, but could be 'friends'
     // if the viewer is a friend, or 'private' if it's their own profile.
     // This example keeps 'public' as a default for simplicity.
-    await fetchAndRenderUserPosts(contextId, postsListContainer, selectedPostType, selectedSortBy);
+    await fetchAndRenderUserPosts(contextId, contextType, postsListContainer, selectedPostType, selectedSortBy);
 }
 
 /**
@@ -57,8 +58,13 @@ async function refreshPostsDisplay(contextId) {
  * for the "All" button.
  *
  * @param {number} contextId - The ID relevant to the current page context.
+ * @param {number} contextType - The ID relevant to the current page context.
  */
-function setupPostFilteringAndSorting(contextId) {
+function setupPostFilteringAndSorting(contextId, contextType) {
+    postsListContainer = document.getElementById('posts-list');
+    postTypeButtons = document.querySelectorAll(".post-type-button");
+    sortBySelect = document.querySelector(".sort-by");
+
     // Set the initial active state for the "All" button
     currentActivePostTypeButton = document.getElementById("All");
     if (currentActivePostTypeButton) {
@@ -77,7 +83,7 @@ function setupPostFilteringAndSorting(contextId) {
             currentActivePostTypeButton = this; // Update the reference to the currently active button
 
             // Refresh the posts display with the new type filter
-            refreshPostsDisplay(contextId);
+            refreshPostsDisplay(contextId, contextType);
         });
     });
 
@@ -85,7 +91,7 @@ function setupPostFilteringAndSorting(contextId) {
     if (sortBySelect) {
         sortBySelect.addEventListener('change', () => {
             currentSortBy = sortBySelect.value; // Update the current sort order
-            refreshPostsDisplay(contextId); // Refresh the posts display with the new sort order
+            refreshPostsDisplay(contextId, contextType); // Refresh the posts display with the new sort order
         });
     } else {
         console.warn("Sort by select dropdown (class='sort-by') not found. Sorting functionality will be limited.");
@@ -103,7 +109,7 @@ function setupPostFilteringAndSorting(contextId) {
  * For a group page, this would be the `groupId`.
  * For a general feed, this might be `currentUserId` or a specific feed type.
  */
-export function setupPostsDisplayModule(contextId) {
+export function setupPostsDisplayModule(contextId, contextType) {
     // Perform a crucial check to ensure the main container for posts exists.
     // If it doesn't, this module cannot function correctly.
     if (!postsListContainer) {
@@ -112,8 +118,10 @@ export function setupPostsDisplayModule(contextId) {
     }
 
     // Initialize the filtering and sorting UI and trigger the initial load of posts.
-    setupPostFilteringAndSorting(contextId);
-    refreshPostsDisplay(contextId);
+    setupPostFilteringAndSorting(contextId, contextType);
+    refreshPostsDisplay(contextId, contextType);
+    setupSinglePostModalListeners();
+    setupImageEnlargementListeners();
     // The initial call to refreshPostsDisplay is now handled within setupPostFilteringAndSorting
     // to ensure the initial state of buttons/selects is set before the first fetch.
 }

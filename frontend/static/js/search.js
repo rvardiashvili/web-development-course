@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             resultsDropdown.appendChild(groupHeader);
                             data.groups.forEach(group => {
                                 const a = document.createElement('a');
-                                a.href = `/groups/${group.id}`;
+                                a.href = `/feed/community/${group.id}`;
                                 a.textContent = group.name;
                                 resultsDropdown.appendChild(a);
                             });

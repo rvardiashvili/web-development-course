@@ -1,0 +1,207 @@
+/* members_popup.css */
+
+/* The modal content box for the members popup */
+/* It uses the .modal class from posts.css for the overlay background */
+.members-popup-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px 30px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 450px; /* A good width for a list of members */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 80vh; /* Limit height */
+    z-index: 10; /* Ensure modal is above other page content */
+}
+
+.members-popup-content h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+/* The close button inherits from .close-button in posts.css, but we can add specifics if needed */
+.members-popup-content .close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease; /* Smooth transition for hover */
+}
+
+.members-popup-content .close-button:hover,
+.members-popup-content .close-button:focus {
+    color: black;
+    text-decoration: none;
+}
+
+/* Container for the list of members */
+.member-list-container {
+    overflow-y: auto; /* Enable scrolling for the list itself */
+    padding-right: 10px; /* Space for scrollbar */
+    /* Custom scrollbar for better aesthetics */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: rgb(150, 150, 150) transparent; /* Firefox */
+}
+
+/* Webkit (Chrome, Safari) scrollbar styles */
+.member-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.member-list-container::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+}
+
+.member-list-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+/* Individual member item */
+.member-item {
+    display: flex;
+    justify-content: space-between; /* Distribute space between member info and actions */
+    align-items: center;
+    padding: 8px 10px; /* Slightly reduced vertical padding */
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+    color: inherit; /* Ensure text color is inherited */
+    border-radius: 5px; /* Subtle rounded corners for each item */
+}
+
+.member-item:last-child {
+    border-bottom: none;
+}
+
+.member-item:hover {
+    background-color: #f0f0f0; /* Lighter hover background, similar to #addCommunityButton:hover */
+}
+
+/* Styling for the member's profile link and image/name */
+.member-item .member-info {
+    display: flex;
+    align-items: center;
+    text-decoration: none; /* Remove underline from the link */
+    color: inherit; /* Inherit color from parent */
+    flex-grow: 1; /* Allow member info to take available space */
+}
+
+.member-item .member-info img {
+    border-radius: 50%;
+    width: 40px; /* Slightly smaller to match .community-group-logo */
+    height: 40px; /* Slightly smaller to match .community-group-logo */
+    aspect-ratio: 1/1; /* Ensure perfect circle */
+    margin-right: 12px; /* Adjusted margin */
+    object-fit: cover;
+}
+
+.member-item .member-info span {
+    font-weight: normal; /* Match .username font-weight */
+    color: #333;
+    font-size: medium; /* Match .group font-size */
+}
+
+.role-identifier {
+    font-size: 0.75em; /* Slightly smaller for subtlety */
+    margin-left: 6px; /* Adjusted margin */
+    font-style: italic;
+    font-weight: normal; /* Ensure it's not bold */
+}
+
+.role-identifier.admin { color: rgb(177, 180, 0); }
+.role-identifier.moderator { color: lightblue; }
+
+/* --- New Styles for Dropdown Menu --- */
+
+.member-actions {
+    position: relative; /* Needed for positioning the dropdown menu */
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.three-dots-button {
+    background: none;
+    border: none;
+    font-size: 24px; /* Larger for better tap target */
+    font-weight: bold; /* Ensures dots are visible */
+    cursor: pointer;
+    padding: 0 8px; /* More padding for easier click */
+    color: #8b8b8b; /* Subtle color, similar to .username */
+    transition: color 0.2s ease, transform 0.2s ease; /* Smooth transition */
+    display: none; /* Hidden by default, JavaScript will show if options exist */
+    border-radius: 50%; /* Make it a circular hit area */
+    width: 30px; /* Fixed size for hit area */
+    height: 30px;
+    display: flex; /* Use flexbox to center the icon */
+    align-items: center;
+    justify-content: center;
+}
+
+.three-dots-button:hover {
+    color: #333; /* Darken on hover */
+    background-color: #f5f5f5; /* Subtle background on hover */
+    transform: scale(1.1); /* Slight scale for interactivity */
+}
+
+.dropdown-menu {
+    display: none; /* Hidden by default, JavaScript toggles this */
+    position:sticky;
+    bottom: 100%; /* IMPORTANT: Position ABOVE the button */
+    right: 0; /* Align to the right of the button */
+    background-color: #fefefe; /* Match modal background */
+    min-width: 200px; /* Ensure enough width for text */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Consistent shadow */
+    z-index: 1000; /* VERY IMPORTANT: Ensure it's on top of everything */
+    border-radius: 8px; /* More rounded corners */
+    overflow: hidden;
+    padding: 5px 0;
+    margin-bottom: 5px; /* Small gap between button and dropdown */
+}
+
+.dropdown-menu .dropdown-item {
+    color: #333;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    white-space: nowrap;
+    font-size: 14px; /* Consistent with small text */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #797979; /* Darker hover background, similar to .group:hover */
+    color: white; /* White text on hover */
+}
+
+/* Specific styling for 'Remove Member' for caution */
+.dropdown-menu .remove-member-button {
+    color: #dc3545; /* Red color for caution, matching .remove-group-btn */
+}
+
+.dropdown-menu .remove-member-button:hover {
+    background-color: #dc3545; /* Red background on hover */
+    color: white;
+}
+
+/* Specific styling for 'Give Away Admin Power' for high caution */
+.dropdown-menu .make-admin-button {
+    color: #ff7f07; /* Warning color, matching .leave-group-btn */
+}
+
+.dropdown-menu .make-admin-button:hover {
+    background-color: #ff7f07; /* Darker warning color on hover */
+    color: #212529; /* Dark text for contrast */
+}

@@ -1,14 +1,14 @@
 from database.database import db
 from models.social.posts import Posts # Assuming this path to your Posts model
-from models.users import Users       # Assuming this path to your Users model
-from models.social.groups import Group # Assuming this path to your Group model
+from models.users import Users, Followers # Assuming this path to your Users and Followers model
+from models.social.groups import Group, GroupMembership # Assuming this path to your Group model
 from models.social.posts import liked_by # Import the liked_by model
 import datetime
 from flask import current_app # Import current_app for logging
 import os
 import uuid # For generating unique filenames
 from werkzeug.utils import secure_filename # Import secure_filename for safe filenames
-from sqlalchemy import func # Import func for aggregate functions like count
+from sqlalchemy import func, or_, and_ # Import func, or_, and 'and_' for complex queries
 
 # Assuming UPLOAD_FOLDER and UPLOAD_PATH are defined in your config.py
 # If not, you might need to define them here or ensure they are accessible.
@@ -25,12 +25,13 @@ except ImportError:
 
 
 # Helper function to serialize a Post object to a dictionary
-def _serialize_post(post, current_user_id=None):
+def _serialize_post(post, current_user_id=None, like_count=None):
     """
     Serializes a Posts SQLAlchemy object into a dictionary suitable for JSON response.
     Includes related User and Group data by explicitly querying if not already loaded.
     Infers 'post_type' based on media_url if no dedicated column exists.
     Includes like count and current user's like status.
+    Accepts an optional pre-calculated like_count for efficiency.
     """
     if not post:
         return None
@@ -85,7 +86,7 @@ def _serialize_post(post, current_user_id=None):
         if group_obj:
             post_dict['group'] = {
                 'group_id': group_obj.group_id,
-                'group_name': group_obj.group_name,
+                'name': group_obj.name,
                 # Add other group fields you want to expose from the Group model
             }
         else:
@@ -93,12 +94,17 @@ def _serialize_post(post, current_user_id=None):
     else:
         post_dict['group'] = None
 
-    # Add like count
-    post_dict['like_count'] = liked_by.query.filter_by(post_id=post.post_id).count()
+    # Add like count, using the pre-calculated one if available
+    if like_count is not None:
+        post_dict['like_count'] = like_count
+    else:
+        # Fallback for other uses of this function where like_count isn't pre-fetched
+        post_dict['like_count'] = db.session.query(func.count(liked_by.post_id)).filter_by(post_id=post.post_id).scalar()
+
 
     # Add current user's like status if current_user_id is provided
     if current_user_id:
-        user_liked = liked_by.query.filter_by(post_id=post.post_id, user_id=current_user_id).first()
+        user_liked = db.session.query(liked_by).filter_by(post_id=post.post_id, user_id=current_user_id).first()
         post_dict['user_liked'] = True if user_liked else False
         post_dict['user_emote_type'] = user_liked.emote_type if user_liked else None
     else:
@@ -151,7 +157,7 @@ def get_post(post_id, current_user_id=None):
     Retrieves a single post by its ID.
     NOTE: This function currently implements only basic visibility checks.
     For a real-world application, comprehensive authorization logic (e.g., checking
-    friend status, group membership, or user roles) must be added here,
+    follower status, group membership, or user roles) must be added here,
     likely by passing the `current_user` object from the route.
     """
     try:
@@ -164,9 +170,9 @@ def get_post(post_id, current_user_id=None):
 
         # Basic visibility check (expand this for full authorization)
         # if post.visibility == 'private' and post.user_id != requesting_user_id:
-        #    return {'status': 'error', 'message': 'Unauthorized to view this post.', 'code': 403}
+        #     return {'status': 'error', 'message': 'Unauthorized to view this post.', 'code': 403}
         # if post.visibility == 'group' and not is_user_member_of_group(requesting_user_id, post.group_id):
-        #    return {'status': 'error', 'message': 'Unauthorized to view this post.', 'code': 403}
+        #     return {'status': 'error', 'message': 'Unauthorized to view this post.', 'code': 403}
 
         return {'status': 'success', 'post': _serialize_post(post, current_user_id)}
     except Exception as e:
@@ -202,8 +208,12 @@ def create_post(post_data):
         if not group_exists:
             return {'status': 'error', 'message': 'Group does not exist.', 'code': 404}
 
-    # Validate visibility
-    allowed_visibilities = ['public', 'private', 'friends', 'group'] # Define your allowed visibilities
+        is_member = GroupMembership.query.filter_by(group_id=group_id, user_id=user_id).first()
+        if not is_member:
+            return {'status': 'error', 'message': 'User is not a member of this group.', 'code': 403}
+
+    # Validate visibility based on the new schema
+    allowed_visibilities = ['public', 'followers', 'group']
     if visibility not in allowed_visibilities:
         return {'status': 'error', 'message': f"Invalid visibility: {visibility}. Must be one of {', '.join(allowed_visibilities)}.", 'code': 400}
 
@@ -231,45 +241,129 @@ def create_post(post_data):
         current_app.logger.error(f"Error creating post: {e}")
         return {'status': 'error', 'message': f'Failed to create post: {str(e)}', 'code': 500}
 
-def get_post_list(filters, current_user_id=None):
+def get_post_list(current_user_id, filters={}, page=1, per_page=20):
     """
-    Retrieves a list of posts based on filters.
-    Filters can include 'user_id', 'group_id', 'visibility', etc.
-    NOTE: This function currently implements only basic visibility filtering.
-    For a real-world application, comprehensive authorization logic (e.g., showing
-    friends' posts, group-specific posts based on membership) must be added here,
-    likely by passing the `current_user` object from the route.
+    Retrieves a personalized, paginated list of posts. This function is now
+    context-aware and handles three main scenarios:
+    1. Viewing a specific group's feed.
+    2. Viewing a specific user's profile feed.
+    3. Viewing the current user's personalized home feed.
+    It also applies sorting and post type filters in all contexts.
     """
     try:
-        query = Posts.query
-
-        # Apply filters
-        if 'user_id' in filters:
-            query = query.filter_by(user_id=filters['user_id'])
+        query = None
+        
+        # --- Context 1: Viewing a specific Group's feed ---
         if 'group_id' in filters:
-            query = query.filter_by(group_id=filters['group_id'])
-        if 'visibility' in filters:
-            query = query.filter_by(visibility=filters['visibility'])
+            group_id = filters['group_id']
+            # Authorization: Check if the current user is a member of the group
+            is_member = GroupMembership.query.filter_by(group_id=group_id, user_id=current_user_id).first()
+            if not is_member:
+                return {'status': 'error', 'message': 'You are not a member of this group.', 'code': 403}
+            # A group member can see all posts within that group.
+            query = Posts.query.filter(Posts.group_id == group_id)
+
+        # --- Context 2: Viewing a specific User's profile feed ---
+        elif 'user_id' in filters:
+            target_user_id = filters['user_id']
+            
+            # Determine relationship to the target user for visibility
+            visible_statuses = ['public'] # Strangers can see public posts
+            if current_user_id:
+                if int(current_user_id) == int(target_user_id):
+                    # User is viewing their own profile, can see everything
+                    visible_statuses.extend(['followers', 'group'])
+                else:
+                    # Check if current user follows the target user
+                    is_following = Followers.query.filter_by(follower_id=current_user_id, followed_id=target_user_id).first()
+                    if is_following:
+                        visible_statuses.append('followers')
+            
+            query = Posts.query.filter(
+                and_(
+                    Posts.user_id == target_user_id,
+                    Posts.visibility.in_(visible_statuses)
+                )
+            )
+
+        # --- Context 3: Viewing the personalized Home feed (default) ---
         else:
-            # Default to showing only public posts if no specific visibility is requested
-            # This is a simplification; a real app needs to consider current_user's permissions
-            query = query.filter(Posts.visibility == 'public')
+            followed_user_ids = [f.followed_id for f in Followers.query.filter_by(follower_id=current_user_id).all()]
+            member_of_group_ids = [gm.group_id for gm in GroupMembership.query.filter_by(user_id=current_user_id).all()]
 
-        # Order by creation date, newest first
-        query = query.order_by(Posts.created_at.desc())
+            # Build the OR conditions for the home feed
+            home_feed_conditions = [
+                # 1. All posts from groups the user is a member of.
+                Posts.group_id.in_(member_of_group_ids),
+                # 2. All of the user's own posts (that aren't in groups already covered above).
+                and_(Posts.user_id == current_user_id, Posts.group_id == None),
+                # 3. 'public' and 'followers' posts from people they follow (that aren't in groups).
+                and_(
+                    Posts.user_id.in_(followed_user_ids),
+                    Posts.visibility.in_(['public', 'followers']),
+                    Posts.group_id == None
+                ),
+                # 4. Any 'public' post from anyone, including from groups they are NOT a member of.
+                Posts.visibility == 'public'
+            ]
+            query = Posts.query.filter(or_(*home_feed_conditions))
+        
+        # --- Apply post_type filter to the determined query context ---
+        post_type = filters.get('post_type')
+        if post_type == 'articles':
+            query = query.filter(Posts.media_url == None)
+        elif post_type == 'images':
+            image_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
+            query = query.filter(or_(*[Posts.media_url.ilike(f'%{ext}') for ext in image_extensions]))
+        elif post_type == 'videos':
+            video_extensions = ['.mp4', '.mov', '.avi', '.wmv', '.flv', '.webm']
+            query = query.filter(or_(*[Posts.media_url.ilike(f'%{ext}') for ext in video_extensions]))
 
-        posts = query.all()
+        # --- Apply sorting logic ---
+        sort_by = filters.get('sort_by', 'Recent')
+        if sort_by == 'Top':
+            likes_count_subquery = db.session.query(
+                liked_by.post_id,
+                func.count(liked_by.user_id).label('like_count')
+            ).group_by(liked_by.post_id).subquery()
+            query = query.add_columns(func.coalesce(likes_count_subquery.c.like_count, 0).label('total_likes'))
+            query = query.outerjoin(likes_count_subquery, Posts.post_id == likes_count_subquery.c.post_id)
+            query = query.order_by(db.desc('total_likes'), Posts.created_at.desc())
+        else: # Default to 'Recent'
+            query = query.order_by(Posts.created_at.desc())
 
-        if not posts:
+        # --- Paginate and Serialize ---
+        paginated_results = query.paginate(page=page, per_page=per_page, error_out=False)
+        results = paginated_results.items
+
+        if not results:
             return {'status': 'info', 'message': 'No posts found matching the criteria.', 'posts': [], 'code': 200}
 
-        # Pass current_user_id to _serialize_post to determine user's like status
-        serialized_posts = [_serialize_post(post, current_user_id) for post in posts]
-        return {'status': 'success', 'posts': serialized_posts, 'code': 200}
+        serialized_posts = []
+        if sort_by == 'Top':
+            for row in results:
+                serialized_posts.append(_serialize_post(row[0], current_user_id, like_count=row[1]))
+        else:
+            for post in results:
+                serialized_posts.append(_serialize_post(post, current_user_id))
+        
+        return {
+            'status': 'success',
+            'posts': serialized_posts,
+            'pagination': {
+                'page': paginated_results.page,
+                'per_page': paginated_results.per_page,
+                'total_pages': paginated_results.pages,
+                'total_items': paginated_results.total
+            },
+            'code': 200
+        }
+
     except Exception as e:
         db.session.rollback()
-        current_app.logger.error(f"Error fetching post list: {e}")
+        current_app.logger.error(f"Error fetching post list for user {current_user_id}: {e}")
         return {'status': 'error', 'message': f'An error occurred: {str(e)}', 'code': 500}
+
 
 def like_post(post_id, user_id, emote_type='like'):
     try:
@@ -350,11 +444,16 @@ def delete_post(post_id, user_id):
 
         # Delete associated media file if it exists
         if post.media_url:
-            # Construct the absolute path to the file
-            filepath = os.path.join(current_app.root_path, post.media_url.lstrip('/'))
+            # Construct the absolute path to the file from the app's root directory
+            # This assumes UPLOAD_PATH starts with a directory in the app's static folder
+            filepath = os.path.join(current_app.root_path, 'static', post.media_url.split('/static/')[-1])
             if os.path.exists(filepath):
-                os.remove(filepath)
-                current_app.logger.info(f"Deleted media file: {filepath}")
+                try:
+                    os.remove(filepath)
+                    current_app.logger.info(f"Deleted media file: {filepath}")
+                except OSError as e:
+                    current_app.logger.error(f"Error deleting media file {filepath}: {e}")
+
 
         db.session.delete(post)
         db.session.commit()

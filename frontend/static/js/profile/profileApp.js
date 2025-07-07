@@ -44,9 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupResumeUploadListeners();
 
 
-    setupPostsDisplayModule(viewedUserId);
+    setupPostsDisplayModule(viewedUserId, 0);
     // Setup the post creation module, but only if viewing own profile
-    setupPostCreationModule(currentUserId);
+    setupPostCreationModule();
         
 
 

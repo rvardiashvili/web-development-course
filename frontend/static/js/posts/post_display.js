@@ -3,25 +3,25 @@
 import { fetchPostsApi, likePostApi, unlikePostApi, getLikeStatusApi, deletePostApi } from './post_api.js'; // Import new API functions
 
 // DOM Elements (assuming postsListContainer exists in your HTML)
-const postsListContainer = document.getElementById('posts-list');
+let postsListContainer = document.getElementById('posts-list');
 
 // New DOM elements for single post view modal
-const singlePostViewModal = document.getElementById('single-post-view-modal');
-const singlePostCloseButton = document.querySelector('.single-post-close-button');
-const singlePostProfilePic = document.querySelector('.single-post-profile-pic');
-const singlePostUsername = document.querySelector('.single-post-username');
-const singlePostContentText = document.querySelector('.single-post-content-text');
-const singlePostMediaContainer = document.querySelector('.single-post-media-container');
-const singlePostActionsContainer = document.querySelector('.single-post-actions');
-const singlePostMeta = document.querySelector('.single-post-meta');
+let singlePostViewModal = document.getElementById('single-post-view-modal');
+let singlePostCloseButton = document.querySelector('.single-post-close-button');
+let singlePostProfilePic = document.querySelector('.single-post-profile-pic');
+let singlePostUsername = document.querySelector('.single-post-username');
+let singlePostContentText = document.querySelector('.single-post-content-text');
+let singlePostMediaContainer = document.querySelector('.single-post-media-container');
+let singlePostActionsContainer = document.querySelector('.single-post-actions');
+let singlePostMeta = document.querySelector('.single-post-meta');
 // Removed global queries for singlePostLikeCountElement and singlePostLikeButtonElement
 // as they will be queried inside openSinglePostModal for reliability.
 
 
 // New DOM elements for image enlargement overlay
-const enlargedImageOverlay = document.getElementById('enlarged-image-overlay');
-const enlargedImage = document.querySelector('.enlarged-image');
-const imageOverlayCloseButton = document.querySelector('.image-overlay-close-button');
+let enlargedImageOverlay = document.getElementById('enlarged-image-overlay');
+let enlargedImage = document.querySelector('.enlarged-image');
+let imageOverlayCloseButton = document.querySelector('.image-overlay-close-button');
 
 // SVG icon for the heart/like
 const HEART_SVG = `
@@ -319,7 +319,7 @@ if (postData.is_own_post) {
             }
         }
     });
-    singlePostActionsContainer.appendChild(removePostButton);
+    singlePostActionsContainer.prepend(removePostButton);
 }
     // Display the modal
     singlePostViewModal.style.display = 'flex';
@@ -328,7 +328,16 @@ if (postData.is_own_post) {
 /**
  * Initializes event listeners for the single post view modal.
  */
-function setupSinglePostModalListeners() {
+export function setupSinglePostModalListeners() {
+
+    singlePostViewModal = document.getElementById('single-post-view-modal');
+    singlePostCloseButton = document.querySelector('.single-post-close-button');
+    singlePostProfilePic = document.querySelector('.single-post-profile-pic');
+    singlePostUsername = document.querySelector('.single-post-username');
+    singlePostContentText = document.querySelector('.single-post-content-text');
+    singlePostMediaContainer = document.querySelector('.single-post-media-container');
+    singlePostActionsContainer = document.querySelector('.single-post-actions');
+    singlePostMeta = document.querySelector('.single-post-meta');
     if (singlePostViewModal && singlePostCloseButton) {
         singlePostCloseButton.addEventListener('click', () => {
             singlePostViewModal.style.display = 'none';
@@ -361,7 +370,13 @@ function enlargeImage(imageUrl) {
 /**
  * Initializes event listeners for the image enlargement overlay.
  */
-function setupImageEnlargementListeners() {
+export function setupImageEnlargementListeners() {
+    postsListContainer = document.getElementById('posts-list');
+
+
+    enlargedImageOverlay = document.getElementById('enlarged-image-overlay');
+    enlargedImage = document.querySelector('.enlarged-image');
+    imageOverlayCloseButton = document.querySelector('.image-overlay-close-button');
     if (enlargedImageOverlay && imageOverlayCloseButton) {
         imageOverlayCloseButton.addEventListener('click', () => {
             enlargedImageOverlay.style.display = 'none';
@@ -386,15 +401,13 @@ function setupImageEnlargementListeners() {
  * This function is now more generic to support different pages (profile, feed, group).
  *
  * @param {number|null} contextId - The ID relevant to the current page context.
- * - For a profile page, this would be `viewedUserId`.
- * - For a group page, this would be `groupId`.
- * - For a general feed, this might be `currentUserId` (to filter for friends' posts) or `null`/`undefined` (for all public posts).
+ * @param {number|null} contextType - The type of context (0 for user, 1 for group).
  * @param {HTMLElement} containerElement - The DOM element where posts will be rendered.
  * @param {string} [visibilityFilter='public'] - Optional visibility filter (e.g., 'public', 'friends').
  * @param {string} [postTypeFilter='All'] - Optional post type filter ('All', 'Articles', 'Images', 'Videos').
  * @param {string} [sortBy='recent'] - Optional sort order ('recent', 'top').
  */
-export async function fetchAndRenderUserPosts(contextId, containerElement, postTypeFilter = 'All', sortBy = 'recent') {
+export async function fetchAndRenderUserPosts(contextId, contextType, containerElement, postTypeFilter = 'All', sortBy = 'recent') {
     if (!containerElement) {
         console.error("Container element for posts not provided.");
         return;
@@ -410,15 +423,14 @@ export async function fetchAndRenderUserPosts(contextId, containerElement, postT
 
         // Conditionally add user_id or group_id based on contextId
         // The backend's `get_post_list` service should handle these parameters.
-        if (contextId) {
-            // This assumes contextId is a user_id for profile pages,
-            // or a group_id for group pages. You might need more logic here
-            // to differentiate if contextId could be both.
-            // For a general feed, contextId might not be present or might be current_user_id.
-            // For simplicity, if contextId is provided, we assume it's a user_id for now.
-            // You'd extend this: if (isProfilePage) queryParams.append('user_id', contextId);
-            // else if (isGroupPage) queryParams.append('group_id', contextId);
-            queryParams.append('user_id', contextId); // Defaulting to user_id for now
+        if (contextId !== null && contextType !== null) {
+            if (contextType === 0) { // User context
+                queryParams.append('user_id', contextId);
+            } else if (contextType === 1) { // Group context
+                queryParams.append('group_id', contextId);
+            } else {
+                console.warn(`Unknown contextType: ${contextType}. Posts might not be filtered correctly.`);
+            }
         }
 
 
@@ -453,5 +465,4 @@ export async function fetchAndRenderUserPosts(contextId, containerElement, postT
 }
 
 // Ensure listeners for the new modals are set up when the module loads
-setupSinglePostModalListeners();
-setupImageEnlargementListeners();
+

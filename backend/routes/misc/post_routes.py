@@ -36,6 +36,9 @@ def create_post():
     media_file = request.files.get('media') # Get the uploaded file
 
     user_id = current_user.user_id # Get user_id from Flask-Login's current_user
+    group_id = request.form.get('group_id')
+
+
 
     # --- ADDED PRINT STATEMENT FOR DEBUGGING ---
     print(f"DEBUG: Flask received from frontend - content='{content}', visibility='{visibility}', post_type='{post_type}', user_id='{user_id}'")
@@ -52,6 +55,7 @@ def create_post():
         'user_id': user_id,
         'content': content,
         'visibility': visibility,
+        'group_id': group_id,
         'media_file': media_file
     }
 
@@ -75,7 +79,7 @@ def get_post_list():
     # Pass current_user.user_id for authorization in service layer if available
     current_user_id = current_user.user_id if current_user.is_authenticated else None
 
-    post_list_data = post_services.get_post_list(filters, current_user_id=current_user_id)
+    post_list_data = post_services.get_post_list(current_user_id, filters)
 
     if post_list_data and post_list_data.get('status') == 'success':
         return jsonify(post_list_data), 200

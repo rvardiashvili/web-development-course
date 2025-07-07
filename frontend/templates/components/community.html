@@ -1,24 +1,28 @@
 <div class="posts-main">
     <div class="profile-card">
         <div class="profile-image-wrapper">
+            <!-- Image source will be updated by JavaScript in feed.html -->
             <img src="{{ url_for('static', filename='media/default/community_cover.png') }}" alt="Community Cover">
             <div class="profile-overlay">
-                <h2>Community A</h2>
-                <p>A space for thoughtful AI discussions and sharing insights.</p>
+                <h2>Community Name</h2>
+                <p>A space for thoughtful discussions.</p>
             </div>
           <div class="back"><i class="fa-solid fa-arrow-left"></i></div> 
+          <div class="community-action-button-container"></div>
           <div class="settings-icon">⚙️</div>
         </div>
       
         <div class="community-meta">
-          <a href="/community/members" class="meta-item">👥<strong>2.4k</strong> Members</a>
-          <a href="/community/events" class="meta-item">📅<strong>5</strong> Events</a>
-          <a href="/community/pins" class="meta-item">📌<strong>3</strong> Pins</a>
+          <a class="meta-item" id="members-link">👥<strong>0</strong> Members</a>
+          <a href="/community/events" class="meta-item">📅<strong>0</strong> Events</a>
+          <a href="/community/pins" class="meta-item">📌<strong>0</strong> Pins</a>
         </div>
       </div>
       
-  
       {% include 'components/posts.html' %}
   
-
   </div>
+
+<script type="module">
+
+</script>
