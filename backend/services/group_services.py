@@ -35,7 +35,7 @@ def create_group(name, description, profile_picture, creator_id):
         file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
         profile_picture.save(file_path)
 
-        new_group.profile_picture = f'/static/media/communities/pfp/{unique_filename}'
+        new_group.profile_picture = f'/static/uploads/communities/pfp/{unique_filename}'
 
     try:
         db.session.add(new_group)
