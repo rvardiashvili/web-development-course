@@ -241,7 +241,7 @@ def create_post(post_data):
         current_app.logger.error(f"Error creating post: {e}")
         return {'status': 'error', 'message': f'Failed to create post: {str(e)}', 'code': 500}
 
-def get_post_list(current_user_id, filters={}, page=1, per_page=20):
+def get_post_list(current_user_id, filters={}, page=1, per_page=500):
     """
     Retrieves a personalized, paginated list of posts. This function is now
     context-aware and handles three main scenarios:
@@ -321,7 +321,7 @@ def get_post_list(current_user_id, filters={}, page=1, per_page=20):
 
         # --- Apply sorting logic ---
         sort_by = filters.get('sort_by', 'Recent')
-        if sort_by == 'Top':
+        if sort_by == 'top':
             likes_count_subquery = db.session.query(
                 liked_by.post_id,
                 func.count(liked_by.user_id).label('like_count')
@@ -331,7 +331,6 @@ def get_post_list(current_user_id, filters={}, page=1, per_page=20):
             query = query.order_by(db.desc('total_likes'), Posts.created_at.desc())
         else: # Default to 'Recent'
             query = query.order_by(Posts.created_at.desc())
-
         # --- Paginate and Serialize ---
         paginated_results = query.paginate(page=page, per_page=per_page, error_out=False)
         results = paginated_results.items
@@ -340,7 +339,7 @@ def get_post_list(current_user_id, filters={}, page=1, per_page=20):
             return {'status': 'info', 'message': 'No posts found matching the criteria.', 'posts': [], 'code': 200}
 
         serialized_posts = []
-        if sort_by == 'Top':
+        if sort_by == 'top':
             for row in results:
                 serialized_posts.append(_serialize_post(row[0], current_user_id, like_count=row[1]))
         else:

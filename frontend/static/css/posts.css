@@ -6,7 +6,6 @@
     flex-direction: row; /* Changed from 'direction' to 'flex-direction' for correctness */
     align-items: center;
     gap:5px;
-    margin-top: 30px;
 }
 
 .post-type-button{
@@ -35,6 +34,13 @@
     background-color: black;
 }
 
+.posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
 .sorter select { /* Targeted the select specifically */
     border: none;
     background: none;
@@ -53,11 +59,7 @@
     width: 100%;
 }
 
-.posts-suggestions-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-}
+
 
 /* --- New/Updated Styles for Post Creation Modal --- */
 
@@ -196,19 +198,26 @@
 }
 
 .create-post-button {
-    background-color: #28a745; /* Green color for create action */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    background-color: transparent; /* Modern, transparent background */
+    color: #888; /* Neutral, subtle color for the icon */
+    border: 2px dashed #d0d0d0; /* A less intrusive dashed border */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 1.1em;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
+    font-size: 1.2em; /* For the plus icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease; /* Smooth transition for all properties */
 }
 
 .create-post-button:hover {
-    background-color: #218838;
+    background-color: #f0f0f0; /* A very light gray on hover */
+    color: #333; /* Darken the icon on hover */
+    border-color: #bbb; /* Make border solid and darker on hover */
+    border-style: solid;
+    transform: scale(1.05);
 }
 
 /* Updated Styles for the Remove Post Button (Trash Bin SVG) */

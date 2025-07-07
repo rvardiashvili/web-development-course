@@ -3,11 +3,16 @@
 
         <!-- Your existing posts section HTML -->
         <div class="posts">
-            <div class = "post-type-selector">
-                <button class="post-type-button" id="All">All</button>
-                <button class="post-type-button" id="Articles">Articles</button>
-                <button class="post-type-button" id="Images">Images</button>
-                <button class="post-type-button" id="Videos">Videos</button>
+            <div class="posts-header">
+                <div class = "post-type-selector">
+                    <button class="post-type-button" id="All">All</button>
+                    <button class="post-type-button" id="Articles">Articles</button>
+                    <button class="post-type-button" id="Images">Images</button>
+                    <button class="post-type-button" id="Videos">Videos</button>
+                </div>
+                <div class="post-creation-area">
+                    <button id="create-new-post-button" class="create-post-button" title="Create New Post"><i class="fa-solid fa-plus"></i></button>
+                </div>
             </div>
             <div class="posts-middle">
                 <div class="posts-separator"></div>
@@ -29,14 +34,10 @@
                 <div class="suggestions">
                     <h1>Suggestions:</h1>
                     <div class="suggestions-separator"></div>
+                    <!-- This is where suggestions will be rendered by suggestions.js -->
+                    <div class="suggestions-list"></div>
                 </div>
             </div>
-        </div>
-
-        <!-- This is where your separate post creation component HTML would go -->
-        <!-- For example, as a standalone section or a modal trigger -->
-        <div class="post-creation-area" style="margin-top: 20px; text-align: center;">
-            <button id="create-new-post-button" class="action-button create-post-button">Create New Post</button>
         </div>
 
         <!-- The Modal for Post Creation -->

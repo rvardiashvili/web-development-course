@@ -9,8 +9,10 @@ from routes.misc.search_routes import search_bp
 from routes.misc.profile_routes import profile_api_bp
 from routes.misc.post_routes import posts_bp
 from routes.misc.group_routes import group_routes_bp
+from routes.misc.suggestions_route import suggestions_bp
 
 def init_app(app):
+    app.register_blueprint(suggestions_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(group_routes_bp)
     app.register_blueprint(auth_page_bp)

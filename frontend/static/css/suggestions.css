@@ -1,21 +1,115 @@
-.suggestions{
-    width: 20%;
-    background-color: #f5f5f5;
-    border-radius: 30px;
+
+.posts-suggestions-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.suggestions {
+    
+    width: 300px; /* Fixed width for the suggestions sidebar */
+    padding: 15px;
+    margin-left: 20px; /* Space between posts and suggestions */
+    background-color: #f8f9fa; /* A light background to distinguish it */
+    border-radius: 8px;
+    position: sticky; /* Make it stick on scroll */
+    top: 80px; /* Adjust based on your top nav height */
+    max-height: 60vh;
+    overflow: auto;
+}
+
+.suggestions h1 {
+    font-size: 1.2em;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.suggestions-separator {
+    height: 2px;
+    background-color: #e0e0e0;
+    margin-bottom: 15px;
+}
+
+.suggestions-list {
     display: flex;
     flex-direction: column;
-    text-align: left;
-    padding: 10px 30px;
-    font-size: xx-small;
-    justify-self: flex-end;
-    height: 800px;
+    gap: 15px; /* Space between suggestion items */
+
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+    background-color: #f1f1f1;
+}
+
+.suggestion-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    flex-grow: 1; /* Allow link to take up available space */
+    margin-right: 10px;
+}
+
+.suggestion-image img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.suggestion-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.suggestion-name {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 0.95em;
+}
+
+.suggestion-reason {
+    font-size: 0.8em;
+    color: #7f8c8d;
+    margin: 2px 0 0 0;
 }
 
 
+/* Styles for loading/error messages */
+.loading-suggestions,
+.no-suggestions,
+.error-suggestions {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 0.9em;
+    padding: 10px;
+}
 
-.suggestions-separator{
-    height: 2px;
-    width: 70%;
-    background-color: black;
-    align-self:center;
+
+.suggestions::-webkit-scrollbar {
+    width: 4px;
+}
+
+.suggestions::-webkit-scrollbar-thumb {
+    background: rgb(150, 150, 150);
+    border-radius: 4px;
+
+
+}
+
+.suggestions::-webkit-scrollbar-track {
+    background: transparent;
 }

@@ -21,7 +21,7 @@ import { setFollowListener, toggleFollowStatus, fetchAndRenderFollows } from './
 import { setupResumeListeners, setupResumeUploadListeners } from './resume.js';
 import { setupPostsDisplayModule } from '../posts/post.js'; // Main module for post display and filtering
 import { setupPostCreationModule } from '../posts/post_create.js'; // Module for post creation form
-
+import { setupSuggestionsModule } from '../suggestions.js';
 // --- DOM References (Top Level - for elements expected to be present early) ---
 const editProfileButton = document.getElementById('edit-profile-button');
 // profileSettingsPopup and profileWizardPopup are now imported from modalControl.js
@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     fetchAndRenderFollows(viewedUserId,document.getElementById('followers-btn'), document.getElementById('following-btn'))
     setupResumeListeners(viewedUserId);
     setupResumeUploadListeners();
+    setupSuggestionsModule();
 
 
     setupPostsDisplayModule(viewedUserId, 0);

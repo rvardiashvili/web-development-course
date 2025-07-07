@@ -107,6 +107,7 @@
         import { setupPostsDisplayModule } from "{{ url_for('static', filename='js/posts/post.js') }}";
         import { setupPostCreationModule } from "{{ url_for('static', filename='js/posts/post_create.js') }}";
         import { setupCommunityPage } from "{{ url_for('static', filename='js/community.js') }}";
+        import { setupSuggestionsModule } from "{{ url_for('static', filename='js/suggestions.js') }}";
 
         // --- Community Action Handlers ---
 
@@ -240,6 +241,7 @@
             // No contextId needed for the general feed unless filtering by current user's friends etc.
             setupPostsDisplayModule();
             setupPostCreationModule();
+            setupSuggestionsModule();
 
             // --- Community Creation Modal Logic ---
             const addCommunityModal = document.getElementById('add-community-modal');
