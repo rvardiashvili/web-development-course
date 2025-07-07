@@ -7,7 +7,7 @@ from database.database import db
 from models.social.groups import Group, GroupMembership
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-UPLOAD_FOLDER = 'frontend/static/media/communities/pfp'
+UPLOAD_FOLDER = 'frontend/static/uploads/communities/pfp'
 DEFAULT_COMMUNITY_PICTURE = '/static/media/default/community.png'
 
 def allowed_file(filename):
