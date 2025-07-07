@@ -5,9 +5,10 @@ from models.social.posts import Posts
 from flask_login import current_user  
 from database.database import db
 from models.social.groups import Group, GroupMembership
+from config import UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-UPLOAD_FOLDER = 'frontend/static/uploads/communities/pfp'
+UPLOAD_FOLDER = os.path.join(UPLOAD_FOLDER, 'communities/pfp')
 DEFAULT_COMMUNITY_PICTURE = '/static/media/default/community.png'
 
 def allowed_file(filename):
