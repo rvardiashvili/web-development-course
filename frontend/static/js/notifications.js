@@ -5,7 +5,7 @@
         const bellIcon = document.querySelector('.fa-bell');
 
         function fetchNotifications() {
-            fetch('/notifications') // Assuming an API endpoint for notifications
+            fetch('/notifications/') // Assuming an API endpoint for notifications
                 .then(response => response.json())
                 .then(data => {
                     notificationList.innerHTML = ''; // Clear existing notifications
