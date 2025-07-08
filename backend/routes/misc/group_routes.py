@@ -34,9 +34,36 @@ def get_group(group_id):
     else:
         return jsonify({'status': 'error', 'message': 'Group not found'}), 404
 
-@group_routes_bp.route('/<int:group_id>', methods=['PUT'])
+@group_routes_bp.route('/<int:group_id>/update', methods=['PUT'])
 @login_required
-def update_group(group_id):
+def update_group(group_id):    # Check if the group exists
+    group_data = group_services.get_group(group_id)
+    if not group_data:
+        return jsonify({'status': 'error', 'message': 'Group not found.'}), 404
+
+    # Check if the current user is an admin of the group
+    if not group_data.get('is_admin'):
+        return jsonify({'status': 'error', 'message': 'Permission denied. Only group admins can update group information.'}), 403
+
+    name = request.form.get('name')
+    description = request.form.get('description')
+    profile_picture = request.files.get('profile_picture')
+    cover_picture = request.files.get('cover_picture')
+
+    result = group_services.update_group(
+        group_id,
+        current_user.user_id,
+        name=name,
+        description=description,
+        profile_picture=profile_picture,
+        cover_picture=cover_picture
+    )
+
+    if result['status'] == 'success':
+        return jsonify(result), 200
+    else:
+        return jsonify(result), result.get('status_code', 400)
+
     pass # Placeholder, implement update logic
 
 @group_routes_bp.route('/<int:group_id>', methods=['DELETE'])

@@ -53,25 +53,23 @@
         margin-right: 20%;
     }
     
-    .settings-icon {
+    .profile-image-wrapper .settings-icon {
         position: absolute;
         top: 15px;
         right: 15px;
-        font-size: 22px;
-        cursor: pointer;
+        font-size: 24px;
         color: white;
-        padding: 6px;
-        border-radius: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background-color 0.2s;
-        width: 20px;
-        height: 20px;
-    }
-    
-    .settings-icon:hover {
-        color: rgba(0,0,0,0.7);
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s;
+        z-index: 2;
     }
 
     .back {
@@ -122,5 +120,95 @@
     .meta-item:hover {
         color: #007bff;
         cursor: pointer;
+    }
+
+    .profile-image-wrapper .settings-icon:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Community Settings Modal */
+    /* Relies on .modal and .close-button from posts.css */
+    .community-settings-content {
+        max-width: 600px;
+        padding: 20px 30px;
+        background-color: #fefefe;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .community-settings-content h2 {
+        text-align: center;
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #333;
+    }
+
+    #community-settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #community-settings-form section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #community-settings-form label {
+        font-weight: bold;
+        color: #555;
+    }
+
+    #community-settings-form input[type="text"],
+    #community-settings-form textarea,
+    #community-settings-form input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    #community-settings-form textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    .community-image-upload .image-preview {
+        width: 100%;
+        height: 150px;
+        border: 2px dashed #ccc;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background-color: #f9f9f9;
+    }
+
+    .community-image-upload .image-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+    }
+
+    #community-settings-form button[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    #community-settings-form button[type="submit"]:hover {
+        background-color: #0056b3;
     }
     

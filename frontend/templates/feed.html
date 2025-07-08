@@ -185,7 +185,7 @@
                 .then(data => {
                     const coverImage = document.querySelector('.profile-image-wrapper img');
                     if (data.profile_picture) {
-                        coverImage.src = data.profile_picture;
+                        coverImage.src = data.cover_picture;
                     } else {
                         coverImage.src = "{{ url_for('static', filename='media/default/community_cover.png') }}";
                     }
@@ -219,6 +219,10 @@
                         }
                         if (button) actionButtonContainer.appendChild(button);
                     }
+
+                    // NOW that we have the user's role, we can set up the community page logic
+                    // which includes showing/hiding the settings button.
+                    setupCommunityPage(communityId); // The function from community.js
                 })
                 .catch(error => console.error('Error fetching community data:', error));
         }
@@ -322,10 +326,10 @@
                     // Pass the communityId as the contextId for the posts module
                     // Call these directly after HTML is injected and initializeCommunityPage is called
                     console.log('Reinitializing posts modules after community load with ID:', communityId); // Debug log
-                    setupCommunityPage(communityId, window.is_member, window.is_admin, window.is_moderator);
+                    // The call to setupCommunityPage is now correctly placed inside initializeCommunityPage
+                    setupSuggestionsModule();
                     setupPostsDisplayModule(communityId, 1);
                     setupPostCreationModule(communityId); // Pass communityId if post creation is specific to a group
-                    
                 } catch (error) {
                     console.error('Error loading community HTML content:', error);
                     mainFeed.innerHTML = '<p class="error-message">Failed to load community content.</p>';

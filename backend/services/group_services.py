@@ -8,7 +8,7 @@ from models.social.groups import Group, GroupMembership
 from config import UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-UPLOAD_FOLDER = os.path.join(UPLOAD_FOLDER, 'communities/pfp')
+UPLOAD_FOLDER = os.path.join(UPLOAD_FOLDER, 'communities')
 DEFAULT_COMMUNITY_PICTURE = '/static/media/default/community.png'
 
 def allowed_file(filename):
@@ -32,7 +32,7 @@ def create_group(name, description, profile_picture, creator_id):
 
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-        file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+        file_path = os.path.join(UPLOAD_FOLDER, f'pfp/{unique_filename}')
         profile_picture.save(file_path)
 
         new_group.profile_picture = f'/static/uploads/communities/pfp/{unique_filename}'
@@ -70,12 +70,13 @@ def get_group(group_id):
             is_member = True
             if membership.role == 'admin':
                 is_admin = True
-        print(is_member, is_admin)
+        print(group.cover_picture)
         return {
             'group_id': group.group_id,
             'name': group.name,
             'description': group.description,
             'profile_picture': group.profile_picture,
+            'cover_picture': group.cover_picture,
             'creator_id': group.creator_id,
             # Add other fields you want to expose, e.g., members_count, events_count, pins_count
             # For now, these are placeholders as they are not directly in the Group model
@@ -289,3 +290,54 @@ def delete_group(group_id, user_id):
         print(f"Error deleting group: {e}")
         return {'status': 'error', 'message': 'An internal error occurred while deleting the group.', 'status_code': 500}
         
+
+
+def update_group(group_id, user_id, name=None, description=None, profile_picture=None, cover_picture=None):
+    group = Group.query.get(group_id)
+    if not group:
+        return {'status': 'error', 'message': 'Group not found.', 'status_code': 404}
+
+    # Check if the user is an admin of the group
+    user_membership = GroupMembership.query.filter_by(group_id=group_id, user_id=user_id).first()
+    if not user_membership or user_membership.role != 'admin':
+        return {'status': 'error', 'message': 'Permission denied. Only group admins can update group information.', 'status_code': 403}
+
+    try:
+        if name:
+            group.name = name
+        if description:
+            group.description = description
+        
+        # Handle profile picture update
+        if profile_picture:
+            if allowed_file(profile_picture.filename):
+                filename = secure_filename(profile_picture.filename)
+                unique_filename = f"{group.group_id}_profile_{int(datetime.utcnow().timestamp())}_{filename}"
+                pfp_upload_folder = os.path.join(UPLOAD_FOLDER, 'pfp')
+                os.makedirs(pfp_upload_folder, exist_ok=True)
+                file_path = os.path.join(pfp_upload_folder, unique_filename)
+                profile_picture.save(file_path)
+                group.profile_picture = f'/static/uploads/communities/pfp/{unique_filename}'
+            else:
+                return {'status': 'error', 'message': 'Invalid profile picture file type.', 'status_code': 400}
+
+        # Handle cover picture update (assuming a similar UPLOAD_FOLDER structure for cover pictures)
+        if cover_picture:
+            if allowed_file(cover_picture.filename):
+                filename = secure_filename(cover_picture.filename)
+                unique_filename = f"{group.group_id}_cover_{int(datetime.utcnow().timestamp())}_{filename}"
+                cover_upload_folder = os.path.join(UPLOAD_FOLDER, 'cover')
+                os.makedirs(cover_upload_folder, exist_ok=True)
+                file_path = os.path.join(cover_upload_folder, unique_filename)
+                cover_picture.save(file_path)
+                group.cover_picture = f'/static/uploads/communities/cover/{unique_filename}'
+            else:
+                return {'status': 'error', 'message': 'Invalid cover picture file type.', 'status_code': 400}
+        db.session.commit()
+        return {'status': 'success', 'message': 'Group updated successfully!', 'group_id': group.group_id}
+                
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error updating group: {e}")
+        return {'status': 'error', 'message': 'An internal error occurred. Please try again.', 'status_code': 500}
+                        

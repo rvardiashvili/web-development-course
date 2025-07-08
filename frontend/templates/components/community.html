@@ -9,7 +9,7 @@
             </div>
           <div class="back"><i class="fa-solid fa-arrow-left"></i></div> 
           <div class="community-action-button-container"></div>
-          <div class="settings-icon">⚙️</div>
+          <a href="#" class="settings-icon" id="community-settings-button" style="display: none;">⚙️</a>
         </div>
       
         <div class="community-meta">
@@ -21,6 +21,45 @@
       
       {% include 'components/posts.html' %}
   
+      <!-- Community Settings Modal -->
+      <div id="community-settings-modal" class="modal">
+        <div class="modal-content community-settings-content">
+            <span class="close-button" id="close-community-settings-modal">&times;</span>
+            <h2>Community Settings</h2>
+
+            <div id="community-settings-messages" class="message-container" style="display: none;"></div>
+
+            <form id="community-settings-form">
+                <section>
+                    <label for="community-settings-name">Community Name</label>
+                    <input type="text" id="community-settings-name" name="name" required>
+                </section>
+
+                <section>
+                    <label for="community-settings-description">Description</label>
+                    <textarea id="community-settings-description" name="description" rows="4" required></textarea>
+                </section>
+
+                <section class="community-image-upload">
+                    <label>Profile Picture</label>
+                    <div class="image-preview" id="profile-pic-preview-container">
+                        <img id="community-settings-profile-pic-preview" src="" alt="Profile Picture Preview">
+                    </div>
+                    <input type="file" id="community-settings-profile-pic" name="profile_picture" accept="image/*">
+                </section>
+
+                <section class="community-image-upload">
+                    <label>Cover Picture</label>
+                    <div class="image-preview" id="cover-pic-preview-container">
+                        <img id="community-settings-cover-pic-preview" src="" alt="Cover Picture Preview">
+                    </div>
+                    <input type="file" id="community-settings-cover-pic" name="cover_picture" accept="image/*">
+                </section>
+
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+      </div>
   </div>
 
 <script type="module">
