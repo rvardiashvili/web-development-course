@@ -1,6 +1,6 @@
 from werkzeug.utils import secure_filename
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from models.social.posts import Posts
 from flask_login import current_user  
 from database.database import db
@@ -28,7 +28,7 @@ def create_group(name, description, profile_picture, creator_id):
 
     if profile_picture and allowed_file(profile_picture.filename):
         filename = secure_filename(profile_picture.filename)
-        unique_filename = f"{creator_id}_{int(datetime.utcnow().timestamp())}_{filename}"
+        unique_filename = f"{creator_id}_{int(datetime.now(timezone.utc).timestamp())}_{filename}"
 
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
@@ -312,7 +312,7 @@ def update_group(group_id, user_id, name=None, description=None, profile_picture
         if profile_picture:
             if allowed_file(profile_picture.filename):
                 filename = secure_filename(profile_picture.filename)
-                unique_filename = f"{group.group_id}_profile_{int(datetime.utcnow().timestamp())}_{filename}"
+                unique_filename = f"{group.group_id}_profile_{int(datetime.now(timezone.utc).timestamp())}_{filename}"
                 pfp_upload_folder = os.path.join(UPLOAD_FOLDER, 'pfp')
                 os.makedirs(pfp_upload_folder, exist_ok=True)
                 file_path = os.path.join(pfp_upload_folder, unique_filename)
@@ -325,7 +325,7 @@ def update_group(group_id, user_id, name=None, description=None, profile_picture
         if cover_picture:
             if allowed_file(cover_picture.filename):
                 filename = secure_filename(cover_picture.filename)
-                unique_filename = f"{group.group_id}_cover_{int(datetime.utcnow().timestamp())}_{filename}"
+                unique_filename = f"{group.group_id}_cover_{int(datetime.now(timezone.utc).timestamp())}_{filename}"
                 cover_upload_folder = os.path.join(UPLOAD_FOLDER, 'cover')
                 os.makedirs(cover_upload_folder, exist_ok=True)
                 file_path = os.path.join(cover_upload_folder, unique_filename)

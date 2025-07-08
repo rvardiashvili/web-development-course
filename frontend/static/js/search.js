@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             resultsDropdown.appendChild(postHeader);
                             data.posts.forEach(post => {
                                 const a = document.createElement('a');
-                                a.href = `/posts/${post.id}`; // Adjust URL as needed
+                                a.href = `/feed/post/${post.id}`; // Adjust URL as needed
                                 a.textContent = post.content;
                                 resultsDropdown.appendChild(a);
                             });

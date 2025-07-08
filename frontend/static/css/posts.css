@@ -688,6 +688,22 @@
 }
 }
 
+.back-to-feed-button {
+    background-color: #e0e0e0; 
+    color: rgb(100, 100, 100);
+    font-weight: bolder;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+.back-to-feed-button:hover {
+    color: white;
+    background-color: #7d7d7d; 
+}
+
 @media (max-width: 480px) {
     .post-type-button {
         width: 80px;

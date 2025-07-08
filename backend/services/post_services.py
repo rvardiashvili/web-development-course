@@ -3,12 +3,14 @@ from models.social.posts import Posts # Assuming this path to your Posts model
 from models.users import Users, Followers # Assuming this path to your Users and Followers model
 from models.social.groups import Group, GroupMembership # Assuming this path to your Group model
 from models.social.posts import liked_by # Import the liked_by model
-import datetime
+from datetime import datetime, timezone
 from flask import current_app # Import current_app for logging
+from flask_login import current_user
 import os
 import uuid # For generating unique filenames
 from werkzeug.utils import secure_filename # Import secure_filename for safe filenames
 from sqlalchemy import func, or_, and_ # Import func, or_, and 'and_' for complex queries
+from .notifications_services import send_notification
 
 # Assuming UPLOAD_FOLDER and UPLOAD_PATH are defined in your config.py
 # If not, you might need to define them here or ensure they are accessible.
@@ -231,7 +233,7 @@ def create_post(post_data):
             content=content,
             visibility=visibility,
             media_url=media_url, # Use the generated media_url
-            created_at=datetime.datetime.utcnow() # Ensure timestamp is set to UTC
+            created_at=datetime.now(timezone.utc) # Ensure timestamp is set to UTC
         )
         db.session.add(new_post)
         db.session.commit()
@@ -337,7 +339,6 @@ def get_post_list(current_user_id, filters={}, page=1, per_page=500):
 
         if not results:
             return {'status': 'info', 'message': 'No posts found matching the criteria.', 'posts': [], 'code': 200}
-
         serialized_posts = []
         if sort_by == 'top':
             for row in results:
@@ -345,6 +346,11 @@ def get_post_list(current_user_id, filters={}, page=1, per_page=500):
         else:
             for post in results:
                 serialized_posts.append(_serialize_post(post, current_user_id))
+        if "post_id" in filters:
+            result = query.filter_by(post_id=filters["post_id"]).first()
+            serialized_posts = [_serialize_post(result, current_user_id)]
+            print(result)
+
         
         return {
             'status': 'success',
@@ -377,13 +383,14 @@ def like_post(post_id, user_id, emote_type='like'):
             else:
                 # Update emote type if already liked by the user with a different emote
                 existing_like.emote_type = emote_type
-                existing_like.liked_at = datetime.datetime.utcnow() # Update timestamp
+                existing_like.liked_at = datetime.now(timezone.utc) # Update timestamp
                 db.session.commit()
                 return {'status': 'success', 'message': 'Emote updated successfully.', 'code': 200, 'action': 'updated'}
         else:
-            new_like = liked_by(post_id=post_id, user_id=user_id, emote_type=emote_type, liked_at=datetime.datetime.utcnow())
+            new_like = liked_by(post_id=post_id, user_id=user_id, emote_type=emote_type, liked_at=datetime.now(timezone.utc))
             db.session.add(new_like)
             db.session.commit()
+            send_notification(post.user_id, f"Your post has been liked by {current_user.username}", "New Like", post_id, "post")
             return {'status': 'success', 'message': 'Post liked successfully.', 'code': 201, 'action': 'liked'}
     except Exception as e:
         db.session.rollback()

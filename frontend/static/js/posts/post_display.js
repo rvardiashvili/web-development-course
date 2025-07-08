@@ -428,6 +428,17 @@ export async function fetchAndRenderUserPosts(contextId, contextType, containerE
                 queryParams.append('user_id', contextId);
             } else if (contextType === 1) { // Group context
                 queryParams.append('group_id', contextId);
+            } else if (contextType === 2) { // Community context
+                queryParams.append('post_id', contextId);
+
+                // Add a back button for single post view
+                const backButton = document.createElement('button');
+                backButton.textContent = 'Back to Feed';
+                backButton.classList.add('back-to-feed-button');
+                backButton.addEventListener('click', () => {
+                    window.location.href = '/feed'; // Navigate back to the general feed
+                });
+                document.getElementsByClassName('posts-main')[0].prepend(backButton); // Add button at the top
             } else {
                 console.warn(`Unknown contextType: ${contextType}. Posts might not be filtered correctly.`);
             }

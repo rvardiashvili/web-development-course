@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/members_popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
 
 
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
@@ -101,6 +102,7 @@
             </div>
         </div>
     </div>
+
 
     <script type="module">
         // Moved imports here so they are always executed when feed.html loads
@@ -243,7 +245,13 @@
             const mainFeed = document.querySelector('.main-feed');
             // Initial setup for the main feed posts (when on the main feed page)
             // No contextId needed for the general feed unless filtering by current user's friends etc.
-            setupPostsDisplayModule();
+            const initialPostId = "{{ initial_post_id | default('') }}";
+            if (initialPostId){
+                setupPostsDisplayModule(initialPostId, 2);
+                
+            }else{
+                setupPostsDisplayModule();
+            }
             setupPostCreationModule();
             setupSuggestionsModule();
 
@@ -389,6 +397,7 @@
                 loadCommunityContent(initialCommunityId);
             }
 
+
             // Listen for popstate event (browser back/forward buttons)
             window.addEventListener('popstate', (event) => {
                 const path = window.location.pathname;
@@ -407,5 +416,6 @@
         });
     </script>
         
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
 
 </html>

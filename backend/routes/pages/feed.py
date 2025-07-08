@@ -16,6 +16,11 @@ def community_page(community_id):
     """
     return render_template('feed.html', initial_community_id=community_id)
 
+@feed_bp.route('/post/<int:post_id>')
+def get_post_feed(post_id):
+    return render_template('feed.html', initial_post_id=post_id)
+
+
 @feed_bp.route('/components/community_content')
 def get_community_content():
     """

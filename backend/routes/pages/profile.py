@@ -31,3 +31,12 @@ def profile(username):
         return render_template('profile.html', viewed_user=user, additional_data=employee, city=city.city, is_self=True)
     else:
         return render_template('profile.html', viewed_user=user, additional_data=employee, city=city.city, is_self=False)
+
+@profile_bp.route('/id/<user_id>')
+@login_required
+def profile_id(user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if user is None:
+        abort(404)  # Handle the case where the user doesn't exist
+    return redirect(url_for('profile.profile', username=user.username))
+        

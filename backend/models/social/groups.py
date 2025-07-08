@@ -1,6 +1,6 @@
 # social/groups.py
 from database.database import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Import models referenced by FKs or for relationships
 from models.users import Users # Assuming users.py is in the parent directory of social
@@ -14,7 +14,7 @@ class Group(db.Model):
     group_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
     description = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     profile_picture = db.Column(db.String(255), default='/static/media/communities/pfp/default.jpg')
     cover_picture = db.Column(db.String(255), default='/static/media/communities/cover/default.jpg')
     creator_id = db.Column(db.Integer, db.ForeignKey('Users.user_id'), nullable=False)

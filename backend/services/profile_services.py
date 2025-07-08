@@ -11,6 +11,8 @@ from models.employee.resume import Resume
 from config import UPLOAD_FOLDER, UPLOAD_PATH, ALLOWED_EXTENSIONS
 from datetime import datetime
 from sqlalchemy.types import JSON 
+from services.notifications_services import send_notification
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -488,6 +490,7 @@ def follow_user(current_user_id, target_user_id):
         newFollower = Followers(follower_id=current_user_id, followed_id=target_user_id)
         db.session.add(newFollower)
         db.session.commit()
+        send_notification(target_user_id, f"New follow from: {user.username}", "New Follow", current_user_id, "user")
         return {'status':'success', 'message': 'User followed successfully.', 'following': True}
     except Exception as e:
         db.session.rollback()

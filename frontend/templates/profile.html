@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/suggestions.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_settings_popup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/details_popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+
     <link href='https://fonts.googleapis.com/css?family=Major Mono Display' rel='stylesheet'>
     <script src="https://kit.fontawesome.com/250db9a87f.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -528,5 +530,7 @@
         </div>
         <script type="module" src="{{ url_for('static', filename='js/profile/profileApp.js') }}"></script>
         <script type="module" src="{{ url_for('static', filename='js/posts.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+
     </body>
 </html>

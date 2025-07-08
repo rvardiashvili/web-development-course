@@ -129,6 +129,19 @@ CREATE TABLE `liked_by` (
   FOREIGN KEY (`post_id`) REFERENCES `Posts` (`post_id`) ON DELETE CASCADE
 );
 
+-- Notifications Table
+CREATE TABLE `Notifications` (
+  `notification_id` INT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `type` VARCHAR(50) NOT NULL, 
+  `source_id` INT, 
+  `source_type` VARCHAR(50), 
+  `content` TEXT NOT NULL,
+  `is_read` BOOLEAN DEFAULT FALSE,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE
+);
+
 
 -- Messages
 CREATE TABLE `Messages` (
